@@ -1,4 +1,4 @@
-import { Persons } from "Persons";
+import { Persons } from "../Persons";
 
 export const App = () => {
   return <Persons />;

@@ -6,3 +6,5 @@ export const API_ENTRYPOINT: string = process.env
 export const HYDRA_CLIENT = HydraClientFactory.configure()
   .withDefaults()
   .andCreate();
+
+export const SEARCH_TIMEOUT = 200;
