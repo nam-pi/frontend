@@ -1,1 +1,5 @@
-export const App = () => <div>NAMPI Frontend</div>;
+import { Persons } from "Persons";
+
+export const App = () => {
+  return <Persons />;
+};
