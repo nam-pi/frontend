@@ -1,13 +1,18 @@
-import { API_ENTRYPOINT } from "App/constants";
+import { ItemType } from "App/enums/ItemType";
 import { usePartialCollection } from "App/hooks/usePartialCollection";
 import { Person, SearchParams } from "App/types";
 import { useMemo, useState } from "react";
+import { useParams } from "react-router";
+import { ItemListItem } from "../ItemListItem";
 import { ItemNav } from "../ItemNav";
-import { PersonListItem } from "../PersonListItem";
+import { PersonDetails } from "../PersonDetails";
 
-const BASE_URI = `${API_ENTRYPOINT}/persons`;
+interface Params {
+  localId: undefined | string;
+}
 
 export const Persons = () => {
+  const { localId } = useParams<Params>();
   const [text, setText] = useState<string>("");
   const searchParams = useMemo<SearchParams>(() => {
     const params: SearchParams = [];
@@ -17,22 +22,29 @@ export const Persons = () => {
     return params;
   }, [text]);
   const [persons, totalItems, nav] = usePartialCollection<Person>(
-    BASE_URI,
+    ItemType.Person,
     searchParams
   );
   return (
     <div>
-      <h1>Persons ({totalItems})</h1>
       <div>
-        Filter:{" "}
-        <input value={text} onChange={(e) => setText(e.target.value)}></input>
+        <h1>Persons ({totalItems})</h1>
+        <div>
+          Filter:{" "}
+          <input value={text} onChange={(e) => setText(e.target.value)}></input>
+        </div>
+        <ul>
+          {persons.map((person) => (
+            <ItemListItem key={person.id} {...person} />
+          ))}
+        </ul>
+        <ItemNav nav={nav} />
       </div>
-      <ul>
-        {persons.map((person) => (
-          <PersonListItem key={person.id} {...person} />
-        ))}
-      </ul>
-      <ItemNav nav={nav} />
+      {localId ? (
+        <PersonDetails localId={localId} />
+      ) : (
+        <span>No person selected</span>
+      )}
     </div>
   );
 };

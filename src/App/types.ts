@@ -1,11 +1,11 @@
+import { ItemType } from "./enums/ItemType";
+
 export interface Label {
   value: string;
   language?: string;
 }
 
-export interface Person extends Item {
-  label: Label[];
-}
+export interface Person extends Item {}
 
 export interface JsonLdItem {
   "@id": string;
@@ -14,6 +14,8 @@ export interface JsonLdItem {
 
 export interface Item {
   id: string;
+  itemType: ItemType;
+  label: Label[];
   localId: string;
   types: string;
 }

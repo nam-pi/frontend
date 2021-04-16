@@ -6,16 +6,19 @@ import {
   ITemplatedLink,
 } from "@hydra-cg/heracles.ts";
 import { HYDRA_CLIENT, SEARCH_TIMEOUT } from "App/constants";
+import { ItemType } from "App/enums/ItemType";
 import { rdfsLabel } from "App/extractors/rdfsLabel";
 import { Extractor, Item, PartialNavigation, SearchParams } from "App/types";
 import { getFromContainer } from "App/utils/getFromContainer";
+import { itemPath } from "App/utils/itemPath";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 export const usePartialCollection = <T extends Item>(
-  startUrl: string,
+  itemType: ItemType,
   search: SearchParams,
   ...extractors: Extractor[]
 ): [items: T[], totalItems: number, nav: PartialNavigation] => {
+  const startUrl = itemPath(itemType, { api: true });
   const oldSearch = useRef<SearchParams>(search);
   const searchTimeout = useRef<undefined | NodeJS.Timeout>();
   const [items, setItems] = useState<T[]>([]);
@@ -34,13 +37,13 @@ export const usePartialCollection = <T extends Item>(
       const idParts = id.split("/");
       const localId = idParts[idParts.length - 1];
       const types = rawItem["@type"];
-      const item: T = ({ id, localId, types } as unknown) as T;
+      const item: T = ({ id, localId, types, itemType } as unknown) as T;
       for (const [key, extract] of fullExtractors) {
         (item as any)[key] = extract(rawItem);
       }
       return item;
     },
-    [fullExtractors]
+    [fullExtractors, itemType]
   );
 
   const fetch = useCallback(
