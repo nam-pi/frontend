@@ -14,6 +14,7 @@ export interface JsonLdItem {
 
 export interface Item {
   id: string;
+  localId: string;
   types: string;
 }
 

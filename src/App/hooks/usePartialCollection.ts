@@ -28,12 +28,13 @@ export const usePartialCollection = <T extends Item>(
   ]);
 
   const extractItem = useCallback(
-    async (member: IResource, container: IHypermediaContainer) => {
+    async (member: IResource, container: IHypermediaContainer): Promise<T> => {
       const rawItem = await getFromContainer(container, member);
-      const item: T = ({
-        id: rawItem["@id"],
-        types: rawItem["@type"],
-      } as unknown) as T;
+      const id = rawItem["@id"];
+      const idParts = id.split("/");
+      const localId = idParts[idParts.length - 1];
+      const types = rawItem["@type"];
+      const item: T = ({ id, localId, types } as unknown) as T;
       for (const [key, extract] of fullExtractors) {
         (item as any)[key] = extract(rawItem);
       }
