@@ -1,5 +1,6 @@
 import HydraClientFactory from "@hydra-cg/heracles.ts";
 import Keycloak from "keycloak-js";
+import { callFacility } from "./callFacility";
 import { ItemType } from "./enums/ItemType";
 
 export const API_ENTRYPOINT: string = process.env
@@ -7,6 +8,7 @@ export const API_ENTRYPOINT: string = process.env
 
 export const HYDRA_CLIENT = HydraClientFactory.configure()
   .withDefaults()
+  .with(callFacility)
   .andCreate();
 
 export const KEYCLOAK_CLIENT = Keycloak({

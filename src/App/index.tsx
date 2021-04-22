@@ -34,9 +34,7 @@ export const App = () => {
   return (
     <ReactKeycloakProvider
       authClient={KEYCLOAK_CLIENT}
-      initOptions={{
-        checkLoginIframe: true,
-      }}
+      initOptions={{ checkLoginIframe: false }}
     >
       <Routes />
     </ReactKeycloakProvider>

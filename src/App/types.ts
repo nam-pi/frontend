@@ -35,6 +35,8 @@ export type Extractor<T = any> = [
 export type SearchParams = [key: string, value: number | string][];
 
 export interface Profile {
+  authorUrl?: string;
+  email: string;
   familyName?: string;
   givenName?: string;
   username: string;

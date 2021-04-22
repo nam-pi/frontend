@@ -1,5 +1,6 @@
 import { ItemType } from "App/enums/ItemType";
 import { usePartialCollection } from "App/hooks/usePartialCollection";
+import { doc } from "App/namespaces";
 import { Person, SearchParams } from "App/types";
 import { useMemo, useState } from "react";
 import { useParams } from "react-router";
@@ -17,7 +18,7 @@ export const Persons = () => {
   const searchParams = useMemo<SearchParams>(() => {
     const params: SearchParams = [];
     if (text) {
-      params.push(["http://localhost:4000/vocab#textVariable", text]);
+      params.push([doc.textVariable, text]);
     }
     return params;
   }, [text]);

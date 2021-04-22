@@ -20,7 +20,7 @@ export const Navbar = () => {
         profile ? (
           <>
             <li>
-              <Link to="profile">Profile: {profile?.username}</Link>
+              <Link to="/profile">Profile: {profile?.username}</Link>
             </li>
             <li>
               <button type="button" onClick={() => keycloak.logout()}>
