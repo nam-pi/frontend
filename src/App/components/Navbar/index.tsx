@@ -2,6 +2,7 @@ import { useKeycloak } from "@react-keycloak/web";
 import { ItemType } from "App/enums/ItemType";
 import { useProfile } from "App/hooks/useProfile";
 import { itemPath } from "App/utils/itemPath";
+import { FormattedMessage } from "react-intl";
 import { Link } from "react-router-dom";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
 
@@ -11,20 +12,39 @@ export const Navbar = () => {
   return (
     <ul>
       <li>
-        <Link to="/">Home</Link>
+        <Link to="/">
+          <FormattedMessage
+            description="Home link text"
+            defaultMessage="Home"
+          />
+        </Link>
       </li>
       <li>
-        <Link to={itemPath(ItemType.Person)}>Persons</Link>
+        <Link to={itemPath(ItemType.Person)}>
+          <FormattedMessage
+            description="Persons link text"
+            defaultMessage="Persons"
+          />
+        </Link>
       </li>
       {keycloak.authenticated ? (
         profile ? (
           <>
             <li>
-              <Link to="/profile">Profile: {profile?.username}</Link>
+              <Link to="/profile">
+                <FormattedMessage
+                  description="Profile link text"
+                  defaultMessage="Profile: {username}"
+                  values={{ username: profile?.username }}
+                />
+              </Link>
             </li>
             <li>
               <button type="button" onClick={() => keycloak.logout()}>
-                Logout
+                <FormattedMessage
+                  description="Logout button text"
+                  defaultMessage="Logout"
+                />
               </button>
             </li>
           </>
@@ -33,7 +53,12 @@ export const Navbar = () => {
         )
       ) : (
         <li>
-          <Link to="/login">Login</Link>
+          <Link to="/login">
+            <FormattedMessage
+              description="Login link text"
+              defaultMessage="Login"
+            />
+          </Link>
         </li>
       )}
     </ul>

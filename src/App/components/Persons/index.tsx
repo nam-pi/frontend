@@ -3,6 +3,7 @@ import { usePartialCollection } from "App/hooks/usePartialCollection";
 import { doc } from "App/namespaces";
 import { Person, SearchParams } from "App/types";
 import { useMemo, useState } from "react";
+import { FormattedMessage } from "react-intl";
 import { useParams } from "react-router";
 import { ItemListItem } from "../ItemListItem";
 import { ItemNav } from "../ItemNav";
@@ -29,9 +30,19 @@ export const Persons = () => {
   return (
     <div>
       <div>
-        <h1>Persons ({totalItems})</h1>
+        <h1>
+          <FormattedMessage
+            description="Persons list heading"
+            defaultMessage="Persons ({totalItems})"
+            values={{ totalItems }}
+          />
+        </h1>
         <div>
-          Filter:{" "}
+          <FormattedMessage
+            description="Filter label"
+            defaultMessage="Filter"
+          />
+          {""}
           <input value={text} onChange={(e) => setText(e.target.value)}></input>
         </div>
         <ul>
@@ -44,7 +55,12 @@ export const Persons = () => {
       {localId ? (
         <PersonDetails localId={localId} />
       ) : (
-        <span>No person selected</span>
+        <span>
+          <FormattedMessage
+            description="Empty placeholder text"
+            defaultMessage="No person selected"
+          />
+        </span>
       )}
     </div>
   );

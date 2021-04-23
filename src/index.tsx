@@ -1,4 +1,5 @@
 import { App } from "App";
+import { TranslationProvider } from "I18n/TranslationContext";
 import { StrictMode } from "react";
 import { render } from "react-dom";
 import "./index.scss";
@@ -6,7 +7,9 @@ import reportWebVitals from "./reportWebVitals";
 
 render(
   <StrictMode>
-    <App />
+    <TranslationProvider>
+      <App />
+    </TranslationProvider>
   </StrictMode>,
   document.getElementById("root")
 );
