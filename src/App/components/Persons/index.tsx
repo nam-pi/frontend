@@ -5,6 +5,8 @@ import { Person, SearchParams } from "App/types";
 import { useMemo, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { useParams } from "react-router";
+import { Heading } from "../Heading";
+import { Input } from "../Input";
 import { ItemListItem } from "../ItemListItem";
 import { ItemNav } from "../ItemNav";
 import { PersonDetails } from "../PersonDetails";
@@ -30,20 +32,23 @@ export const Persons = () => {
   return (
     <div>
       <div>
-        <h1>
+        <Heading>
           <FormattedMessage
             description="Persons list heading"
             defaultMessage="Persons ({totalItems})"
             values={{ totalItems }}
           />
-        </h1>
-        <div>
+        </Heading>
+        <div className="my-4">
           <FormattedMessage
             description="Filter label"
             defaultMessage="Filter"
           />
-          {""}
-          <input value={text} onChange={(e) => setText(e.target.value)}></input>
+          <Input
+            className="ml-2"
+            value={text}
+            onChange={(e) => setText(e.currentTarget.value)}
+          ></Input>
         </div>
         <ul>
           {persons.map((person) => (
@@ -52,16 +57,18 @@ export const Persons = () => {
         </ul>
         <ItemNav nav={nav} />
       </div>
-      {localId ? (
-        <PersonDetails localId={localId} />
-      ) : (
-        <span>
-          <FormattedMessage
-            description="Empty placeholder text"
-            defaultMessage="No person selected"
-          />
-        </span>
-      )}
+      <div className="mt-4">
+        {localId ? (
+          <PersonDetails localId={localId} />
+        ) : (
+          <span>
+            <FormattedMessage
+              description="Empty placeholder text"
+              defaultMessage="No person selected"
+            />
+          </span>
+        )}
+      </div>
     </div>
   );
 };

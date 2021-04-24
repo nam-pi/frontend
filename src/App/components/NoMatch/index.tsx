@@ -1,15 +1,17 @@
 import { FormattedMessage } from "react-intl";
 import { Link } from "react-router-dom";
+import { Heading } from "../Heading";
+import { Paragraph } from "../Paragraph";
 
 export const NoMatch = () => (
   <div>
-    <h1>
+    <Heading>
       <FormattedMessage
         description="No match page header"
         defaultMessage="Error"
       />
-    </h1>
-    <p>
+    </Heading>
+    <Paragraph>
       <FormattedMessage
         description="The text of the no match page"
         defaultMessage="Page not found, go back to <a>Home</a>"
@@ -17,6 +19,6 @@ export const NoMatch = () => (
           a: (m: string) => <Link to="/">{m}</Link>,
         }}
       />
-    </p>
+    </Paragraph>
   </div>
 );
