@@ -1,5 +1,5 @@
 import { HttpCallFacility } from "@hydra-cg/heracles.ts";
-import { KEYCLOAK_CLIENT } from "./constants";
+import { HISTORY, KEYCLOAK_CLIENT } from "./constants";
 
 const DEFAULT_CONFIG: RequestInit = {
   headers: {
@@ -20,5 +20,9 @@ export const callFacility: HttpCallFacility = async (url) => {
     })
     .catch(() => {
       return fetch(url, DEFAULT_CONFIG);
+    })
+    .catch((r: Response) => {
+      HISTORY.push("/");
+      return r;
     });
 };

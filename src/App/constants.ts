@@ -1,4 +1,5 @@
 import HydraClientFactory from "@hydra-cg/heracles.ts";
+import { createBrowserHistory } from "history";
 import Keycloak from "keycloak-js";
 import { callFacility } from "./callFacility";
 import { ItemType } from "./enums/ItemType";
@@ -25,5 +26,7 @@ export const PATH_BASES = {
     [ItemType.Person]: "persons",
   },
 };
+
+export const HISTORY = createBrowserHistory();
 
 export const SEARCH_TIMEOUT = 200;
