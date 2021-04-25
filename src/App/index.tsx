@@ -16,15 +16,17 @@ const Routes = () => {
   const { initialized } = useKeycloak();
   return initialized ? (
     <Router history={HISTORY}>
-      <Navbar />
-      <div className="m-3">
-        <Switch>
-          <Route exact path="/" component={Home} />
-          <Route exact path="/login" component={Login} />
-          <Route exact path={PERSON_PATHS} component={Persons} />
-          <PrivateRoute exact path="/profile" component={Profile} />
-          <Route path="*" component={NoMatch} />
-        </Switch>
+      <div className="text-gray-800">
+        <Navbar />
+        <div className="m-3">
+          <Switch>
+            <Route exact path="/" component={Home} />
+            <Route exact path="/login" component={Login} />
+            <Route exact path={PERSON_PATHS} component={Persons} />
+            <PrivateRoute exact path="/profile" component={Profile} />
+            <Route path="*" component={NoMatch} />
+          </Switch>
+        </div>
       </div>
     </Router>
   ) : (

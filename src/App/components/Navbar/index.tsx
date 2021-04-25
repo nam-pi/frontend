@@ -10,7 +10,7 @@ export const Navbar = () => {
   const { keycloak } = useKeycloak();
   const profile = useProfile();
   return (
-    <nav className="relative flex items-center justify-between flex-wrap  bg-gray-500 p-3">
+    <nav className="relative flex items-center justify-between flex-wrap  bg-gray-400 p-3 text-white">
       <div className="space-x-3 text-white">
         <Link to="/" className="font-semibold text-2xl">
           <FormattedMessage
@@ -28,7 +28,7 @@ export const Navbar = () => {
       <div>
         {keycloak.authenticated ? (
           <Menu as="div" className="relative">
-            <Menu.Button className="px-4 py-2 rounded bg-white">
+            <Menu.Button className="px-4 py-2 rounded bg-white text-gray-800">
               {profile?.username}
             </Menu.Button>
             <Menu.Items className="absolute min-w-max mt-1 right-0 bg-white shadow-lg rounded flex flex-col p-2">
@@ -55,14 +55,12 @@ export const Navbar = () => {
             </Menu.Items>
           </Menu>
         ) : (
-          <div>
-            <Link to="/login">
-              <FormattedMessage
-                description="Login link text"
-                defaultMessage="Login"
-              />
-            </Link>
-          </div>
+          <Link to="/login">
+            <FormattedMessage
+              description="Login link text"
+              defaultMessage="Login"
+            />
+          </Link>
         )}
       </div>
     </nav>
