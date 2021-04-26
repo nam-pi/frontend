@@ -1,18 +1,19 @@
 import { PartialNavigation } from "App/types";
+import { Button } from "../Button";
 
 export const ItemNav = ({ nav }: { nav: PartialNavigation }) => (
-  <>
-    <button disabled={!nav.first} onClick={nav.first}>
+  <div className="space-x-2">
+    <Button disabled={!nav.first} onClick={nav.first}>
       first
-    </button>
-    <button disabled={!nav.previous} onClick={nav.previous}>
+    </Button>
+    <Button disabled={!nav.previous} onClick={nav.previous}>
       previous
-    </button>
-    <button disabled={!nav.next} onClick={nav.next}>
+    </Button>
+    <Button disabled={!nav.next} onClick={nav.next}>
       next
-    </button>
-    <button disabled={!nav.last} onClick={nav.last}>
+    </Button>
+    <Button disabled={!nav.last} onClick={nav.last}>
       last
-    </button>
-  </>
+    </Button>
+  </div>
 );

@@ -1,7 +1,7 @@
 import clsx from "clsx";
-import { HTMLProps } from "react";
+import { InputHTMLAttributes } from "react";
 
-interface Props extends HTMLProps<HTMLInputElement> {}
+interface Props extends InputHTMLAttributes<HTMLInputElement> {}
 
 export const Input = ({ className, type = "text", ...props }: Props) => (
   <input

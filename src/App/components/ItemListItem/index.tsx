@@ -6,12 +6,13 @@ export const ItemListItem = ({
   itemType,
   label,
   localId,
-}: Pick<Item, "itemType" | "label" | "localId">) => (
+  labelPs = "",
+}: { labelPs?: string } & Pick<Item, "itemType" | "label" | "localId">) => (
   <li>
     <Link to={itemPath(itemType, { localId })}>
       {label
         .map((l) => `${l.value}${l.language ? ` [${l.language}]` : ""}`)
-        .join(", ")}
+        .join(", ") + labelPs}
     </Link>
   </li>
 );

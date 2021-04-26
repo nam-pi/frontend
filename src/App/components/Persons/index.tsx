@@ -1,6 +1,7 @@
 import { ItemType } from "App/enums/ItemType";
+import { event } from "App/extractors/event";
 import { usePartialCollection } from "App/hooks/usePartialCollection";
-import { doc } from "App/namespaces";
+import { core, doc } from "App/namespaces";
 import { Person, SearchParams } from "App/types";
 import { useMemo, useState } from "react";
 import { FormattedMessage } from "react-intl";
@@ -27,7 +28,9 @@ export const Persons = () => {
   }, [text]);
   const [persons, totalItems, nav] = usePartialCollection<Person>(
     ItemType.Person,
-    searchParams
+    searchParams,
+    event("birth", core.isBornIn),
+    event("death", core.diesIn)
   );
   return (
     <div>
@@ -50,10 +53,29 @@ export const Persons = () => {
             onChange={(e) => setText(e.currentTarget.value)}
           ></Input>
         </div>
-        <ul>
-          {persons.map((person) => (
-            <ItemListItem key={person.id} {...person} />
-          ))}
+        <ul className="mb-4">
+          {persons.map((person) => {
+            return (
+              <ItemListItem
+                key={person.id}
+                {...person}
+                labelPs={person.birth
+                  .map(({ date: d }) => {
+                    const dString = d.exact
+                      ? d.exact.getFullYear()
+                      : d.earliest && d.latest
+                      ? `${d.earliest.getFullYear()} - ${d.latest.getFullYear()}`
+                      : d.earliest
+                      ? d.earliest.getFullYear()
+                      : d.latest
+                      ? d.latest.getFullYear()
+                      : "";
+                    return dString ? ` (${dString})` : "";
+                  })
+                  .join(",")}
+              />
+            );
+          })}
         </ul>
         <ItemNav nav={nav} />
       </div>

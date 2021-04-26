@@ -5,7 +5,23 @@ export interface Label {
   language?: string;
 }
 
-export interface Person extends Item {}
+export interface EventDate {
+  sort: Date;
+  exact?: Date;
+  earliest?: Date;
+  latest?: Date;
+}
+
+export interface Event {
+  "@id": string;
+  "@type": string[];
+  date: EventDate;
+}
+
+export interface Person extends Item {
+  birth: Event[];
+  death: Event[];
+}
 
 export interface JsonLdItem {
   "@id": string;

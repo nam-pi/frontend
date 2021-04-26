@@ -1,7 +1,7 @@
 import clsx from "clsx";
-import { HTMLProps } from "react";
+import { HTMLAttributes } from "react";
 
-interface Props extends HTMLProps<HTMLParagraphElement> {}
+interface Props extends HTMLAttributes<HTMLParagraphElement> {}
 
 export const Paragraph = ({ className, ...props }: Props) => (
   <p {...props} className={clsx(className)} />
