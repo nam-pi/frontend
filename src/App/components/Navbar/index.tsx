@@ -27,8 +27,8 @@ export const Navbar = () => {
       </div>
       <div>
         {keycloak.authenticated ? (
-          <Menu as="div" className="relative">
-            <Menu.Button className="px-4 py-2 rounded bg-white text-gray-800">
+          <Menu as="div" className="relative text-gray-800">
+            <Menu.Button className="px-4 py-2 rounded bg-white ">
               {profile?.username}
             </Menu.Button>
             <Menu.Items className="absolute min-w-max mt-1 right-0 bg-white shadow-lg rounded flex flex-col p-2">
@@ -55,7 +55,9 @@ export const Navbar = () => {
             </Menu.Items>
           </Menu>
         ) : (
-          <Link to="/login">
+          <Link
+            to={{ pathname: "/login", state: { from: window.location.href } }}
+          >
             <FormattedMessage
               description="Login link text"
               defaultMessage="Login"

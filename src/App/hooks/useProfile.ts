@@ -10,19 +10,23 @@ export const useProfile = () => {
   const { keycloak } = useKeycloak();
   const [profile, setProfile] = useState<undefined | Profile>();
   useEffect(() => {
-    const load = async () => {
-      const data = await HYDRA_CLIENT.getResource(
-        buildPath(API_ENTRYPOINT, "user")
-      );
-      const item = (await extractItem(data)) as any;
-      const authorUrl = item[schemaOrg.sameAs][0]["@id"];
-      const email = item[schemaOrg.email][0]["@value"];
-      const familyName = item[schemaOrg.familyName][0]["@value"];
-      const givenName = item[schemaOrg.givenName][0]["@value"];
-      const username = item[schemaOrg.name][0]["@value"];
-      setProfile({ authorUrl, email, familyName, givenName, username });
-    };
-    load();
+    HYDRA_CLIENT.getResource(buildPath(API_ENTRYPOINT, "user"))
+      .then(async (data) => {
+        const item = (await extractItem(data)) as any;
+        const authorUrl = item[schemaOrg.sameAs][0]["@id"];
+        const email = item[schemaOrg.email][0]["@value"];
+        const familyName = item[schemaOrg.familyName][0]["@value"];
+        const givenName = item[schemaOrg.givenName][0]["@value"];
+        const username = item[schemaOrg.name][0]["@value"];
+        setProfile({ authorUrl, email, familyName, givenName, username });
+      })
+      .catch((e) => {
+        if (e.message === "Remote server responded with a status of 401") {
+          console.log("User not logged in");
+        } else {
+          console.log(e);
+        }
+      });
   }, [keycloak]);
   return profile;
 };
