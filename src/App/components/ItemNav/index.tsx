@@ -14,7 +14,7 @@ export const ItemNav = ({
   disabled: boolean;
   nav: PartialNavigation;
 }) => (
-  <div className="space-x-2 text-blue-500 text-xs">
+  <div className="space-x-2 text-xs">
     <IconButton
       disabled={disabled || !nav.first}
       onClick={nav.first}

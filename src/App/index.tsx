@@ -30,7 +30,7 @@ const Routes = () => {
       </div>
     </Router>
   ) : (
-    <LoadingPlaceholder />
+    <LoadingPlaceholder delay />
   );
 };
 
