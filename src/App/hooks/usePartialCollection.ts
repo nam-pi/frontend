@@ -17,10 +17,16 @@ export const usePartialCollection = <T extends Item>(
   itemType: ItemType,
   search: SearchParams,
   ...extractors: Extractor[]
-): [items: T[], totalItems: number, nav: PartialNavigation] => {
+): [
+  initialized: boolean,
+  items: T[],
+  totalItems: number,
+  nav: PartialNavigation
+] => {
   const startUrl = itemPath(itemType, { api: true });
-  const oldSearch = useRef<SearchParams>(search);
+  const oldSearch = useRef<SearchParams>();
   const searchTimeout = useRef<undefined | NodeJS.Timeout>();
+  const [initialized, setInitialized] = useState<boolean>(search.length === 0);
   const [items, setItems] = useState<T[]>([]);
   const [view, setView] = useState<undefined | IPartialCollectionView>();
   const [template, setTemplate] = useState<undefined | ITemplatedLink>();
@@ -64,32 +70,38 @@ export const usePartialCollection = <T extends Item>(
     [extractItem]
   );
 
-  useEffect(() => {
-    if (!view) {
-      fetch(startUrl);
-    }
-  }, [fetch, search, startUrl, view]);
+  // useEffect(() => {
+  //   if (!view) {
+  //     fetch(startUrl);
+  //   }
+  // }, [fetch, search, startUrl, view]);
 
   useEffect(() => {
-    if (!view || !template || search === oldSearch.current) {
+    if (!view || !template) {
+      fetch(startUrl);
+      return;
+    }
+    if (search === oldSearch.current) {
       return;
     }
     oldSearch.current = search;
     if (searchTimeout.current) {
       clearTimeout(searchTimeout.current);
     }
-    searchTimeout.current = setTimeout(() => {
+    searchTimeout.current = setTimeout(async () => {
       const finalTarget = template.expandTarget((p) => {
         for (const param of search || []) {
           p.withProperty(param[0]).havingValueOf(param[1]);
         }
         return p;
       });
-      fetch(finalTarget);
+      await fetch(finalTarget);
+      setInitialized(true);
     }, SEARCH_TIMEOUT);
-  }, [fetch, search, template, view]);
+  }, [fetch, search, startUrl, template, view]);
 
   return [
+    initialized,
     items,
     totalItems,
     {

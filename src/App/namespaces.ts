@@ -16,6 +16,7 @@ export const core = {
 };
 
 export const doc = {
+  personOrderByVariable: `${docBase}personOrderByVariable`,
   textVariable: `${docBase}textVariable`,
 };
 
