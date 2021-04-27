@@ -6,10 +6,15 @@ import { buildPath } from "App/utils/buildPath";
 import { extractItem } from "App/utils/extractItem";
 import { useEffect, useState } from "react";
 
-export const useProfile = () => {
+export const useProfile = (): [
+  profile: undefined | Profile,
+  loading: boolean
+] => {
   const { keycloak } = useKeycloak();
+  const [loading, setLoading] = useState<boolean>(true);
   const [profile, setProfile] = useState<undefined | Profile>();
   useEffect(() => {
+    setLoading(true);
     HYDRA_CLIENT.getResource(buildPath(API_ENTRYPOINT, "user"))
       .then(async (data) => {
         const item = (await extractItem(data)) as any;
@@ -26,7 +31,10 @@ export const useProfile = () => {
         } else {
           console.log(e);
         }
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, [keycloak]);
-  return profile;
+  return [profile, loading];
 };

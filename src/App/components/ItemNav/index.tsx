@@ -1,19 +1,39 @@
+import {
+  faBackward,
+  faForward,
+  faStepBackward,
+  faStepForward,
+} from "@fortawesome/free-solid-svg-icons";
 import { PartialNavigation } from "App/types";
-import { Button } from "../Button";
+import { IconButton } from "../IconButton";
 
-export const ItemNav = ({ nav }: { nav: PartialNavigation }) => (
-  <div className="space-x-2">
-    <Button disabled={!nav.first} onClick={nav.first}>
-      first
-    </Button>
-    <Button disabled={!nav.previous} onClick={nav.previous}>
-      previous
-    </Button>
-    <Button disabled={!nav.next} onClick={nav.next}>
-      next
-    </Button>
-    <Button disabled={!nav.last} onClick={nav.last}>
-      last
-    </Button>
+export const ItemNav = ({
+  disabled,
+  nav,
+}: {
+  disabled: boolean;
+  nav: PartialNavigation;
+}) => (
+  <div className="space-x-2 text-blue-500 text-xs">
+    <IconButton
+      disabled={disabled || !nav.first}
+      onClick={nav.first}
+      icon={faStepBackward}
+    />
+    <IconButton
+      disabled={disabled || !nav.previous}
+      onClick={nav.previous}
+      icon={faBackward}
+    />
+    <IconButton
+      disabled={disabled || !nav.next}
+      onClick={nav.next}
+      icon={faForward}
+    />
+    <IconButton
+      disabled={disabled || !nav.last}
+      onClick={nav.last}
+      icon={faStepForward}
+    />
   </div>
 );

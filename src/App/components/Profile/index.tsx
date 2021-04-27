@@ -3,7 +3,7 @@ import { FormattedMessage } from "react-intl";
 import { Heading } from "../Heading";
 
 export const Profile = () => {
-  const profile = useProfile();
+  const [profile] = useProfile();
   return (
     <div>
       <Heading>

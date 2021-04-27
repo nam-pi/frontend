@@ -19,6 +19,7 @@ export const usePartialCollection = <T extends Item>(
   ...extractors: Extractor[]
 ): [
   initialized: boolean,
+  loading: boolean,
   items: T[],
   totalItems: number,
   nav: PartialNavigation
@@ -27,6 +28,7 @@ export const usePartialCollection = <T extends Item>(
   const oldSearch = useRef<SearchParams>();
   const searchTimeout = useRef<undefined | NodeJS.Timeout>();
   const [initialized, setInitialized] = useState<boolean>(search.length === 0);
+  const [loading, setLoading] = useState<boolean>(false);
   const [items, setItems] = useState<T[]>([]);
   const [view, setView] = useState<undefined | IPartialCollectionView>();
   const [template, setTemplate] = useState<undefined | ITemplatedLink>();
@@ -54,6 +56,7 @@ export const usePartialCollection = <T extends Item>(
 
   const fetch = useCallback(
     async (target: string | IResource) => {
+      setLoading(true);
       const response = await HYDRA_CLIENT.getResource(target);
       const collection = response.collections.first();
       setView(collection.view);
@@ -66,15 +69,10 @@ export const usePartialCollection = <T extends Item>(
       }
       setItems(items);
       setTotalItems(collection.totalItems);
+      setLoading(false);
     },
     [extractItem]
   );
-
-  // useEffect(() => {
-  //   if (!view) {
-  //     fetch(startUrl);
-  //   }
-  // }, [fetch, search, startUrl, view]);
 
   useEffect(() => {
     if (!view || !template) {
@@ -102,6 +100,7 @@ export const usePartialCollection = <T extends Item>(
 
   return [
     initialized,
+    loading,
     items,
     totalItems,
     {

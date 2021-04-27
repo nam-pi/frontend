@@ -1,3 +1,4 @@
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { ItemType } from "App/enums/ItemType";
 import { event } from "App/extractors/event";
 import { usePartialCollection } from "App/hooks/usePartialCollection";
@@ -7,6 +8,7 @@ import { useMemo, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { useParams } from "react-router";
 import { Heading } from "../Heading";
+import { Icon } from "../Icon";
 import { Input } from "../Input";
 import { ItemListItem } from "../ItemListItem";
 import { ItemNav } from "../ItemNav";
@@ -27,7 +29,13 @@ export const Persons = () => {
     }
     return params;
   }, [text]);
-  const [initialized, persons, totalItems, nav] = usePartialCollection<Person>(
+  const [
+    initialized,
+    loading,
+    persons,
+    totalItems,
+    nav,
+  ] = usePartialCollection<Person>(
     ItemType.Person,
     searchParams,
     event("birth", core.isBornIn),
@@ -51,10 +59,7 @@ export const Persons = () => {
           )}
         </Heading>
         <div className="my-4">
-          <FormattedMessage
-            description="Filter label"
-            defaultMessage="Filter"
-          />
+          <Icon icon={faSearch} />
           <Input
             className="ml-2"
             value={text}
@@ -93,9 +98,9 @@ export const Persons = () => {
               })}
           </ul>
         ) : (
-          <LoadingPlaceholder />
+          <LoadingPlaceholder className="mb-4" />
         )}
-        <ItemNav nav={nav} />
+        <ItemNav disabled={!initialized || loading} nav={nav} />
       </div>
       <div className="mt-4">
         {localId ? (
