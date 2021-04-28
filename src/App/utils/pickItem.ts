@@ -6,6 +6,7 @@ export const pickItem = <T extends JsonLdItem>(
   items: T[]
 ): T => {
   const item = items.find((i) => i["@id"] === resource.iri);
+  console.log(items);
   if (!item) {
     throw Error(`Failed to pick item '${resource.iri}' from item array.`);
   }

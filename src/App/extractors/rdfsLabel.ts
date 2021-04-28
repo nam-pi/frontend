@@ -1,12 +1,8 @@
 import { rdfs } from "@hydra-cg/heracles.ts";
-import { Extractor } from "App/types";
+import { Extractor, Label } from "App/types";
+import { label as labelMapper } from "../mappers/label";
 
-export const rdfsLabel: Extractor<string> = [
+export const rdfsLabel: Extractor<Label[]> = [
   "label",
-  (data) => {
-    return (data[rdfs.label] || []).map((l: any) => ({
-      value: l["@value"],
-      language: l["@language"],
-    }));
-  },
+  (data) => labelMapper(data[rdfs.label] || []),
 ];

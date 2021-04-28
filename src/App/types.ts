@@ -13,8 +13,8 @@ export interface EventDate {
 }
 
 export interface Event {
-  "@id": string;
-  "@type": string[];
+  id: string;
+  type: string[];
   date: EventDate;
 }
 
