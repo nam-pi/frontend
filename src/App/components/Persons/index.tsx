@@ -1,38 +1,63 @@
-import { API_ENTRYPOINT } from "App/constants";
-import { usePartialCollection } from "App/hooks/usePartialCollection";
-import { Person, SearchParams } from "App/types";
-import { useMemo, useState } from "react";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { usePersons } from "nampi-use-api";
+import React, { useState } from "react";
+import { FormattedMessage } from "react-intl";
+import { Link } from "react-router-dom";
+import { serializeEventDates } from "../../utils/serializeEventDates";
+import { serializeLabels } from "../../utils/serializeLabels";
+import { Heading } from "../Heading";
+import { Icon } from "../Icon";
+import { Input } from "../Input";
 import { ItemNav } from "../ItemNav";
-import { PersonListItem } from "../PersonListItem";
-
-const BASE_URI = `${API_ENTRYPOINT}/persons`;
+import { LoadingPlaceholder } from "../LoadingPlaceholder";
 
 export const Persons = () => {
   const [text, setText] = useState<string>("");
-  const searchParams = useMemo<SearchParams>(() => {
-    const params: SearchParams = [];
-    if (text) {
-      params.push(["http://localhost:4000/vocab#textVariable", text]);
-    }
-    return params;
-  }, [text]);
-  const [persons, totalItems, nav] = usePartialCollection<Person>(
-    BASE_URI,
-    searchParams
-  );
+  const { initialized, loading, data, nav, total } = usePersons({
+    query: { orderBy: "label", text },
+  });
   return (
     <div>
-      <h1>Persons ({totalItems})</h1>
-      <div>
-        Filter:{" "}
-        <input value={text} onChange={(e) => setText(e.target.value)}></input>
+      <Heading>
+        {total === undefined ? (
+          <FormattedMessage
+            description="Persons page heading without totals"
+            defaultMessage="Persons"
+          />
+        ) : (
+          <FormattedMessage
+            description="Persons page heading with totals"
+            defaultMessage="Persons ({total})"
+            values={{ total }}
+          />
+        )}
+      </Heading>
+      <div className="my-4">
+        <Icon icon={faSearch} />
+        <Input
+          className="ml-2"
+          value={text}
+          onChange={(e) => setText(e.currentTarget.value)}
+        ></Input>
       </div>
-      <ul>
-        {persons.map((person) => (
-          <PersonListItem key={person.id} {...person} />
-        ))}
-      </ul>
-      <ItemNav nav={nav} />
+      <ItemNav className="my-4" disabled={!initialized || loading} nav={nav} />
+      {!initialized || !data ? (
+        <LoadingPlaceholder />
+      ) : (
+        <ul>
+          {data.map((person) => {
+            const label = serializeLabels(person);
+            const born = serializeEventDates(person.bornIn, "Y");
+            return (
+              <li key={person.idLocal}>
+                <Link to={"person/" + person.idLocal} className="text-gray-800">
+                  {label + (born ? ` (${born})` : "")}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      )}
     </div>
   );
 };
