@@ -1,4 +1,4 @@
-import { useKeycloak } from "@react-keycloak/web";
+import { useAuth } from "nampi-use-api";
 import { Redirect, Route, RouteComponentProps, RouteProps } from "react-router";
 
 interface PrivateRouteParams extends RouteProps {
@@ -11,12 +11,12 @@ export const PrivateRoute = ({
   component: Component,
   ...rest
 }: PrivateRouteParams) => {
-  const { keycloak } = useKeycloak();
+  const { authenticated } = useAuth();
   return (
     <Route
       {...rest}
       render={(props) =>
-        keycloak?.authenticated ? (
+        authenticated ? (
           <Component {...props} />
         ) : (
           <Redirect

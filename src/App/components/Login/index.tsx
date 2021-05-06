@@ -1,4 +1,4 @@
-import { useKeycloak } from "@react-keycloak/web";
+import { useAuth } from "nampi-use-api";
 import { useEffect } from "react";
 import { useHistory, useLocation } from "react-router";
 
@@ -8,17 +8,17 @@ export const Login = () => {
   const redirectUri =
     location?.state?.from ||
     window.location.protocol + "//" + window.location.host;
-  const { initialized, keycloak } = useKeycloak();
+  const { authenticated, initialized, login } = useAuth();
 
   useEffect(() => {
     if (initialized) {
-      if (keycloak.authenticated) {
+      if (authenticated) {
         history.push("/");
       } else {
-        keycloak.login({ redirectUri });
+        login({ redirectUri });
       }
     }
-  }, [history, initialized, keycloak, redirectUri]);
+  }, [authenticated, history, initialized, login, redirectUri]);
 
   return <></>;
 };

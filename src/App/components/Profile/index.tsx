@@ -1,18 +1,23 @@
-import { useProfile } from "App/hooks/useProfile";
+import { useUser } from "nampi-use-api";
 import { FormattedMessage } from "react-intl";
 import { Heading } from "../Heading";
+import { LoadingPlaceholder } from "../LoadingPlaceholder";
 
 export const Profile = () => {
-  const [profile] = useProfile();
+  const { initialized, loading, data } = useUser();
   return (
     <div>
       <Heading>
         <FormattedMessage
-          description="Profile page heading"
+          description="Profile page label"
           defaultMessage="Profile"
         />
       </Heading>
-      <p>{JSON.stringify(profile)}</p>
+      {!initialized || loading ? (
+        <LoadingPlaceholder />
+      ) : (
+        <p>{JSON.stringify(data)}</p>
+      )}
     </div>
   );
 };

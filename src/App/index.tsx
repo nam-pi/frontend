@@ -1,19 +1,18 @@
-import { ReactKeycloakProvider, useKeycloak } from "@react-keycloak/web";
-import { Route, Router, Switch } from "react-router-dom";
+import { useAuth } from "nampi-use-api";
+import { Route, Router, Switch } from "react-router";
 import { Home } from "./components/Home";
 import { LoadingPlaceholder } from "./components/LoadingPlaceholder";
 import { Login } from "./components/Login";
 import { Navbar } from "./components/Navbar";
 import { NoMatch } from "./components/NoMatch";
+import { Person } from "./components/Person";
 import { Persons } from "./components/Persons";
 import { PrivateRoute } from "./components/PrivateRoute";
 import { Profile } from "./components/Profile";
-import { HISTORY, KEYCLOAK_CLIENT } from "./constants";
+import { HISTORY } from "./constants";
 
-const PERSON_PATHS = ["/persons", "/person/:localId"];
-
-const Routes = () => {
-  const { initialized } = useKeycloak();
+export const App = () => {
+  const { initialized } = useAuth();
   return initialized ? (
     <Router history={HISTORY}>
       <div className="text-gray-800">
@@ -22,7 +21,8 @@ const Routes = () => {
           <Switch>
             <Route exact path="/" component={Home} />
             <Route exact path="/login" component={Login} />
-            <Route exact path={PERSON_PATHS} component={Persons} />
+            <Route exact path="/persons" component={Persons} />
+            <Route exact path="/person/:idLocal" component={Person} />
             <PrivateRoute exact path="/profile" component={Profile} />
             <Route path="*" component={NoMatch} />
           </Switch>
@@ -30,17 +30,6 @@ const Routes = () => {
       </div>
     </Router>
   ) : (
-    <LoadingPlaceholder delay />
-  );
-};
-
-export const App = () => {
-  return (
-    <ReactKeycloakProvider
-      authClient={KEYCLOAK_CLIENT}
-      initOptions={{ checkLoginIframe: false }}
-    >
-      <Routes />
-    </ReactKeycloakProvider>
+    <LoadingPlaceholder delay={1000} />
   );
 };

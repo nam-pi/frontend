@@ -4,35 +4,41 @@ import {
   faStepBackward,
   faStepForward,
 } from "@fortawesome/free-solid-svg-icons";
-import { PartialNavigation } from "App/types";
+import clsx from "clsx";
+import { CollectionNav } from "nampi-use-api";
 import { IconButton } from "../IconButton";
 
 export const ItemNav = ({
+  className,
   disabled,
   nav,
 }: {
+  className?: string;
   disabled: boolean;
-  nav: PartialNavigation;
+  nav?: CollectionNav;
 }) => (
-  <div className="space-x-2 text-xs">
+  <div className={clsx("space-x-2 text-xs", className)}>
     <IconButton
-      disabled={disabled || !nav.first}
-      onClick={nav.first}
+      disabled={disabled || !nav?.first}
+      onClick={nav?.first}
       icon={faStepBackward}
     />
     <IconButton
-      disabled={disabled || !nav.previous}
-      onClick={nav.previous}
+      disabled={disabled || !nav?.previous}
+      onClick={nav?.previous}
       icon={faBackward}
     />
+    <span className="w-3 inline-block text-center">
+      {nav?.page !== undefined ? nav?.page : ""}
+    </span>
     <IconButton
-      disabled={disabled || !nav.next}
-      onClick={nav.next}
+      disabled={disabled || !nav?.next}
+      onClick={nav?.next}
       icon={faForward}
     />
     <IconButton
-      disabled={disabled || !nav.last}
-      onClick={nav.last}
+      disabled={disabled || !nav?.last}
+      onClick={nav?.last}
       icon={faStepForward}
     />
   </div>

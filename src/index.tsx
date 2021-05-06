@@ -1,16 +1,36 @@
-import { App } from "App";
 import { TranslationProvider } from "I18n/TranslationContext";
-import { StrictMode } from "react";
-import { render } from "react-dom";
+import { NampiProvider } from "nampi-use-api";
+import React from "react";
+import ReactDOM from "react-dom";
 import "tailwindcss/tailwind.css";
+import { App } from "./App";
 import reportWebVitals from "./reportWebVitals";
 
-render(
-  <StrictMode>
+const api = process.env.REACT_APP_API;
+const auth = process.env.REACT_APP_AUTH;
+const client = process.env.REACT_APP_CLIENT;
+const realm = process.env.REACT_APP_REALM;
+
+if (!api || !auth || !client || !realm) {
+  throw new Error("Invalid environment");
+}
+
+ReactDOM.render(
+  <React.StrictMode>
     <TranslationProvider>
-      <App />
+      <NampiProvider
+        api={api}
+        auth={auth}
+        client={client}
+        realm={realm}
+        searchTimeout={200}
+        silentSsoUri={window.location.origin + "/silent-check-sso.html"}
+        sso={true}
+      >
+        <App />
+      </NampiProvider>
     </TranslationProvider>
-  </StrictMode>,
+  </React.StrictMode>,
   document.getElementById("root")
 );
 
