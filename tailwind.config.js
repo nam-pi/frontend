@@ -8,7 +8,7 @@ module.exports = {
     extend: {
       opacity: ["disabled"],
     },
-    textColor: ["visited"],
+    textColor: ["visited", "hover"],
   },
   plugins: [require("@tailwindcss/forms")],
 };
