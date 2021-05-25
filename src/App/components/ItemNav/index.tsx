@@ -12,10 +12,12 @@ export const ItemNav = ({
   className,
   disabled,
   nav,
+  page,
 }: {
   className?: string;
   disabled: boolean;
-  nav?: CollectionNav;
+  nav: undefined | CollectionNav;
+  page: undefined | number;
 }) => (
   <div className={clsx("space-x-2 text-xs", className)}>
     <IconButton
@@ -28,9 +30,7 @@ export const ItemNav = ({
       onClick={nav?.previous}
       icon={faBackward}
     />
-    <span className="w-3 inline-block text-center">
-      {nav?.page !== undefined ? nav?.page : ""}
-    </span>
+    <span className="w-3 inline-block text-center">{page || ""}</span>
     <IconButton
       disabled={disabled || !nav?.next}
       onClick={nav?.next}

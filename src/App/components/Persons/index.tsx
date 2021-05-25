@@ -13,7 +13,7 @@ import { LoadingPlaceholder } from "../LoadingPlaceholder";
 
 export const Persons = () => {
   const [text, setText] = useState<string>("");
-  const { initialized, loading, data, nav, total } = usePersons({
+  const { initialized, loading, data, nav, total, page } = usePersons({
     query: { orderBy: "label", text },
   });
   return (
@@ -40,7 +40,12 @@ export const Persons = () => {
           onChange={(e) => setText(e.currentTarget.value)}
         ></Input>
       </div>
-      <ItemNav className="my-4" disabled={!initialized || loading} nav={nav} />
+      <ItemNav
+        className="my-4"
+        disabled={!initialized || loading}
+        nav={nav}
+        page={page}
+      />
       {!initialized || !data ? (
         <LoadingPlaceholder />
       ) : (
