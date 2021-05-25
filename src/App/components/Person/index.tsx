@@ -1,8 +1,8 @@
+import { useLocaleLiteral } from "App/hooks/useLocaleLiteral";
 import { useEvents, usePerson } from "nampi-use-api";
 import { FormattedMessage } from "react-intl";
 import { useParams } from "react-router";
 import { serializeEventDates } from "../../utils/serializeEventDates";
-import { serializeLabels } from "../../utils/serializeLabels";
 import { Heading } from "../Heading";
 
 interface Params {
@@ -10,6 +10,7 @@ interface Params {
 }
 
 export const Person = () => {
+  const getText = useLocaleLiteral();
   const { idLocal } = useParams<Params>();
   const { data } = usePerson({ idLocal });
   const events = useEvents({
@@ -22,13 +23,13 @@ export const Person = () => {
         <FormattedMessage
           description="Person heading"
           defaultMessage="Person: {label}"
-          values={{ label: serializeLabels(data) }}
+          values={{ label: getText(data.labels) }}
         />
       </Heading>
       <div>
         {events.data?.map((e) => {
           const dateText = serializeEventDates([e]);
-          const labelsText = serializeLabels(e);
+          const labelsText = getText(e.labels);
           return (
             <div key={e.idLocal}>
               {dateText ? `${dateText}: ` : ""}

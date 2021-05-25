@@ -1,10 +1,10 @@
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { useLocaleLiteral } from "App/hooks/useLocaleLiteral";
 import { usePersons } from "nampi-use-api";
-import React, { useState } from "react";
+import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { Link } from "react-router-dom";
 import { serializeEventDates } from "../../utils/serializeEventDates";
-import { serializeLabels } from "../../utils/serializeLabels";
 import { Heading } from "../Heading";
 import { Icon } from "../Icon";
 import { Input } from "../Input";
@@ -12,6 +12,7 @@ import { ItemNav } from "../ItemNav";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
 
 export const Persons = () => {
+  const getText = useLocaleLiteral();
   const [text, setText] = useState<string>("");
   const { initialized, loading, data, nav, total, page } = usePersons({
     query: { orderBy: "label", text },
@@ -51,7 +52,7 @@ export const Persons = () => {
       ) : (
         <ul>
           {data.map((person) => {
-            const label = serializeLabels(person);
+            const label = getText(person.labels);
             const born = serializeEventDates(person.bornIn, "Y");
             return (
               <li key={person.idLocal}>

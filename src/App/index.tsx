@@ -17,7 +17,7 @@ export const App = () => {
     <Router history={HISTORY}>
       <div className="text-gray-800">
         <Navbar />
-        <div className="m-3">
+        <div className="max-w-7xl mx-auto px-2 mt-4 sm:px-6 lg:px-8">
           <Switch>
             <Route exact path="/" component={Home} />
             <Route exact path="/login" component={Login} />
