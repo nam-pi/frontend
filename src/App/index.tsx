@@ -2,6 +2,7 @@ import { useAuth } from "nampi-use-api";
 import { Route, Router, Switch } from "react-router";
 import { ActsPage } from "./components/ActsPage";
 import { AspectsPage } from "./components/AspectsPage";
+import { AuthorsPage } from "./components/AuthorsPage";
 import { Home } from "./components/Home";
 import { LoadingPlaceholder } from "./components/LoadingPlaceholder";
 import { Login } from "./components/Login";
@@ -30,6 +31,11 @@ export const App = () => {
               exact
               path={["/aspects", "/aspect/:idLocal"]}
               component={AspectsPage}
+            />
+            <Route
+              exact
+              path={["/authors", "/author/:idLocal"]}
+              component={AuthorsPage}
             />
             <Route
               exact
