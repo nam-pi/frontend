@@ -40,6 +40,12 @@ const Links = () => (
         defaultMessage="Events"
       />
     </Link>
+    <Link to="/groups" className="hover:opacity-80">
+      <FormattedMessage
+        description="Groups menu link label"
+        defaultMessage="Groups"
+      />
+    </Link>
     <Link to="/persons" className="hover:opacity-80">
       <FormattedMessage
         description="Persons menu link label"

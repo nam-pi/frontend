@@ -4,6 +4,7 @@ import { ActsPage } from "./components/ActsPage";
 import { AspectsPage } from "./components/AspectsPage";
 import { AuthorsPage } from "./components/AuthorsPage";
 import { EventsPage } from "./components/EventsPage";
+import { GroupsPage } from "./components/GroupsPage";
 import { Home } from "./components/Home";
 import { LoadingPlaceholder } from "./components/LoadingPlaceholder";
 import { Login } from "./components/Login";
@@ -42,6 +43,11 @@ export const App = () => {
               exact
               path={["/events", "/event/:idLocal"]}
               component={EventsPage}
+            />
+            <Route
+              exact
+              path={["/groups", "/group/:idLocal"]}
+              component={GroupsPage}
             />
             <Route
               exact
