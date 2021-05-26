@@ -22,6 +22,12 @@ const Links = () => (
         defaultMessage="Acts"
       />
     </Link>
+    <Link to="/aspects" className="hover:opacity-80">
+      <FormattedMessage
+        description="Aspects menu link label"
+        defaultMessage="Aspects"
+      />
+    </Link>
     <Link to="/persons" className="hover:opacity-80">
       <FormattedMessage
         description="Persons menu link label"
