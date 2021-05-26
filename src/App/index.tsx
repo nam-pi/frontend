@@ -3,6 +3,7 @@ import { Route, Router, Switch } from "react-router";
 import { ActsPage } from "./components/ActsPage";
 import { AspectsPage } from "./components/AspectsPage";
 import { AuthorsPage } from "./components/AuthorsPage";
+import { EventsPage } from "./components/EventsPage";
 import { Home } from "./components/Home";
 import { LoadingPlaceholder } from "./components/LoadingPlaceholder";
 import { Login } from "./components/Login";
@@ -36,6 +37,11 @@ export const App = () => {
               exact
               path={["/authors", "/author/:idLocal"]}
               component={AuthorsPage}
+            />
+            <Route
+              exact
+              path={["/events", "/event/:idLocal"]}
+              component={EventsPage}
             />
             <Route
               exact
