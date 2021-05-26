@@ -14,6 +14,7 @@ import { PersonsPage } from "./components/PersonsPage";
 import { PlacesPage } from "./components/PlacesPage";
 import { PrivateRoute } from "./components/PrivateRoute";
 import { Profile } from "./components/Profile";
+import { SourcesPage } from "./components/SourcesPage";
 import { HISTORY } from "./constants";
 
 export const App = () => {
@@ -59,6 +60,11 @@ export const App = () => {
               exact
               path={["/places", "/place/:idLocal"]}
               component={PlacesPage}
+            />
+            <Route
+              exact
+              path={["/sources", "/source/:idLocal"]}
+              component={SourcesPage}
             />
             <Route exact path="/login" component={Login} />
             <PrivateRoute exact path="/profile" component={Profile} />

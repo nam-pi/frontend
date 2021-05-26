@@ -58,6 +58,12 @@ const Links = () => (
         defaultMessage="Places"
       />
     </Link>
+    <Link to="/sources" className="hover:opacity-80">
+      <FormattedMessage
+        description="Sources menu link label"
+        defaultMessage="Sources"
+      />
+    </Link>
   </>
 );
 
