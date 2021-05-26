@@ -10,6 +10,8 @@ export const SidebarPage = ({ main, sidebar }: Props) => (
     <aside className="flex flex-col sm:w-64 lg:w-80 px-4 py-2 mb-2 sm:mb-0 sm:shadow-lg rounded-lg border-2 border-primary-500">
       {sidebar}
     </aside>
-    <main className="w-auto mb-4 sm:mb-0 sm:ml-6">{main}</main>
+    <main className="mb-4 flex flex-col flex-1 sm:mb-0 sm:ml-6 sm:h-full">
+      {main}
+    </main>
   </div>
 );

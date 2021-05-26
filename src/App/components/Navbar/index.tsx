@@ -16,6 +16,12 @@ interface Props {
 
 const Links = () => (
   <>
+    <Link to="/acts" className="hover:opacity-80">
+      <FormattedMessage
+        description="Acts menu link label"
+        defaultMessage="Acts"
+      />
+    </Link>
     <Link to="/persons" className="hover:opacity-80">
       <FormattedMessage
         description="Persons menu link label"
@@ -49,7 +55,7 @@ export const Navbar = ({ className }: Props) => {
             <NampiLogo className="h-10 bg-white p-1 rounded" />
             <span className="ml-2 hidden lg:block text-white">Nampi</span>
           </Link>
-          <div className="hidden sm:block sm:ml-6">
+          <div className="hidden sm:block sm:ml-6 space-x-2">
             <Links />
           </div>
           <div className="sm:absolute right-0">
@@ -104,7 +110,7 @@ export const Navbar = ({ className }: Props) => {
       </div>
       {mobileMenu ? (
         <div className="sm:hidden" id="mobile-menu">
-          <div className="px-2 pt-2 pb-3 space-y-1">
+          <div className="px-2 pb-3 flex flex-col">
             <Links />
           </div>
         </div>

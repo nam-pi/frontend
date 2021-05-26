@@ -1,5 +1,6 @@
 import { useAuth } from "nampi-use-api";
 import { Route, Router, Switch } from "react-router";
+import { ActsPage } from "./components/ActsPage";
 import { Home } from "./components/Home";
 import { LoadingPlaceholder } from "./components/LoadingPlaceholder";
 import { Login } from "./components/Login";
@@ -19,12 +20,17 @@ export const App = () => {
         <div className="max-w-7xl mx-auto px-2 my-4 w-full sm:overflow-hidden sm:px-6 lg:px-8">
           <Switch>
             <Route exact path="/" component={Home} />
-            <Route exact path="/login" component={Login} />
+            <Route
+              exact
+              path={["/acts", "/act/:idLocal"]}
+              component={ActsPage}
+            />
             <Route
               exact
               path={["/persons", "/person/:idLocal"]}
               component={PersonsPage}
             />
+            <Route exact path="/login" component={Login} />
             <PrivateRoute exact path="/profile" component={Profile} />
             <Route path="*" component={NoMatch} />
           </Switch>
