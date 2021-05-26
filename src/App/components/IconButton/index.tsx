@@ -7,8 +7,11 @@ import { Button, Props as ButtonProps } from "../Button";
 type IconProps = Omit<FontAwesomeIconProps, keyof ButtonProps | "fixedWidth">;
 type UnifiedProps = ButtonProps & IconProps;
 
-interface Props extends Omit<UnifiedProps, "children"> {}
+interface PureProps extends Omit<UnifiedProps, "children"> {}
 
+interface Props extends PureProps {
+  label: string;
+}
 type FaKeys = Array<keyof IconProps>;
 
 const iconKeys: FaKeys = [
@@ -29,7 +32,7 @@ const iconKeys: FaKeys = [
 ];
 
 const separate = (
-  props: Props
+  props: PureProps
 ): [buttonProps: ButtonProps, iconProps: IconProps] => {
   const buttonProps = {} as ButtonProps;
   const iconProps = {} as IconProps;
@@ -45,10 +48,11 @@ const separate = (
   return [buttonProps, iconProps];
 };
 
-export const IconButton = (props: Props) => {
+export const IconButton = ({ label, ...props }: Props) => {
   const [buttonProps, iconProps] = separate(props);
   return (
     <Button {...buttonProps} className={clsx("px-1", buttonProps.className)}>
+      <span className="sr-only">{label}</span>
       <FontAwesomeIcon {...iconProps} fixedWidth />
     </Button>
   );

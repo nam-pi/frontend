@@ -1,70 +1,158 @@
+import { faBars, faUser } from "@fortawesome/free-solid-svg-icons";
 import { Menu } from "@headlessui/react";
+import { useToggle } from "App/hooks/useToggle";
+import clsx from "clsx";
 import { useAuth, useUser } from "nampi-use-api";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 import { Link } from "react-router-dom";
+import { Icon } from "../Icon";
+import { IconButton } from "../IconButton";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
 import { NampiLogo } from "../NampiLogo";
 
-export const Navbar = () => {
+interface Props {
+  className?: string;
+}
+
+const Links = () => (
+  <>
+    <Link to="/acts" className="hover:opacity-80">
+      <FormattedMessage
+        description="Acts menu link label"
+        defaultMessage="Acts"
+      />
+    </Link>
+    <Link to="/aspects" className="hover:opacity-80">
+      <FormattedMessage
+        description="Aspects menu link label"
+        defaultMessage="Aspects"
+      />
+    </Link>
+    <Link to="/authors" className="hover:opacity-80">
+      <FormattedMessage
+        description="Authors menu link label"
+        defaultMessage="Authors"
+      />
+    </Link>
+    <Link to="/events" className="hover:opacity-80">
+      <FormattedMessage
+        description="Events menu link label"
+        defaultMessage="Events"
+      />
+    </Link>
+    <Link to="/groups" className="hover:opacity-80">
+      <FormattedMessage
+        description="Groups menu link label"
+        defaultMessage="Groups"
+      />
+    </Link>
+    <Link to="/persons" className="hover:opacity-80">
+      <FormattedMessage
+        description="Persons menu link label"
+        defaultMessage="Persons"
+      />
+    </Link>
+    <Link to="/places" className="hover:opacity-80">
+      <FormattedMessage
+        description="Places menu link label"
+        defaultMessage="Places"
+      />
+    </Link>
+    <Link to="/sources" className="hover:opacity-80">
+      <FormattedMessage
+        description="Sources menu link label"
+        defaultMessage="Sources"
+      />
+    </Link>
+  </>
+);
+
+export const Navbar = ({ className }: Props) => {
+  const { formatMessage } = useIntl();
   const { authenticated, logout } = useAuth();
   const { initialized, loading, data } = useUser();
+  const [mobileMenu, toggleMobileMenu] = useToggle();
   return (
-    <nav className="relative flex items-center justify-between flex-wrap  bg-gray-400 p-3 text-white">
-      <div className="space-x-3 text-white flex items-center">
-        <Link to="/" className="font-semibold text-2xl">
-          <NampiLogo className="h-10 bg-white p-1 rounded" />
-        </Link>
-        <Link to="/persons">
-          <FormattedMessage
-            description="The persons link label"
-            defaultMessage="Persons"
+    <nav className={clsx("bg-gray-400 text-white", className)}>
+      <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+        <div className="relative flex flex-1 items-center justify-between h-16 sm:justify-start">
+          <IconButton
+            className="sm:hidden rounded shadow-none border-2 border-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+            aria-controls="mobile-menu"
+            aria-expanded="false"
+            icon={faBars}
+            label={formatMessage({
+              description: "Mobile toggle button label",
+              defaultMessage: "Open main menu",
+            })}
+            onClick={toggleMobileMenu}
           />
-        </Link>
+          <Link to="/" className="font-semibold text-2xl flex items-center">
+            <NampiLogo className="h-10 bg-white p-1 rounded" />
+            <span className="ml-2 hidden lg:block text-white">Nampi</span>
+          </Link>
+          <div className="hidden sm:block sm:ml-6 space-x-2">
+            <Links />
+          </div>
+          <div className="sm:absolute right-0">
+            {initialized && !loading ? (
+              authenticated && data ? (
+                <Menu as="div" className="relative text-gray-800">
+                  <Menu.Button className="px-3 py-2 rounded-full border-2 border-white text-white hover:opacity-80 text-sm">
+                    <Icon icon={faUser} />
+                  </Menu.Button>
+                  <Menu.Items className="absolute min-w-max mt-1 right-0 bg-white shadow-lg rounded flex flex-col p-2">
+                    <Menu.Item>
+                      {({ active }) => (
+                        <Link to="/profile">
+                          <FormattedMessage
+                            description="User profile link text"
+                            defaultMessage="Profile"
+                          />
+                        </Link>
+                      )}
+                    </Menu.Item>
+                    <Menu.Item>
+                      {({ active }) => (
+                        <button type="button" onClick={() => logout()}>
+                          <FormattedMessage
+                            description="Logout button label"
+                            defaultMessage="Log out"
+                          />
+                        </button>
+                      )}
+                    </Menu.Item>
+                  </Menu.Items>
+                </Menu>
+              ) : (
+                <Link
+                  className="hover:opacity-80"
+                  to={{
+                    pathname: "/login",
+                    state: { from: window.location.href },
+                  }}
+                >
+                  <FormattedMessage
+                    description="Login link text"
+                    defaultMessage="Log in"
+                  />
+                </Link>
+              )
+            ) : (
+              <LoadingPlaceholder />
+            )}
+          </div>
+        </div>
       </div>
-      <div>
-        {initialized && !loading ? (
-          authenticated && data ? (
-            <Menu as="div" className="relative text-gray-800">
-              <Menu.Button className="px-4 py-2 rounded bg-white text-sm">
-                {data.username}
-              </Menu.Button>
-              <Menu.Items className="absolute min-w-max mt-1 right-0 bg-white shadow-lg rounded flex flex-col p-2">
-                <Menu.Item>
-                  {({ active }) => (
-                    <Link to="/profile">
-                      <FormattedMessage
-                        description="The profile link label"
-                        defaultMessage="Profile"
-                      />
-                    </Link>
-                  )}
-                </Menu.Item>
-                <Menu.Item>
-                  {({ active }) => (
-                    <button type="button" onClick={() => logout()}>
-                      <FormattedMessage
-                        description="The logout button label"
-                        defaultMessage="Logout"
-                      />
-                    </button>
-                  )}
-                </Menu.Item>
-              </Menu.Items>
-            </Menu>
-          ) : (
-            <Link
-              to={{ pathname: "/login", state: { from: window.location.href } }}
-            >
-              <FormattedMessage
-                description="The login link label"
-                defaultMessage="Login"
-              />
-            </Link>
-          )
-        ) : (
-          <LoadingPlaceholder />
-        )}
-      </div>
+      {mobileMenu ? (
+        <div className="sm:hidden" id="mobile-menu">
+          <div className="px-2 pb-3 flex flex-col">
+            <Links />
+          </div>
+        </div>
+      ) : (
+        <></>
+      )}
     </nav>
   );
 };
