@@ -11,6 +11,7 @@ import { Login } from "./components/Login";
 import { Navbar } from "./components/Navbar";
 import { NoMatch } from "./components/NoMatch";
 import { PersonsPage } from "./components/PersonsPage";
+import { PlacesPage } from "./components/PlacesPage";
 import { PrivateRoute } from "./components/PrivateRoute";
 import { Profile } from "./components/Profile";
 import { HISTORY } from "./constants";
@@ -53,6 +54,11 @@ export const App = () => {
               exact
               path={["/persons", "/person/:idLocal"]}
               component={PersonsPage}
+            />
+            <Route
+              exact
+              path={["/places", "/place/:idLocal"]}
+              component={PlacesPage}
             />
             <Route exact path="/login" component={Login} />
             <PrivateRoute exact path="/profile" component={Profile} />
