@@ -13,7 +13,7 @@ export const Home = () => (
     <Paragraph>
       <FormattedMessage
         description="The home page content"
-        defaultMessage="Welcome."
+        defaultMessage="Welcome. This page is currently under development."
       />
     </Paragraph>
   </div>

@@ -1,24 +1,22 @@
 import { useLocaleLiteral } from "App/hooks/useLocaleLiteral";
 import { useEvents, usePerson } from "nampi-use-api";
 import { FormattedMessage } from "react-intl";
-import { useParams } from "react-router";
 import { serializeEventDates } from "../../utils/serializeEventDates";
 import { Heading } from "../Heading";
 
-interface Params {
+interface Props {
   idLocal: string;
 }
 
-export const Person = () => {
+export const PersonDetails = ({ idLocal }: Props) => {
   const getText = useLocaleLiteral();
-  const { idLocal } = useParams<Params>();
   const { data } = usePerson({ idLocal });
   const events = useEvents({
     paused: !data,
     query: { orderBy: "date", participant: data?.id },
   });
   return data ? (
-    <div>
+    <>
       <Heading>
         <FormattedMessage
           description="Person heading"
@@ -38,7 +36,7 @@ export const Person = () => {
           );
         })}
       </div>
-    </div>
+    </>
   ) : (
     <></>
   );
