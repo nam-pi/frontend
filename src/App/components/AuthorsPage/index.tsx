@@ -28,7 +28,10 @@ export const AuthorsPage = () => {
           activeItem={idLocal}
           filterSettings={
             <div className="grid grid-cols-1 sm:grid-cols-6 gap-4">
-              <Label className="col-span-2" htmlFor="text-input">
+              <Label
+                className="col-span-2 sm:flex sm:items-center"
+                htmlFor="text-input"
+              >
                 <FormattedMessage
                   description="Author text filter input label"
                   defaultMessage="Text"

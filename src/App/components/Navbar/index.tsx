@@ -106,7 +106,7 @@ export const Navbar = ({ className }: Props) => {
               </span>
             </Link>
           </div>
-          <div className="hidden sm:block sm:ml-6 space-x-2">
+          <div className="hidden sm:block sm:ml-6 space-x-3">
             <Links />
           </div>
           <div className="sm:absolute right-0">

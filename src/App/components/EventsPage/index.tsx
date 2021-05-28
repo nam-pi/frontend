@@ -44,7 +44,10 @@ export const EventsPage = () => {
           activeItem={idLocal}
           filterSettings={
             <div className="grid grid-cols-1 sm:grid-cols-6 gap-4">
-              <Label className="col-span-2" htmlFor="sort-select">
+              <Label
+                className="col-span-2 sm:flex sm:items-center"
+                htmlFor="sort-select"
+              >
                 <FormattedMessage
                   description="Order by filter input label"
                   defaultMessage="Order by"
@@ -62,7 +65,10 @@ export const EventsPage = () => {
                 ]}
                 selected={query.orderBy}
               />
-              <Label className="col-span-2" htmlFor="aspect-type-input">
+              <Label
+                className="col-span-2 sm:flex sm:items-center"
+                htmlFor="aspect-type-input"
+              >
                 <FormattedMessage
                   description="Used aspect type filter input label"
                   defaultMessage="Used aspect type"
@@ -75,7 +81,10 @@ export const EventsPage = () => {
                 typeBase={namespaces.core.aspect}
                 typeIri={query.aspectType}
               />
-              <Label className="col-span-2" htmlFor="participant-type-input">
+              <Label
+                className="col-span-2 sm:flex sm:items-center"
+                htmlFor="participant-type-input"
+              >
                 <FormattedMessage
                   description="Used participant type filter input label"
                   defaultMessage="Used participant type"
@@ -90,7 +99,10 @@ export const EventsPage = () => {
                 typeBase={namespaces.core.agent}
                 typeIri={query.participantType}
               />
-              <Label className="col-span-2" htmlFor="text-input">
+              <Label
+                className="col-span-2 sm:flex sm:items-center"
+                htmlFor="text-input"
+              >
                 <FormattedMessage
                   description="Event text filter input label"
                   defaultMessage="Text"
