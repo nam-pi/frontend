@@ -1,9 +1,7 @@
-import deDEMessages from "I18n/translations/de-DE.json";
-import enUSMessages from "I18n/translations/en-US.json";
-import { Locale } from "./Locale";
+import enGBMessages from "I18n/translations/en-GB.json";
 import { TranslationState } from "./types";
 
-export const DEFAULT_LOCALE = Locale.En;
+export const DEFAULT_LOCALE = "en-GB";
 
 export const DEFAULT_TRANSLATION_STATE: TranslationState = {
   locale: DEFAULT_LOCALE,
@@ -11,11 +9,12 @@ export const DEFAULT_TRANSLATION_STATE: TranslationState = {
 };
 
 export const MESSAGES = {
-  [Locale.De]: deDEMessages,
-  [Locale.En]: enUSMessages,
+  "en-GB": enGBMessages,
 };
 
 export const LANGUAGE_NAMES = {
-  [Locale.De]: "Deutsch",
-  [Locale.En]: "English",
+  "en-GB": "English (UK)",
 };
+
+export const LOG_MISSING_TRANSLATIONS =
+  process.env.REACT_APP_LOG_MISSING_TRANSLATIONS || false;

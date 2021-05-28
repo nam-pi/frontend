@@ -13,6 +13,10 @@ export const Input = ({ className, type = "text", ...props }: Props) => (
       "rounded",
       "border-gray-400",
       "shadow",
+      "focus:outline-none",
+      "focus-visible:ring-2",
+      "focus-visible:ring-offset-2",
+      "focus-visible:ring-current",
       className
     )}
   />

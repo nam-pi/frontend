@@ -6,8 +6,11 @@ module.exports = {
       opacity: ["disabled"],
       margin: ["first", "last"],
       padding: ["first", "last"],
+      textColor: ["visited", "hover"],
+      ringColor: ["focus-visible"],
+      ringWidth: ["focus-visible"],
+      ringOffsetWidth: ["focus-visible"],
     },
-    textColor: ["visited", "hover"],
   },
   plugins: [require("@tailwindcss/forms")],
 };
