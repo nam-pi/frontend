@@ -33,11 +33,11 @@ const useShort = (): ((event: Event) => undefined | string) => {
     exact
       ? formatDate(exact)
       : earliest && latest
-      ? `${formatDate(earliest)}-${formatDate(latest)}`
+      ? `${formatDate(earliest)}~${formatDate(latest)}`
       : earliest
-      ? formatDate(earliest)
+      ? formatDate(earliest) + "~"
       : latest
-      ? formatDate(latest)
+      ? "~" + formatDate(latest)
       : undefined;
 };
 
@@ -49,11 +49,11 @@ const useYearOnly =
       : earliest && latest
       ? earliest.getUTCFullYear() === latest.getUTCFullYear()
         ? earliest.getUTCFullYear().toString()
-        : `${earliest.getUTCFullYear()}|${latest.getUTCFullYear()}`
+        : `${earliest.getUTCFullYear()}~${latest.getUTCFullYear()}`
       : earliest
-      ? earliest.getUTCFullYear().toString()
+      ? earliest.getUTCFullYear() + "~"
       : latest
-      ? latest.getUTCFullYear().toString()
+      ? "~" + latest.getUTCFullYear()
       : undefined;
 
 export const useEventDate = (): ((
