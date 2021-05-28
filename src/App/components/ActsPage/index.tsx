@@ -1,8 +1,8 @@
-import { Act, useActs } from "nampi-use-api";
+import { namespaces } from "App/namespaces";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useParams } from "react-router-dom";
 import { ActDetails } from "../ActDetails";
-import { ItemListSidebar } from "../ItemListSidebar";
+import { FilterableItemList } from "../FilterableItemList";
 import { PlaceholderText } from "../PlaceholderText";
 import { SidebarPage } from "../SidebarPage";
 
@@ -13,19 +13,17 @@ interface Params {
 export const ActsPage = () => {
   const { formatMessage } = useIntl();
   const { idLocal } = useParams<Params>();
-  const fetchResult = useActs({
-    query: { orderBy: "label" },
-  });
   return (
     <SidebarPage
       sidebar={
-        <ItemListSidebar<Act>
-          linkBase="act"
-          fetchResult={fetchResult}
+        <FilterableItemList
+          activeItem={idLocal}
           itemName={formatMessage({
             description: "Acts sidebar list item name",
             defaultMessage: "Acts",
           })}
+          itemType={namespaces.core.act}
+          linkBase="act"
         />
       }
       main={

@@ -1,6 +1,4 @@
-import { Locale } from "./Locale";
-
 export interface TranslationState {
-  locale: Locale;
-  setLocale: (locale: Locale) => void;
+  locale: string;
+  setLocale: (locale: string) => void;
 }
