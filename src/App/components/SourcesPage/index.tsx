@@ -30,7 +30,10 @@ export const SourcesPage = () => {
           activeItem={idLocal}
           filterSettings={
             <div className="grid grid-cols-1 sm:grid-cols-6 gap-4">
-              <Label className="col-span-2" htmlFor="type-input">
+              <Label
+                className="col-span-2 sm:flex sm:items-center"
+                htmlFor="type-input"
+              >
                 <FormattedMessage
                   description="Source type filter input label"
                   defaultMessage="Source type"
@@ -43,7 +46,10 @@ export const SourcesPage = () => {
                 typeBase={namespaces.core.source}
                 typeIri={query.type}
               />
-              <Label className="col-span-2" htmlFor="text-input">
+              <Label
+                className="col-span-2 sm:flex sm:items-center"
+                htmlFor="text-input"
+              >
                 <FormattedMessage
                   description="Source text filter input label"
                   defaultMessage="Text"

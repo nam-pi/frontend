@@ -30,7 +30,10 @@ export const GroupsPage = () => {
           activeItem={idLocal}
           filterSettings={
             <div className="grid grid-cols-1 sm:grid-cols-6 gap-4">
-              <Label className="col-span-2" htmlFor="type-input">
+              <Label
+                className="col-span-2 sm:flex sm:items-center"
+                htmlFor="type-input"
+              >
                 <FormattedMessage
                   description="Group type filter input label"
                   defaultMessage="Group type"
@@ -43,7 +46,10 @@ export const GroupsPage = () => {
                 typeBase={namespaces.core.group}
                 typeIri={query.type}
               />
-              <Label className="col-span-2" htmlFor="text-input">
+              <Label
+                className="col-span-2 sm:flex sm:items-center"
+                htmlFor="text-input"
+              >
                 <FormattedMessage
                   description="Group text filter input label"
                   defaultMessage="Text"

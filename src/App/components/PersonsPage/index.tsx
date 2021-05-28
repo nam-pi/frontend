@@ -34,7 +34,10 @@ export const PersonsPage = () => {
           activeItem={idLocal}
           filterSettings={
             <div className="grid grid-cols-1 sm:grid-cols-6 gap-4">
-              <Label className="col-span-2" htmlFor="type-input">
+              <Label
+                className="col-span-2 sm:flex sm:items-center"
+                htmlFor="type-input"
+              >
                 <FormattedMessage
                   description="Person type filter input label"
                   defaultMessage="Person type"
@@ -47,7 +50,10 @@ export const PersonsPage = () => {
                 typeBase={namespaces.core.person}
                 typeIri={query.type}
               />
-              <Label className="col-span-2" htmlFor="text-input">
+              <Label
+                className="col-span-2 sm:flex sm:items-center"
+                htmlFor="text-input"
+              >
                 <FormattedMessage
                   description="Person text filter input label"
                   defaultMessage="Text"
