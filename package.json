@@ -28,7 +28,7 @@
     "focus-visible": "^5.2.0",
     "husky": "^6.0.0",
     "lint-staged": "^11.0.0",
-    "nampi-use-api": "^0.1.3",
+    "nampi-use-api": "^0.1.4",
     "postcss": "^7",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
