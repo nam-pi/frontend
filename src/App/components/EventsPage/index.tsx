@@ -8,11 +8,11 @@ import { useParams } from "react-router-dom";
 import { EventDetails } from "../EventDetails";
 import { FilterableItemList } from "../FilterableItemList";
 import { Input } from "../Input";
-import { ItemTypeSelect } from "../ItemTypeSelect";
 import { Label } from "../Label";
 import { PlaceholderText } from "../PlaceholderText";
 import { Select } from "../Select";
 import { SidebarPage } from "../SidebarPage";
+import { TypeSelect } from "../TypeSelect";
 
 interface Params {
   idLocal: string;
@@ -74,7 +74,7 @@ export const EventsPage = () => {
                   defaultMessage="Used aspect type"
                 />
               </Label>
-              <ItemTypeSelect
+              <TypeSelect
                 className="col-span-4"
                 id="aspect-type-input"
                 onChange={(id) => setQuery((q) => ({ ...q, aspectType: id }))}
@@ -90,7 +90,7 @@ export const EventsPage = () => {
                   defaultMessage="Used participant type"
                 />
               </Label>
-              <ItemTypeSelect
+              <TypeSelect
                 className="col-span-4"
                 id="participant-type-input"
                 onChange={(id) =>

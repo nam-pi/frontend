@@ -6,10 +6,10 @@ import { useParams } from "react-router-dom";
 import { FilterableItemList } from "../FilterableItemList";
 import { GroupDetails } from "../GroupDetails";
 import { Input } from "../Input";
-import { ItemTypeSelect } from "../ItemTypeSelect";
 import { Label } from "../Label";
 import { PlaceholderText } from "../PlaceholderText";
 import { SidebarPage } from "../SidebarPage";
+import { TypeSelect } from "../TypeSelect";
 
 interface Params {
   idLocal: string;
@@ -39,7 +39,7 @@ export const GroupsPage = () => {
                   defaultMessage="Group type"
                 />
               </Label>
-              <ItemTypeSelect
+              <TypeSelect
                 className="col-span-4"
                 id="type-input"
                 onChange={(id) => setQuery((q) => ({ ...q, type: id }))}
