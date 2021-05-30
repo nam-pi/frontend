@@ -71,7 +71,7 @@ export const EventsPage = () => {
               >
                 <FormattedMessage
                   description="Used aspect type filter input label"
-                  defaultMessage="Used aspect type"
+                  defaultMessage="Aspect type"
                 />
               </Label>
               <TypeSelect
@@ -87,7 +87,7 @@ export const EventsPage = () => {
               >
                 <FormattedMessage
                   description="Used participant type filter input label"
-                  defaultMessage="Used participant type"
+                  defaultMessage="Participant type"
                 />
               </Label>
               <TypeSelect
@@ -98,6 +98,24 @@ export const EventsPage = () => {
                 }
                 typeBase={namespaces.core.agent}
                 typeIri={query.participantType}
+              />
+              <Label
+                className="col-span-2 sm:flex sm:items-center"
+                htmlFor="participation-type-input"
+              >
+                <FormattedMessage
+                  description="Used participation type filter input label"
+                  defaultMessage="Participation type"
+                />
+              </Label>
+              <TypeSelect
+                className="col-span-4"
+                id="participation-type-input"
+                onChange={(id) =>
+                  setQuery((q) => ({ ...q, participationType: id }))
+                }
+                typeBase={namespaces.core.hasParticipant}
+                typeIri={query.participationType}
               />
               <Label
                 className="col-span-2 sm:flex sm:items-center"
