@@ -2,6 +2,7 @@ import { useLocaleLiteral } from "App/hooks/useLocaleLiteral";
 import { useAspect } from "nampi-use-api";
 import { FormattedMessage } from "react-intl";
 import { Heading } from "../Heading";
+import { ItemInheritance } from "../ItemInheritance";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
 import { Pre } from "../Pre";
 
@@ -21,8 +22,8 @@ export const AspectDetails = ({ idLocal }: Props) => {
           values={{ label: getText(data.labels) }}
         />
       </Heading>
-      {data.types}
-      <div className="mt-4 overflow-auto">
+      <ItemInheritance iri={data.id} />
+      <div className="overflow-auto">
         <Pre>{data}</Pre>
       </div>
     </>

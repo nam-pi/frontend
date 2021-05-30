@@ -201,7 +201,7 @@ export const FilterableItemList = <
           {data.map((item) => {
             const active = activeItem === item.idLocal;
             return (
-              <Link to={"/" + linkBase + "/" + item.idLocal}>
+              <Link key={item.id} to={"/" + linkBase + "/" + item.idLocal}>
                 <li
                   id={item.idLocal}
                   className={clsx(
