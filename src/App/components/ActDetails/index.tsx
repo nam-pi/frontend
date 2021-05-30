@@ -1,6 +1,7 @@
 import { useAct } from "nampi-use-api";
 import { FormattedMessage, useIntl } from "react-intl";
 import { Heading } from "../Heading";
+import { ItemInheritance } from "../ItemInheritance";
 import { ItemLink } from "../ItemLink";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
 
@@ -19,7 +20,8 @@ export const ActDetails = ({ idLocal }: Props) => {
           defaultMessage="Document interpretation act"
         />
       </Heading>
-      <ul className="mt-2">
+      <ItemInheritance iri={data.id} />
+      <ul>
         <li>
           <FormattedMessage
             description="Author text"
