@@ -8,11 +8,11 @@ import { useParams } from "react-router-dom";
 import { EventDetails } from "../EventDetails";
 import { FilterableItemList } from "../FilterableItemList";
 import { Input } from "../Input";
-import { ItemTypeSelect } from "../ItemTypeSelect";
 import { Label } from "../Label";
 import { PlaceholderText } from "../PlaceholderText";
 import { Select } from "../Select";
 import { SidebarPage } from "../SidebarPage";
+import { TypeSelect } from "../TypeSelect";
 
 interface Params {
   idLocal: string;
@@ -71,10 +71,10 @@ export const EventsPage = () => {
               >
                 <FormattedMessage
                   description="Used aspect type filter input label"
-                  defaultMessage="Used aspect type"
+                  defaultMessage="Aspect type"
                 />
               </Label>
-              <ItemTypeSelect
+              <TypeSelect
                 className="col-span-4"
                 id="aspect-type-input"
                 onChange={(id) => setQuery((q) => ({ ...q, aspectType: id }))}
@@ -87,10 +87,10 @@ export const EventsPage = () => {
               >
                 <FormattedMessage
                   description="Used participant type filter input label"
-                  defaultMessage="Used participant type"
+                  defaultMessage="Participant type"
                 />
               </Label>
-              <ItemTypeSelect
+              <TypeSelect
                 className="col-span-4"
                 id="participant-type-input"
                 onChange={(id) =>
@@ -98,6 +98,24 @@ export const EventsPage = () => {
                 }
                 typeBase={namespaces.core.agent}
                 typeIri={query.participantType}
+              />
+              <Label
+                className="col-span-2 sm:flex sm:items-center"
+                htmlFor="participation-type-input"
+              >
+                <FormattedMessage
+                  description="Used participation type filter input label"
+                  defaultMessage="Participation type"
+                />
+              </Label>
+              <TypeSelect
+                className="col-span-4"
+                id="participation-type-input"
+                onChange={(id) =>
+                  setQuery((q) => ({ ...q, participationType: id }))
+                }
+                typeBase={namespaces.core.hasParticipant}
+                typeIri={query.participationType}
               />
               <Label
                 className="col-span-2 sm:flex sm:items-center"

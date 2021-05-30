@@ -21,6 +21,7 @@ export const AspectDetails = ({ idLocal }: Props) => {
           values={{ label: getText(data.labels) }}
         />
       </Heading>
+      {data.types}
       <div className="mt-4 overflow-auto">
         <Pre>{data}</Pre>
       </div>

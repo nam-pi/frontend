@@ -1,5 +1,5 @@
 import { useLocaleLiteral } from "App/hooks/useLocaleLiteral";
-import { useClasses } from "nampi-use-api";
+import { useTypes } from "nampi-use-api";
 import { useMemo, useRef } from "react";
 import { useIntl } from "react-intl";
 import { Option, Select } from "../Select";
@@ -14,7 +14,7 @@ export interface Props {
 
 type SelectOption = Option<string>;
 
-export const ItemTypeSelect = ({
+export const TypeSelect = ({
   className,
   id,
   onChange = () => {},
@@ -31,11 +31,11 @@ export const ItemTypeSelect = ({
     value: "",
   });
 
-  const { data } = useClasses({
+  const { data } = useTypes({
     query: {
       limit: 1000,
       orderBy: "label",
-      ancestor: typeBase,
+      type: typeBase,
     },
   });
 

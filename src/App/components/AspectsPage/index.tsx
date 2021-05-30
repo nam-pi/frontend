@@ -1,15 +1,15 @@
 import { namespaces } from "App/namespaces";
 import { Aspect, AspectsQuery } from "nampi-use-api";
-import React, { useState } from "react";
+import { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useParams } from "react-router-dom";
 import { AspectDetails } from "../AspectDetails";
 import { FilterableItemList } from "../FilterableItemList";
 import { Input } from "../Input";
-import { ItemTypeSelect } from "../ItemTypeSelect";
 import { Label } from "../Label";
 import { PlaceholderText } from "../PlaceholderText";
 import { SidebarPage } from "../SidebarPage";
+import { TypeSelect } from "../TypeSelect";
 
 interface Params {
   idLocal: string;
@@ -39,7 +39,7 @@ export const AspectsPage = () => {
                   defaultMessage="Aspect type"
                 />
               </Label>
-              <ItemTypeSelect
+              <TypeSelect
                 className="col-span-4"
                 id="type-input"
                 onChange={(id) => setQuery((q) => ({ ...q, type: id }))}
