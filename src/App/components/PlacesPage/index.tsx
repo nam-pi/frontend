@@ -65,7 +65,7 @@ export const PlacesPage = () => {
               />
             </div>
           }
-          itemName={formatMessage({
+          heading={formatMessage({
             description: "Places sidebar list item name",
             defaultMessage: "Places",
           })}

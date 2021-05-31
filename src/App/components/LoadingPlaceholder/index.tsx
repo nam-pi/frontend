@@ -4,6 +4,7 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconProps,
 } from "@fortawesome/react-fontawesome";
+import clsx from "clsx";
 import { useEffect, useRef, useState } from "react";
 
 interface Props extends Omit<FontAwesomeIconProps, "spin" | "icon"> {
@@ -14,6 +15,7 @@ interface Props extends Omit<FontAwesomeIconProps, "spin" | "icon"> {
 const DEFAULT_DELAY = 500;
 
 export const LoadingPlaceholder = ({
+  className,
   delay,
   icon = faCircleNotch,
   ...props
@@ -35,5 +37,17 @@ export const LoadingPlaceholder = ({
       }
     };
   }, [delay]);
-  return visible ? <FontAwesomeIcon {...props} icon={icon} spin /> : <></>;
+  return visible ? (
+    <FontAwesomeIcon
+      {...props}
+      className={clsx(
+        className,
+        !className?.includes("text-") && "text-gray-500"
+      )}
+      icon={icon}
+      spin
+    />
+  ) : (
+    <></>
+  );
 };

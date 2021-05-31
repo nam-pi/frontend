@@ -65,7 +65,7 @@ export const AspectsPage = () => {
               />
             </div>
           }
-          itemName={formatMessage({
+          heading={formatMessage({
             description: "Aspects sidebar list item name",
             defaultMessage: "Aspects",
           })}

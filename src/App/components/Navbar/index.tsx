@@ -1,6 +1,6 @@
 import { faBars, faUser } from "@fortawesome/free-solid-svg-icons";
 import { Menu, Transition } from "@headlessui/react";
-import { AppName } from "App/constants";
+import { APP_NAME } from "App/constants";
 import { useToggle } from "App/hooks/useToggle";
 import clsx from "clsx";
 import { useAuth, useUser } from "nampi-use-api";
@@ -102,7 +102,7 @@ export const Navbar = ({ className }: Props) => {
               tabIndex={-1}
             >
               <span className="ml-2 hidden lg:block text-white" tabIndex={-1}>
-                {AppName}
+                {APP_NAME}
               </span>
             </Link>
           </div>

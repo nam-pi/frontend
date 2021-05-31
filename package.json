@@ -1,6 +1,6 @@
 {
   "name": "nampi-frontend",
-  "version": "0.1.0",
+  "version": "0.1.5",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
@@ -28,7 +28,7 @@
     "focus-visible": "^5.2.0",
     "husky": "^6.0.0",
     "lint-staged": "^11.0.0",
-    "nampi-use-api": "^0.1.4",
+    "nampi-use-api": "^0.1.6",
     "postcss": "^7",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",

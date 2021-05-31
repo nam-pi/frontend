@@ -1,14 +1,14 @@
-import { useHierarchy } from "nampi-use-api";
+import { Item, useHierarchy } from "nampi-use-api";
 import { InheritancePath } from "../InheritancePath";
 
 interface Props {
   className?: string;
-  iri: string;
+  item: Item;
 }
 
-export const ItemInheritance = ({ className, iri }: Props) => {
+export const ItemInheritance = ({ className, item }: Props) => {
   const { data } = useHierarchy({
-    query: { iri },
+    query: { iri: item.id },
   });
   return (
     <div className="leading-none">
