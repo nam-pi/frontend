@@ -14,7 +14,10 @@ export const Heading = ({
   const tag = `h${level}` as keyof JSX.IntrinsicElements;
   return createElement(
     tag,
-    { ...props, className: clsx("text-2xl", className) },
+    {
+      ...props,
+      className: clsx(level === 1 ? "text-2xl" : "text-xl", className),
+    },
     children
   );
 };

@@ -3,6 +3,7 @@ import { usePlace } from "nampi-use-api";
 import { FormattedMessage } from "react-intl";
 import { Heading } from "../Heading";
 import { ItemInheritance } from "../ItemInheritance";
+import { ItemLabels } from "../ItemLabels";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
 import { Pre } from "../Pre";
 
@@ -22,7 +23,8 @@ export const PlaceDetails = ({ idLocal }: Props) => {
           values={{ label: getText(data.labels) }}
         />
       </Heading>
-      <ItemInheritance iri={data.id} />
+      <ItemInheritance item={data} />
+      <ItemLabels item={data} />
       <div className="overflow-auto">
         <Pre>{data}</Pre>
       </div>

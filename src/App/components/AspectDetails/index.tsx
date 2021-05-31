@@ -3,7 +3,9 @@ import { useAspect } from "nampi-use-api";
 import { FormattedMessage } from "react-intl";
 import { Heading } from "../Heading";
 import { ItemInheritance } from "../ItemInheritance";
+import { ItemLabels } from "../ItemLabels";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
+import { MultiLangTexts } from "../MultiLangTexts";
 import { Pre } from "../Pre";
 
 interface Props {
@@ -22,7 +24,23 @@ export const AspectDetails = ({ idLocal }: Props) => {
           values={{ label: getText(data.labels) }}
         />
       </Heading>
-      <ItemInheritance iri={data.id} />
+      <ItemInheritance item={data} />
+      <ItemLabels item={data} />
+      {data.text ? (
+        <div>
+          <Heading level={2}>
+            <FormattedMessage
+              description="Text content list heading text"
+              defaultMessage="Textual content"
+            />
+          </Heading>
+          <div className="flex flex-col">
+            <MultiLangTexts texts={data.text} />
+          </div>
+        </div>
+      ) : (
+        <></>
+      )}
       <div className="overflow-auto">
         <Pre>{data}</Pre>
       </div>
