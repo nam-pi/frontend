@@ -48,7 +48,7 @@ export const AuthorsPage = () => {
             </div>
           }
           linkBase="author"
-          itemName={formatMessage({
+          heading={formatMessage({
             description: "Authors sidebar list item name",
             defaultMessage: "Authors",
           })}

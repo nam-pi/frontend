@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { createElement, HTMLAttributes } from "react";
 
-interface Props extends HTMLAttributes<HTMLHeadingElement> {
+export interface Props extends HTMLAttributes<HTMLHeadingElement> {
   level?: 1 | 2 | 3 | 4 | 5 | 6;
 }
 

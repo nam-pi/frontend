@@ -16,11 +16,11 @@ import {
   usePlaces,
   useSources,
 } from "nampi-use-api";
-import { ReactNode, useEffect, useMemo, useRef } from "react";
+import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { Link } from "react-router-dom";
 import { Button } from "../Button";
-import { Heading } from "../Heading";
+import { Heading, Props as HeadingProps } from "../Heading";
 import { IconButton } from "../IconButton";
 import { ItemNav } from "../ItemNav";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
@@ -29,14 +29,18 @@ import { PlaceholderText } from "../PlaceholderText";
 
 interface Props<Q extends CollectionQuery, I extends Item = Item> {
   activeItem?: undefined | string;
+  compact?: boolean;
   createLabel?: (item: I) => string;
+  defaultQuery?: Q;
   filterSettings?: ReactNode;
-  itemName: string;
+  heading: string;
+  headingLevel?: HeadingProps["level"];
   itemType: string;
   linkBase: string;
   query?: Q;
   resetQuery?: (query: Q) => void;
 }
+
 const { core } = namespaces;
 
 const useData = <I extends Item>(
@@ -80,29 +84,40 @@ export const FilterableItemList = <
   Q extends CollectionQuery = {}
 >({
   activeItem,
+  compact,
   createLabel,
   filterSettings,
-  itemName,
+  heading,
+  headingLevel = 1,
   itemType,
   linkBase,
   query,
+  defaultQuery,
   resetQuery = () => undefined,
 }: Props<Q, I>) => {
   const scrollTimeout = useRef<undefined | NodeJS.Timeout>();
   const listRef = useRef<null | HTMLUListElement>(null);
   const itemRefs = useRef<{ [localId: string]: HTMLLIElement }>({});
   const { formatMessage } = useIntl();
-  const initialQuery = useRef<Q>(query || ({} as Q));
   const getText = useLocaleLiteral();
   const [filterActive, toggleFilter] = useToggle();
+  const [initialQuery, setInitialQuery] = useState<Q>(
+    defaultQuery || query || ({} as Q)
+  );
+  const filterChanged = useMemo(
+    () => JSON.stringify(initialQuery) !== JSON.stringify(query),
+    [initialQuery, query]
+  );
   const { data, initialized, loading, nav, page, total } = useData<I>(
     itemType,
     query || { orderBy: "label" }
   );
-  const filterChanged = useMemo(
-    () => JSON.stringify(initialQuery.current) !== JSON.stringify(query),
-    [query]
-  );
+
+  useEffect(() => {
+    if (defaultQuery) {
+      setInitialQuery(defaultQuery);
+    }
+  }, [defaultQuery]);
 
   useEffect(() => {
     if (!initialized || loading || !data) {
@@ -123,77 +138,69 @@ export const FilterableItemList = <
   }, [activeItem, data, initialized, loading]);
 
   return (
-    <>
-      <Heading>
-        {total === undefined ? (
-          itemName
-        ) : (
-          <FormattedMessage
-            description="Item list heading"
-            defaultMessage="{itemName} ({total})"
-            values={{ itemName, total }}
-          />
-        )}
+    <div>
+      <Heading level={headingLevel}>
+        <FormattedMessage
+          description="Item list heading"
+          defaultMessage="{total, plural, =0 {{heading}} other {{heading} ({total})}}"
+          values={{ heading, total }}
+        />
       </Heading>
       <div className="flex justify-between items-center">
         <ItemNav
-          className="my-4"
+          className={compact ? "my-2" : "my-4"}
           disabled={!initialized || loading}
           nav={nav}
           page={page}
         />
-        {filterSettings ? (
-          <>
-            <div className="text-xs flex space-x-2">
+        {filterSettings && (
+          <div className="text-xs flex space-x-2">
+            <IconButton
+              className={clsx(filterActive && "bg-gray-100")}
+              disabled={loading}
+              icon={faFilter}
+              label={formatMessage({
+                description: "Item list filter modal toggle button label",
+                defaultMessage: "Toggle filter settings",
+              })}
+              onClick={toggleFilter}
+            />
+            {filterChanged && (
               <IconButton
-                className={clsx(filterActive && "bg-gray-100")}
-                disabled={loading}
-                icon={faFilter}
+                className="bg-red-100"
+                icon={faEraser}
                 label={formatMessage({
                   description: "Item list filter modal toggle button label",
                   defaultMessage: "Toggle filter settings",
                 })}
-                onClick={toggleFilter}
+                onClick={() => resetQuery(initialQuery)}
               />
-              {filterChanged ? (
-                <IconButton
-                  className="bg-red-100"
-                  icon={faEraser}
-                  label={formatMessage({
-                    description: "Item list filter modal toggle button label",
-                    defaultMessage: "Toggle filter settings",
-                  })}
-                  onClick={() => resetQuery(initialQuery.current)}
-                />
-              ) : (
-                <></>
-              )}
-            </div>
-            <Modal
-              active={filterActive}
-              closeCallback={toggleFilter}
-              title={formatMessage({
-                description: "Filter settings modal title",
-                defaultMessage: "Change filter settings",
-              })}
-              rightElement={
-                filterChanged && (
-                  <Button onClick={() => resetQuery(initialQuery.current)}>
-                    <FormattedMessage
-                      description="Reset button label"
-                      defaultMessage="Reset"
-                    />
-                  </Button>
-                )
-              }
-            >
-              {filterSettings}
-            </Modal>
-          </>
-        ) : (
-          <></>
+            )}
+          </div>
         )}
       </div>
+      {filterActive && (
+        <Modal
+          active={true}
+          closeCallback={toggleFilter}
+          title={formatMessage({
+            description: "Filter settings modal title",
+            defaultMessage: "Change filter settings",
+          })}
+          rightElement={
+            filterChanged && (
+              <Button onClick={() => resetQuery(initialQuery)}>
+                <FormattedMessage
+                  description="Reset button label"
+                  defaultMessage="Reset"
+                />
+              </Button>
+            )
+          }
+        >
+          {filterSettings}
+        </Modal>
+      )}
       {loading ? (
         <LoadingPlaceholder />
       ) : data ? (
@@ -228,6 +235,6 @@ export const FilterableItemList = <
           />
         </PlaceholderText>
       )}
-    </>
+    </div>
   );
 };

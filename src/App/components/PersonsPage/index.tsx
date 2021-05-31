@@ -1,25 +1,21 @@
-import { useEventDate } from "App/hooks/useEventDate";
-import { useLocaleLiteral } from "App/hooks/useLocaleLiteral";
+import { usePersonLabel } from "App/hooks/usePersonLabel";
 import { namespaces } from "App/namespaces";
 import { Person, PersonsQuery } from "nampi-use-api";
 import { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useParams } from "react-router-dom";
 import { FilterableItemList } from "../FilterableItemList";
-import { Input } from "../Input";
-import { Label } from "../Label";
 import { PersonDetails } from "../PersonDetails";
+import { PersonsFilterSettings } from "../PersonsFilterSettings";
 import { PlaceholderText } from "../PlaceholderText";
 import { SidebarPage } from "../SidebarPage";
-import { TypeSelect } from "../TypeSelect";
 
 interface Params {
   idLocal: string;
 }
 
 export const PersonsPage = () => {
-  const getDate = useEventDate();
-  const getText = useLocaleLiteral();
+  const getLabel = usePersonLabel();
   const { formatMessage } = useIntl();
   const { idLocal } = useParams<Params>();
   const [query, setQuery] = useState<PersonsQuery>({
@@ -33,63 +29,10 @@ export const PersonsPage = () => {
         <FilterableItemList<Person>
           activeItem={idLocal}
           filterSettings={
-            <div className="grid grid-cols-1 sm:grid-cols-6 gap-4">
-              <Label
-                className="col-span-2 sm:flex sm:items-center"
-                htmlFor="type-input"
-              >
-                <FormattedMessage
-                  description="Person type filter input label"
-                  defaultMessage="Person type"
-                />
-              </Label>
-              <TypeSelect
-                className="col-span-4"
-                id="type-input"
-                onChange={(id) => setQuery((q) => ({ ...q, type: id }))}
-                typeBase={namespaces.core.person}
-                typeIri={query.type}
-              />
-              <Label
-                className="col-span-2 sm:flex sm:items-center"
-                htmlFor="text-input"
-              >
-                <FormattedMessage
-                  description="Person text filter input label"
-                  defaultMessage="Text"
-                />
-              </Label>
-              <Input
-                className="col-span-4"
-                id="text-input"
-                value={query.text}
-                onChange={(e) =>
-                  setQuery((q) => ({ ...q, text: e.target.value }))
-                }
-              />
-            </div>
+            <PersonsFilterSettings query={query} setQuery={setQuery} />
           }
-          createLabel={(person) => {
-            const label = getText(person.labels);
-            const born = getDate(person.bornIn?.[0], "yearOnly");
-            return (
-              label +
-              (born
-                ? ` ${formatMessage(
-                    {
-                      description: "Person birth name",
-                      defaultMessage: "(born {birth})",
-                    },
-                    {
-                      birth: `${born}${
-                        (person.bornIn?.length || 0) > 1 ? "[...]" : ""
-                      }`,
-                    }
-                  )} `
-                : "")
-            );
-          }}
-          itemName={formatMessage({
+          createLabel={getLabel}
+          heading={formatMessage({
             description: "Person sidebar list item name",
             defaultMessage: "Persons",
           })}

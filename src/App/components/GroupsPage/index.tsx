@@ -65,7 +65,7 @@ export const GroupsPage = () => {
               />
             </div>
           }
-          itemName={formatMessage({
+          heading={formatMessage({
             description: "Groups sidebar list item name",
             defaultMessage: "Groups",
           })}

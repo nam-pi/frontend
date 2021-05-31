@@ -18,7 +18,7 @@ export const ActsPage = () => {
       sidebar={
         <FilterableItemList
           activeItem={idLocal}
-          itemName={formatMessage({
+          heading={formatMessage({
             description: "Acts sidebar list item name",
             defaultMessage: "Acts",
           })}
