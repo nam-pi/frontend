@@ -143,7 +143,7 @@ export const FilterableItemList = <
         <FormattedMessage
           description="Item list heading"
           defaultMessage="{total, plural, =0 {{heading}} other {{heading} ({total})}}"
-          values={{ heading, total }}
+          values={{ heading, total: total || 0 }}
         />
       </Heading>
       <div className="flex justify-between items-center">
