@@ -1,43 +1,72 @@
 import { Event } from "nampi-use-api";
 import { useIntl } from "react-intl";
 
+const getNeutralDate = (date: Date): Date =>
+  new Date(`${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`);
+
+const isFullYear = (earliest: Date, latest: Date): boolean =>
+  earliest.getFullYear() === latest.getFullYear() &&
+  earliest.getMonth() === 0 &&
+  earliest.getDate() === 1 &&
+  latest.getMonth() === 11 &&
+  latest.getDate() === 31;
+
 const useFull = (): ((event: Event) => undefined | string) => {
-  const { formatDate, formatMessage } = useIntl();
+  const { formatMessage, ...intl } = useIntl();
+  const formatDate = (date: Date) =>
+    intl.formatDate(getNeutralDate(date), { dateStyle: "long" });
   return ({ exact, earliest, latest }) =>
     exact
       ? formatDate(exact)
       : earliest && latest
-      ? formatMessage(
-          {
-            description: "Date range content",
-            defaultMessage: "between {start} and {end}",
-          },
-          { start: formatDate(earliest), end: formatDate(latest) }
-        )
+      ? isFullYear(earliest, latest)
+        ? formatMessage(
+            {
+              description: "Full year content",
+              defaultMessage: "sometime in {year}",
+            },
+            { year: earliest.getFullYear() }
+          )
+        : formatMessage(
+            {
+              description: "Date range content",
+              defaultMessage: "sometime between {start} and {end}",
+            },
+            { start: formatDate(earliest), end: formatDate(latest) }
+          )
       : earliest
       ? formatMessage(
-          { description: "Earliest content", defaultMessage: "after {start}" },
+          {
+            description: "Earliest content",
+            defaultMessage: "not earlier than {start}",
+          },
           { start: formatDate(earliest) }
         )
       : latest
       ? formatMessage(
-          { description: "Latest content", defaultMessage: "before {end}" },
-          { end: formatDate(earliest) }
+          {
+            description: "Latest content",
+            defaultMessage: "not later than {end}",
+          },
+          { end: formatDate(latest) }
         )
       : undefined;
 };
 
 const useShort = (): ((event: Event) => undefined | string) => {
-  const { formatDate } = useIntl();
+  const intl = useIntl();
+  const formatDate = (date: Date) => intl.formatDate(getNeutralDate(date));
   return ({ exact, earliest, latest }) =>
     exact
       ? formatDate(exact)
       : earliest && latest
-      ? `${formatDate(earliest)}~${formatDate(latest)}`
+      ? isFullYear(earliest, latest)
+        ? earliest.getFullYear().toString()
+        : `${formatDate(earliest)}≬${formatDate(latest)}`
       : earliest
-      ? formatDate(earliest) + "~"
+      ? "≥" + formatDate(earliest)
       : latest
-      ? "~" + formatDate(latest)
+      ? "≤" + formatDate(latest)
       : undefined;
 };
 
@@ -45,15 +74,15 @@ const useYearOnly =
   (): ((event: Event) => undefined | string) =>
   ({ exact, earliest, latest }) =>
     exact
-      ? exact.getUTCFullYear().toString()
+      ? exact.getFullYear().toString()
       : earliest && latest
-      ? earliest.getUTCFullYear() === latest.getUTCFullYear()
-        ? earliest.getUTCFullYear().toString()
-        : `${earliest.getUTCFullYear()}~${latest.getUTCFullYear()}`
+      ? earliest.getFullYear() === latest.getFullYear()
+        ? `${earliest.getFullYear()}`
+        : `${earliest.getFullYear()}≬${latest.getFullYear()}`
       : earliest
-      ? earliest.getUTCFullYear() + "~"
+      ? "≥" + earliest.getFullYear()
       : latest
-      ? "~" + latest.getUTCFullYear()
+      ? "≤" + latest.getFullYear()
       : undefined;
 
 export const useEventDate = (): ((

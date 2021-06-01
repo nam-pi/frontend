@@ -29,6 +29,7 @@ import { PlaceholderText } from "../PlaceholderText";
 
 interface Props<Q extends CollectionQuery, I extends Item = Item> {
   activeItem?: undefined | string;
+  className?: string;
   compact?: boolean;
   createLabel?: (item: I) => string;
   defaultQuery?: Q;
@@ -37,6 +38,7 @@ interface Props<Q extends CollectionQuery, I extends Item = Item> {
   headingLevel?: HeadingProps["level"];
   itemType: string;
   linkBase: string;
+  paused?: boolean;
   query?: Q;
   resetQuery?: (query: Q) => void;
 }
@@ -45,19 +47,20 @@ const { core } = namespaces;
 
 const useData = <I extends Item>(
   type: string,
-  query: CollectionQuery
+  query: CollectionQuery,
+  paused: undefined | boolean
 ): FetchCollectionResult<I> => {
-  const acts = useActs({ paused: type !== core.act, query });
-  const aspects = useAspects({ paused: type !== core.aspect, query });
-  const authors = useAuthors({ paused: type !== core.author, query });
+  const acts = useActs({ paused: paused || type !== core.act, query });
+  const aspects = useAspects({ paused: paused || type !== core.aspect, query });
+  const authors = useAuthors({ paused: paused || type !== core.author, query });
   const events = useEvents({
-    paused: type !== core.event,
+    paused: paused || type !== core.event,
     query: query as any,
   });
-  const groups = useGroups({ paused: type !== core.group, query });
-  const persons = usePersons({ paused: type !== core.person, query });
-  const places = usePlaces({ paused: type !== core.place, query });
-  const sources = useSources({ paused: type !== core.source, query });
+  const groups = useGroups({ paused: paused || type !== core.group, query });
+  const persons = usePersons({ paused: paused || type !== core.person, query });
+  const places = usePlaces({ paused: paused || type !== core.place, query });
+  const sources = useSources({ paused: paused || type !== core.source, query });
   switch (type) {
     case core.act:
       return acts as FetchCollectionResult<I>;
@@ -84,6 +87,7 @@ export const FilterableItemList = <
   Q extends CollectionQuery = {}
 >({
   activeItem,
+  className,
   compact,
   createLabel,
   filterSettings,
@@ -94,6 +98,7 @@ export const FilterableItemList = <
   query,
   defaultQuery,
   resetQuery = () => undefined,
+  paused,
 }: Props<Q, I>) => {
   const scrollTimeout = useRef<undefined | NodeJS.Timeout>();
   const listRef = useRef<null | HTMLUListElement>(null);
@@ -110,7 +115,8 @@ export const FilterableItemList = <
   );
   const { data, initialized, loading, nav, page, total } = useData<I>(
     itemType,
-    query || { orderBy: "label" }
+    query || { orderBy: "label" },
+    paused
   );
 
   useEffect(() => {
@@ -138,7 +144,7 @@ export const FilterableItemList = <
   }, [activeItem, data, initialized, loading]);
 
   return (
-    <div>
+    <div className={className}>
       <Heading level={headingLevel}>
         <FormattedMessage
           description="Item list heading"
