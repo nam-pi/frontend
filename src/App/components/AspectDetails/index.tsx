@@ -23,7 +23,7 @@ const EventsWithAspect = ({ id }: { id: string }) => {
   const getLabel = useEventLabel();
   const defaultQuery = useMemo<EventsQuery>(
     () => ({
-      aspect: id,
+      author: id,
       orderBy: "label",
       participantType: "",
       text: "",
@@ -34,7 +34,7 @@ const EventsWithAspect = ({ id }: { id: string }) => {
   const [query, setQuery] = useState(defaultQuery);
 
   useEffect(() => {
-    setQuery((old) => (old.aspect === id ? old : { ...old, aspect: id }));
+    setQuery((old) => (old.author === id ? old : { ...old, author: id }));
   }, [id]);
 
   return (
@@ -57,6 +57,7 @@ const EventsWithAspect = ({ id }: { id: string }) => {
     />
   );
 };
+
 const PersonsWithAspect = ({ id }: { id: string }) => {
   const { formatMessage } = useIntl();
   const getLabel = usePersonLabel();
