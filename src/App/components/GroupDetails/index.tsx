@@ -22,7 +22,7 @@ const EventsWithGroup = ({ id }: { id: string }) => {
   const defaultQuery = useMemo<EventsQuery>(
     () => ({
       participant: id,
-      orderBy: "label",
+      orderBy: "date",
       text: "",
       limit: SECONDARY_ITEM_LIMIT,
     }),

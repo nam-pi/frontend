@@ -24,7 +24,7 @@ const EventsWithAspect = ({ id }: { id: string }) => {
   const defaultQuery = useMemo<EventsQuery>(
     () => ({
       author: id,
-      orderBy: "label",
+      orderBy: "date",
       participantType: "",
       text: "",
       limit: SECONDARY_ITEM_LIMIT,
