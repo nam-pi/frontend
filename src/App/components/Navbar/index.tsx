@@ -48,16 +48,16 @@ const Links = () => (
         defaultMessage="Aspects"
       />
     </Link>
-    <Link to="/authors" className="hover:opacity-80">
-      <FormattedMessage
-        description="Authors menu link label"
-        defaultMessage="Authors"
-      />
-    </Link>
     <Link to="/sources" className="hover:opacity-80">
       <FormattedMessage
         description="Sources menu link label"
         defaultMessage="Sources"
+      />
+    </Link>
+    <Link to="/authors" className="hover:opacity-80">
+      <FormattedMessage
+        description="Authors menu link label"
+        defaultMessage="Authors"
       />
     </Link>
   </>
