@@ -1,4 +1,4 @@
-import { faBars, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faSearch, faUser } from "@fortawesome/free-solid-svg-icons";
 import { Menu, Transition } from "@headlessui/react";
 import { APP_NAME } from "App/constants";
 import { useToggle } from "App/hooks/useToggle";
@@ -110,68 +110,82 @@ export const Navbar = ({ className }: Props) => {
             <Links />
           </div>
           <div className="sm:absolute right-0">
-            {initialized && !loading ? (
-              authenticated && data ? (
-                <Menu as="div" className="relative text-gray-800">
-                  <Menu.Button className="px-3 py-2 rounded-full border-2 border-white text-white hover:opacity-80 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-current">
-                    <Icon icon={faUser} />
-                  </Menu.Button>
-                  <Transition
-                    as={Fragment}
-                    enter="transition ease-out duration-100"
-                    enterFrom="transform opacity-0 scale-95"
-                    enterTo="transform opacity-100 scale-100"
-                    leave="transition ease-in duration-75"
-                    leaveFrom="transform opacity-100 scale-100"
-                    leaveTo="transform opacity-0 scale-95"
+            <div>
+              <Link
+                className="mr-4 hover:opacity-80 hidden sm:inline-block"
+                to="/search"
+              >
+                <Icon icon={faSearch} />
+              </Link>
+              {initialized && !loading ? (
+                authenticated && data ? (
+                  <Menu as="div" className="relative text-gray-800">
+                    <Menu.Button className="px-3 py-2 rounded-full border-2 border-white text-white hover:opacity-80 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-current">
+                      <Icon icon={faUser} />
+                    </Menu.Button>
+                    <Transition
+                      as={Fragment}
+                      enter="transition ease-out duration-100"
+                      enterFrom="transform opacity-0 scale-95"
+                      enterTo="transform opacity-100 scale-100"
+                      leave="transition ease-in duration-75"
+                      leaveFrom="transform opacity-100 scale-100"
+                      leaveTo="transform opacity-0 scale-95"
+                    >
+                      <Menu.Items className="absolute min-w-max mt-1 right-0 bg-white shadow-lg rounded flex flex-col p-2">
+                        <Menu.Item>
+                          {({ active }) => (
+                            <Link to="/profile">
+                              <FormattedMessage
+                                description="User profile link text"
+                                defaultMessage="Profile"
+                              />
+                            </Link>
+                          )}
+                        </Menu.Item>
+                        <Menu.Item>
+                          {({ active }) => (
+                            <button type="button" onClick={() => logout()}>
+                              <FormattedMessage
+                                description="Logout button label"
+                                defaultMessage="Log out"
+                              />
+                            </button>
+                          )}
+                        </Menu.Item>
+                      </Menu.Items>
+                    </Transition>
+                  </Menu>
+                ) : (
+                  <Link
+                    className="hover:opacity-80"
+                    to={{
+                      pathname: "/login",
+                      state: { from: window.location.href },
+                    }}
                   >
-                    <Menu.Items className="absolute min-w-max mt-1 right-0 bg-white shadow-lg rounded flex flex-col p-2">
-                      <Menu.Item>
-                        {({ active }) => (
-                          <Link to="/profile">
-                            <FormattedMessage
-                              description="User profile link text"
-                              defaultMessage="Profile"
-                            />
-                          </Link>
-                        )}
-                      </Menu.Item>
-                      <Menu.Item>
-                        {({ active }) => (
-                          <button type="button" onClick={() => logout()}>
-                            <FormattedMessage
-                              description="Logout button label"
-                              defaultMessage="Log out"
-                            />
-                          </button>
-                        )}
-                      </Menu.Item>
-                    </Menu.Items>
-                  </Transition>
-                </Menu>
+                    <FormattedMessage
+                      description="Login link text"
+                      defaultMessage="Log in"
+                    />
+                  </Link>
+                )
               ) : (
-                <Link
-                  className="hover:opacity-80"
-                  to={{
-                    pathname: "/login",
-                    state: { from: window.location.href },
-                  }}
-                >
-                  <FormattedMessage
-                    description="Login link text"
-                    defaultMessage="Log in"
-                  />
-                </Link>
-              )
-            ) : (
-              <LoadingPlaceholder />
-            )}
+                <LoadingPlaceholder />
+              )}
+            </div>
           </div>
         </div>
       </div>
       {mobileMenu ? (
         <div className="sm:hidden text-lg space-y-1" id="mobile-menu">
           <div className="px-2 pb-3 flex flex-col">
+            <Link className="mr-4 hover:opacity-80" to="/search">
+              <FormattedMessage
+                description="Search link text"
+                defaultMessage="Search"
+              />
+            </Link>
             <Links />
           </div>
         </div>
