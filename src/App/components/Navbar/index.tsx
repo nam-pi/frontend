@@ -18,12 +18,6 @@ interface Props {
 
 const Links = () => (
   <>
-    <Link to="/acts" className="hover:opacity-80">
-      <FormattedMessage
-        description="Acts menu link label"
-        defaultMessage="Acts"
-      />
-    </Link>
     <Link to="/aspects" className="hover:opacity-80">
       <FormattedMessage
         description="Aspects menu link label"
