@@ -5,7 +5,6 @@ import { Heading } from "../Heading";
 import { ItemInheritance } from "../ItemInheritance";
 import { ItemLabels } from "../ItemLabels";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
-import { Pre } from "../Pre";
 
 interface Props {
   idLocal: string;
@@ -25,9 +24,6 @@ export const SourceDetails = ({ idLocal }: Props) => {
       </Heading>
       <ItemInheritance item={data} />
       <ItemLabels item={data} />
-      <div className="overflow-auto">
-        <Pre>{data}</Pre>
-      </div>
     </>
   ) : (
     <LoadingPlaceholder />
