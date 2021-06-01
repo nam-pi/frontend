@@ -18,6 +18,30 @@ interface Props {
 
 const Links = () => (
   <>
+    <Link to="/events" className="hover:opacity-80">
+      <FormattedMessage
+        description="Events menu link label"
+        defaultMessage="Events"
+      />
+    </Link>
+    <Link to="/persons" className="hover:opacity-80">
+      <FormattedMessage
+        description="Persons menu link label"
+        defaultMessage="Persons"
+      />
+    </Link>
+    <Link to="/groups" className="hover:opacity-80">
+      <FormattedMessage
+        description="Groups menu link label"
+        defaultMessage="Groups"
+      />
+    </Link>
+    <Link to="/places" className="hover:opacity-80">
+      <FormattedMessage
+        description="Places menu link label"
+        defaultMessage="Places"
+      />
+    </Link>
     <Link to="/aspects" className="hover:opacity-80">
       <FormattedMessage
         description="Aspects menu link label"
@@ -28,30 +52,6 @@ const Links = () => (
       <FormattedMessage
         description="Authors menu link label"
         defaultMessage="Authors"
-      />
-    </Link>
-    <Link to="/events" className="hover:opacity-80">
-      <FormattedMessage
-        description="Events menu link label"
-        defaultMessage="Events"
-      />
-    </Link>
-    <Link to="/groups" className="hover:opacity-80">
-      <FormattedMessage
-        description="Groups menu link label"
-        defaultMessage="Groups"
-      />
-    </Link>
-    <Link to="/persons" className="hover:opacity-80">
-      <FormattedMessage
-        description="Persons menu link label"
-        defaultMessage="Persons"
-      />
-    </Link>
-    <Link to="/places" className="hover:opacity-80">
-      <FormattedMessage
-        description="Places menu link label"
-        defaultMessage="Places"
       />
     </Link>
     <Link to="/sources" className="hover:opacity-80">
