@@ -4,9 +4,8 @@ import { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useParams } from "react-router-dom";
 import { AuthorDetails } from "../AuthorDetails";
+import { AuthorsFilterSettings } from "../AuthorsFilterSettings";
 import { FilterableItemList } from "../FilterableItemList";
-import { Input } from "../Input";
-import { Label } from "../Label";
 import { PlaceholderText } from "../PlaceholderText";
 import { SidebarPage } from "../SidebarPage";
 
@@ -27,25 +26,7 @@ export const AuthorsPage = () => {
         <FilterableItemList
           activeItem={idLocal}
           filterSettings={
-            <div className="grid grid-cols-1 sm:grid-cols-6 gap-4">
-              <Label
-                className="col-span-2 sm:flex sm:items-center"
-                htmlFor="text-input"
-              >
-                <FormattedMessage
-                  description="Author text filter input label"
-                  defaultMessage="Text"
-                />
-              </Label>
-              <Input
-                className="col-span-4"
-                id="text-input"
-                value={query.text}
-                onChange={(e) =>
-                  setQuery((q) => ({ ...q, text: e.target.value }))
-                }
-              />
-            </div>
+            <AuthorsFilterSettings query={query} setQuery={setQuery} />
           }
           linkBase="author"
           heading={formatMessage({
