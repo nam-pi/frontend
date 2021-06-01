@@ -20,7 +20,7 @@ export const EventsPage = () => {
   const { idLocal } = useParams<Params>();
   const [query, setQuery] = useState<EventsQuery>({
     aspectType: "",
-    orderBy: "label",
+    orderBy: "date",
     participantType: "",
     text: "",
   });

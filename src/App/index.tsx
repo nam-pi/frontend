@@ -14,6 +14,7 @@ import { PersonsPage } from "./components/PersonsPage";
 import { PlacesPage } from "./components/PlacesPage";
 import { PrivateRoute } from "./components/PrivateRoute";
 import { Profile } from "./components/Profile";
+import { SearchPage } from "./components/SearchPage";
 import { SourcesPage } from "./components/SourcesPage";
 import { HISTORY } from "./constants";
 
@@ -66,6 +67,7 @@ export const App = () => {
               path={["/sources", "/source/:idLocal"]}
               component={SourcesPage}
             />
+            <Route exact path="/search" component={SearchPage} />
             <Route exact path="/login" component={Login} />
             <PrivateRoute exact path="/profile" component={Profile} />
             <Route path="*" component={NoMatch} />

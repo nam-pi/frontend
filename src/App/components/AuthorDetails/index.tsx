@@ -1,15 +1,59 @@
+import { SECONDARY_ITEM_LIMIT } from "App/constants";
+import { useEventLabel } from "App/hooks/useEventLabel";
 import { useLocaleLiteral } from "App/hooks/useLocaleLiteral";
-import { useAuthor } from "nampi-use-api";
-import { FormattedMessage } from "react-intl";
+import { namespaces } from "App/namespaces";
+import { EventsQuery, useAuthor } from "nampi-use-api";
+import { useEffect, useMemo, useState } from "react";
+import { FormattedMessage, useIntl } from "react-intl";
+import { EventsFilterSettings } from "../EventsFilterSettings";
+import { FilterableItemList } from "../FilterableItemList";
 import { Heading } from "../Heading";
 import { ItemInheritance } from "../ItemInheritance";
 import { ItemLabels } from "../ItemLabels";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
-import { Pre } from "../Pre";
 
 interface Props {
   idLocal: string;
 }
+
+const EventsWithAuthor = ({ id }: { id: string }) => {
+  const { formatMessage } = useIntl();
+  const getLabel = useEventLabel();
+  const defaultQuery = useMemo<EventsQuery>(
+    () => ({
+      author: id,
+      orderBy: "date",
+      text: "",
+      limit: SECONDARY_ITEM_LIMIT,
+    }),
+    [id]
+  );
+  const [query, setQuery] = useState(defaultQuery);
+
+  useEffect(() => {
+    setQuery((old) => (old.author === id ? old : { ...old, author: id }));
+  }, [id]);
+
+  return (
+    <FilterableItemList
+      compact
+      defaultQuery={defaultQuery}
+      filterSettings={
+        <EventsFilterSettings query={query} setQuery={setQuery} />
+      }
+      headingLevel={2}
+      linkBase="event"
+      heading={formatMessage({
+        description: "Author events list heading",
+        defaultMessage: "Events created by this author",
+      })}
+      itemType={namespaces.core.event}
+      createLabel={getLabel}
+      query={query}
+      resetQuery={setQuery}
+    />
+  );
+};
 
 export const AuthorDetails = ({ idLocal }: Props) => {
   const getText = useLocaleLiteral();
@@ -25,9 +69,7 @@ export const AuthorDetails = ({ idLocal }: Props) => {
       </Heading>
       <ItemInheritance item={data} />
       <ItemLabels item={data} />
-      <div className="overflow-auto">
-        <Pre>{data}</Pre>
-      </div>
+      <EventsWithAuthor id={data.id} />
     </>
   ) : (
     <LoadingPlaceholder />
