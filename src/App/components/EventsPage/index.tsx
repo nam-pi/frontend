@@ -22,6 +22,8 @@ export const EventsPage = () => {
     aspectType: "",
     orderBy: "date",
     participantType: "",
+    endDate: undefined,
+    startDate: undefined,
     text: "",
   });
   return (
