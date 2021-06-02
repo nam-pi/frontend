@@ -4,9 +4,9 @@ import { APP_NAME } from "App/constants";
 import { useToggle } from "App/hooks/useToggle";
 import clsx from "clsx";
 import { useAuth, useUser } from "nampi-use-api";
-import { Fragment } from "react";
+import { Fragment, useEffect, useRef } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Icon } from "../Icon";
 import { IconButton } from "../IconButton";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
@@ -64,10 +64,18 @@ const Links = () => (
 );
 
 export const Navbar = ({ className }: Props) => {
+  const { pathname } = useLocation();
+  const oldPath = useRef(pathname);
   const { formatMessage } = useIntl();
   const { authenticated, logout } = useAuth();
   const { initialized, loading, data } = useUser();
   const [mobileMenu, toggleMobileMenu] = useToggle();
+  useEffect(() => {
+    if (pathname !== oldPath.current && mobileMenu) {
+      oldPath.current = pathname;
+      toggleMobileMenu();
+    }
+  }, [pathname, mobileMenu, toggleMobileMenu]);
   return (
     <nav className={clsx("bg-gray-400 text-white", className)}>
       <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
