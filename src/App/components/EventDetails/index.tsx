@@ -22,7 +22,6 @@ export const EventDetails = ({ idLocal }: Props) => {
   const { data } = useEvent({ idLocal });
   const { formatDate, formatList } = useIntl();
   const otherParticipants = getOtherParticipants(data);
-  console.log(data?.latest);
   return data ? (
     <>
       <Heading>
