@@ -50,6 +50,7 @@ const EventsList = ({ text }: { text: string }) => {
       filterSettings={
         <EventsFilterSettings query={query} setQuery={setQuery} />
       }
+      forceEmpty={!text}
       headingLevel={2}
       linkBase="event"
       heading={formatMessage({
@@ -88,6 +89,7 @@ const PersonsList = ({ text }: { text: string }) => {
       filterSettings={
         <PersonsFilterSettings query={query} setQuery={setQuery} />
       }
+      forceEmpty={!text}
       headingLevel={2}
       linkBase="person"
       heading={formatMessage({
@@ -126,6 +128,7 @@ const GroupsList = ({ text }: { text: string }) => {
       filterSettings={
         <GroupsFilterSettings query={query} setQuery={setQuery} />
       }
+      forceEmpty={!text}
       headingLevel={2}
       linkBase="group"
       heading={formatMessage({
@@ -164,6 +167,7 @@ const PlacesList = ({ text }: { text: string }) => {
       filterSettings={
         <PlacesFilterSettings query={query} setQuery={setQuery} />
       }
+      forceEmpty={!text}
       headingLevel={2}
       linkBase="place"
       heading={formatMessage({
@@ -202,6 +206,7 @@ const AspectsList = ({ text }: { text: string }) => {
       filterSettings={
         <AspectsFilterSettings query={query} setQuery={setQuery} />
       }
+      forceEmpty={!text}
       headingLevel={2}
       linkBase="aspect"
       heading={formatMessage({
@@ -240,6 +245,7 @@ const SourcesList = ({ text }: { text: string }) => {
       filterSettings={
         <SourcesFilterSettings query={query} setQuery={setQuery} />
       }
+      forceEmpty={!text}
       headingLevel={2}
       linkBase="source"
       heading={formatMessage({
@@ -256,11 +262,21 @@ const SourcesList = ({ text }: { text: string }) => {
 };
 
 export const SearchPage = () => {
-  const key = useRef(Date.now());
+  const inputTimeout = useRef<undefined | NodeJS.Timeout>();
   const searchParam = useSearchParam();
   const [text, setText] = useState<string>(searchParam);
+  const [synchronizedText, setSynchronizedText] = useState<string>(text);
   const location = useLocation();
   const history = useHistory();
+  useEffect(() => {
+    if (inputTimeout.current) {
+      clearTimeout(inputTimeout.current);
+    }
+    inputTimeout.current = setTimeout(
+      () => setSynchronizedText(text.replace(/\s/g, "")),
+      300
+    );
+  }, [text]);
   useEffect(() => {
     if (text) {
       history.push(location.pathname + "?s=" + text);
@@ -269,7 +285,7 @@ export const SearchPage = () => {
     }
   }, [history, location.pathname, text]);
   return (
-    <div key={key.current} className="flex flex-col">
+    <div className="flex flex-col h-full">
       <Heading className="text-center mb-4">
         <FormattedMessage
           description="Search page heading"
@@ -286,13 +302,13 @@ export const SearchPage = () => {
           onChange={(e) => setText(e.currentTarget.value)}
         />
       </div>
-      <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-        <EventsList text={text} />
-        <PersonsList text={text} />
-        <GroupsList text={text} />
-        <PlacesList text={text} />
-        <AspectsList text={text} />
-        <SourcesList text={text} />
+      <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 overflow-auto">
+        <EventsList text={synchronizedText} />
+        <PersonsList text={synchronizedText} />
+        <GroupsList text={synchronizedText} />
+        <PlacesList text={synchronizedText} />
+        <AspectsList text={synchronizedText} />
+        <SourcesList text={synchronizedText} />
       </div>
     </div>
   );

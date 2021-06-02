@@ -24,7 +24,7 @@ export const App = () => {
     <Router history={HISTORY}>
       <div className="text-gray-800 h-screen flex flex-col">
         <Navbar className="sticky top-0 z-50" />
-        <div className="max-w-7xl mx-auto px-2 my-4 w-full sm:overflow-hidden sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-2 my-4 w-full sm:overflow-hidden sm:px-6 lg:px-8 h-full">
           <Switch>
             <Route exact path="/" component={Home} />
             <Route

@@ -34,6 +34,7 @@ interface Props<Q extends CollectionQuery, I extends Item = Item> {
   createLabel?: (item: I) => string;
   defaultQuery?: Q;
   filterSettings?: ReactNode;
+  forceEmpty?: boolean;
   heading: string;
   headingLevel?: HeadingProps["level"];
   itemType: string;
@@ -91,6 +92,7 @@ export const FilterableItemList = <
   compact,
   createLabel,
   filterSettings,
+  forceEmpty,
   heading,
   headingLevel = 1,
   itemType,
@@ -209,7 +211,7 @@ export const FilterableItemList = <
       )}
       {loading ? (
         <LoadingPlaceholder />
-      ) : data ? (
+      ) : data && !forceEmpty ? (
         <ul className="overflow-y-auto" ref={listRef}>
           {data.map((item) => {
             const active = activeItem === item.idLocal;
