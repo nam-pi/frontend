@@ -77,7 +77,7 @@ export const Navbar = ({ className }: Props) => {
     }
   }, [pathname, mobileMenu, toggleMobileMenu]);
   return (
-    <nav className={clsx("bg-gray-400 text-white", className)}>
+    <nav className={clsx("bg-gray-400", "text-white", className)}>
       <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
         <div className="relative flex flex-1 items-center justify-between h-16 sm:justify-start">
           <IconButton
@@ -115,6 +115,10 @@ export const Navbar = ({ className }: Props) => {
             <div>
               <Link
                 className="mr-4 hover:opacity-80 hidden sm:inline-block"
+                title={formatMessage({
+                  description: "Desktop search link title text",
+                  defaultMessage: "Go to search",
+                })}
                 to="/search"
               >
                 <Icon icon={faSearch} />

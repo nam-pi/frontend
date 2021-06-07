@@ -146,7 +146,7 @@ export const FilterableItemList = <
   }, [activeItem, data, initialized, loading]);
 
   return (
-    <div className={className}>
+    <div className={clsx(className, "flex flex-col sm:h-full")}>
       <Heading level={headingLevel}>
         <FormattedMessage
           description="Item list heading"
@@ -216,22 +216,22 @@ export const FilterableItemList = <
           {data.map((item) => {
             const active = activeItem === item.idLocal;
             return (
-              <Link key={item.id} to={"/" + linkBase + "/" + item.idLocal}>
-                <li
-                  id={item.idLocal}
-                  className={clsx(
-                    "mb-1",
-                    "last:mb-0",
-                    "cursor-pointer",
-                    "hover:bg-gray-200",
-                    active && "bg-gray-100"
-                  )}
-                  key={item.idLocal}
-                  ref={(ref) => (itemRefs.current[item.idLocal] = ref!)}
-                >
+              <li
+                key={item.idLocal}
+                id={item.idLocal}
+                className={clsx(
+                  "mb-1",
+                  "last:mb-0",
+                  "cursor-pointer",
+                  "hover:bg-gray-200",
+                  active && "bg-gray-100"
+                )}
+                ref={(ref) => (itemRefs.current[item.idLocal] = ref!)}
+              >
+                <Link key={item.id} to={"/" + linkBase + "/" + item.idLocal}>
                   {createLabel ? createLabel(item) : getText(item.labels)}
-                </li>
-              </Link>
+                </Link>
+              </li>
             );
           })}
         </ul>
