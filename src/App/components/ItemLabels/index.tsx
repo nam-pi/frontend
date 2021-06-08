@@ -14,7 +14,7 @@ export const ItemLabels = ({ className, item }: Props) => (
     <Heading level={2}>
       <FormattedMessage
         description="Labels list heading text"
-        defaultMessage="{labelCount, plural, one {Label} other {Labels}}"
+        defaultMessage="{labelCount, plural, one {Label} other {Label variants}}"
         values={{ labelCount: item.labels?.length }}
       />
     </Heading>
