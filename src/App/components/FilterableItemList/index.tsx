@@ -228,7 +228,11 @@ export const FilterableItemList = <
                 )}
                 ref={(ref) => (itemRefs.current[item.idLocal] = ref!)}
               >
-                <Link key={item.id} to={"/" + linkBase + "/" + item.idLocal}>
+                <Link
+                  className="w-full inline-block"
+                  key={item.id}
+                  to={"/" + linkBase + "/" + item.idLocal}
+                >
                   {createLabel ? createLabel(item) : getText(item.labels)}
                 </Link>
               </li>
