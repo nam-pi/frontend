@@ -12,9 +12,5 @@ export const MESSAGES = {
   "en-GB": enGBMessages,
 };
 
-export const LANGUAGE_NAMES = {
-  "en-GB": "English (UK)",
-};
-
 export const LOG_MISSING_TRANSLATIONS =
   process.env.REACT_APP_LOG_MISSING_TRANSLATIONS || false;
