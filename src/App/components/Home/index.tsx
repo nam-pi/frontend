@@ -1,20 +1,4 @@
-import { FormattedMessage } from "react-intl";
-import { Heading } from "../Heading";
-import { Paragraph } from "../Paragraph";
+import { HOME_TEXTS } from "App/constants";
+import { LocalizedMarkdownPage } from "../LocalizedMarkdownPage";
 
-export const Home = () => (
-  <div>
-    <Heading>
-      <FormattedMessage
-        description="The home page heading"
-        defaultMessage="Home"
-      />
-    </Heading>
-    <Paragraph>
-      <FormattedMessage
-        description="The home page content"
-        defaultMessage="Welcome. This page is currently under development."
-      />
-    </Paragraph>
-  </div>
-);
+export const Home = () => <LocalizedMarkdownPage texts={HOME_TEXTS} />;
