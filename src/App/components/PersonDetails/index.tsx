@@ -44,7 +44,7 @@ const EventsWithPerson = ({ id }: { id: string }) => {
         <EventsFilterSettings query={query} setQuery={setQuery} />
       }
       headingLevel={2}
-      linkBase="event"
+      linkBase="events"
       heading={formatMessage({
         description: "Person events list heading",
         defaultMessage: "Events with this person as participant",

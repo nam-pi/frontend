@@ -46,7 +46,7 @@ const EventsWithAspect = ({ id }: { id: string }) => {
         <EventsFilterSettings query={query} setQuery={setQuery} />
       }
       headingLevel={2}
-      linkBase="event"
+      linkBase="events"
       heading={formatMessage({
         description: "Aspect events list heading",
         defaultMessage: "Events that use this aspect",
@@ -85,7 +85,7 @@ const PersonsWithAspect = ({ id }: { id: string }) => {
         <PersonsFilterSettings query={query} setQuery={setQuery} />
       }
       headingLevel={2}
-      linkBase="person"
+      linkBase="persons"
       heading={formatMessage({
         description: "Person events list heading",
         defaultMessage: "Persons that use this aspect",
@@ -101,7 +101,7 @@ const PersonsWithAspect = ({ id }: { id: string }) => {
 export const AspectDetails = ({ idLocal }: Props) => {
   const getText = useLocaleLiteral();
   const { data } = useAspect({ idLocal });
-  const textCount = data?.text?.length;
+  const textCount = data?.texts?.length;
   return data ? (
     <>
       <Heading>

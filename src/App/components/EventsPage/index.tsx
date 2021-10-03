@@ -34,7 +34,7 @@ export const EventsPage = () => {
           filterSettings={
             <EventsFilterSettings query={query} setQuery={setQuery} />
           }
-          linkBase="event"
+          linkBase="events"
           heading={formatMessage({
             description: "Events sidebar list item name",
             defaultMessage: "Events",

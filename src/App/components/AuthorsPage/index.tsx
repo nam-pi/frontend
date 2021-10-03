@@ -28,7 +28,7 @@ export const AuthorsPage = () => {
           filterSettings={
             <AuthorsFilterSettings query={query} setQuery={setQuery} />
           }
-          linkBase="author"
+          linkBase="authors"
           heading={formatMessage({
             description: "Authors sidebar list item name",
             defaultMessage: "Authors",

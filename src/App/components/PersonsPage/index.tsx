@@ -37,7 +37,7 @@ export const PersonsPage = () => {
             defaultMessage: "Persons",
           })}
           itemType={namespaces.core.person}
-          linkBase="person"
+          linkBase="persons"
           query={query}
           resetQuery={setQuery}
         />

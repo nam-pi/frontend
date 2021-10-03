@@ -34,7 +34,7 @@ export const PlacesPage = () => {
             defaultMessage: "Places",
           })}
           itemType={namespaces.core.place}
-          linkBase="place"
+          linkBase="places"
           query={query}
           resetQuery={setQuery}
         />

@@ -42,7 +42,7 @@ const EventsWithPlace = ({ id }: { id: string }) => {
         <EventsFilterSettings query={query} setQuery={setQuery} />
       }
       headingLevel={2}
-      linkBase="event"
+      linkBase="events"
       heading={formatMessage({
         description: "Place events list heading",
         defaultMessage: "Events happened at this place",

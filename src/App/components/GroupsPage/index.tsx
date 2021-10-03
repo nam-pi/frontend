@@ -34,7 +34,7 @@ export const GroupsPage = () => {
             defaultMessage: "Groups",
           })}
           itemType={namespaces.core.group}
-          linkBase="group"
+          linkBase="groups"
           query={query}
           resetQuery={setQuery}
         />

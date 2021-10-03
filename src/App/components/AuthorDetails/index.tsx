@@ -42,7 +42,7 @@ const EventsWithAuthor = ({ id }: { id: string }) => {
         <EventsFilterSettings query={query} setQuery={setQuery} />
       }
       headingLevel={2}
-      linkBase="event"
+      linkBase="events"
       heading={formatMessage({
         description: "Author events list heading",
         defaultMessage: "Events created by this author",

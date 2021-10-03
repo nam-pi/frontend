@@ -4,17 +4,17 @@ import { useToggle } from "App/hooks/useToggle";
 import { namespaces } from "App/namespaces";
 import clsx from "clsx";
 import {
-  CollectionQuery,
-  FetchCollectionResult,
-  Item,
-  useActs,
-  useAspects,
-  useAuthors,
-  useEvents,
-  useGroups,
-  usePersons,
-  usePlaces,
-  useSources,
+    CollectionQuery,
+    FetchCollectionResult,
+    Item,
+    useActs,
+    useAspects,
+    useAuthors,
+    useEvents,
+    useGroups,
+    usePersons,
+    usePlaces,
+    useSources
 } from "nampi-use-api";
 import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -38,7 +38,15 @@ interface Props<Q extends CollectionQuery, I extends Item = Item> {
   heading: string;
   headingLevel?: HeadingProps["level"];
   itemType: string;
-  linkBase: string;
+  linkBase:
+    | "acts"
+    | "aspects"
+    | "authors"
+    | "events"
+    | "groups"
+    | "persons"
+    | "places"
+    | "sources";
   paused?: boolean;
   query?: Q;
   resetQuery?: (query: Q) => void;

@@ -2,12 +2,12 @@ import { SECONDARY_ITEM_LIMIT } from "App/constants";
 import { useEventLabel } from "App/hooks/useEventLabel";
 import { namespaces } from "App/namespaces";
 import {
-  AspectsQuery,
-  EventsQuery,
-  GroupsQuery,
-  PersonsQuery,
-  PlacesQuery,
-  SourcesQuery,
+    AspectsQuery,
+    EventsQuery,
+    GroupsQuery,
+    PersonsQuery,
+    PlacesQuery,
+    SourcesQuery
 } from "nampi-use-api";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -52,7 +52,7 @@ const EventsList = ({ text }: { text: string }) => {
       }
       forceEmpty={!text}
       headingLevel={2}
-      linkBase="event"
+      linkBase="events"
       heading={formatMessage({
         description: "Events list heading",
         defaultMessage: "Events with this text",
@@ -91,7 +91,7 @@ const PersonsList = ({ text }: { text: string }) => {
       }
       forceEmpty={!text}
       headingLevel={2}
-      linkBase="person"
+      linkBase="persons"
       heading={formatMessage({
         description: "Persons list heading",
         defaultMessage: "Persons with this text",
@@ -130,7 +130,7 @@ const GroupsList = ({ text }: { text: string }) => {
       }
       forceEmpty={!text}
       headingLevel={2}
-      linkBase="group"
+      linkBase="groups"
       heading={formatMessage({
         description: "Groups list heading",
         defaultMessage: "Groups with this text",
@@ -169,7 +169,7 @@ const PlacesList = ({ text }: { text: string }) => {
       }
       forceEmpty={!text}
       headingLevel={2}
-      linkBase="place"
+      linkBase="places"
       heading={formatMessage({
         description: "Places list heading",
         defaultMessage: "Places with this text",
@@ -208,7 +208,7 @@ const AspectsList = ({ text }: { text: string }) => {
       }
       forceEmpty={!text}
       headingLevel={2}
-      linkBase="aspect"
+      linkBase="aspects"
       heading={formatMessage({
         description: "Aspects list heading",
         defaultMessage: "Aspects with this text",
@@ -247,7 +247,7 @@ const SourcesList = ({ text }: { text: string }) => {
       }
       forceEmpty={!text}
       headingLevel={2}
-      linkBase="source"
+      linkBase="sources"
       heading={formatMessage({
         description: "Sources list heading",
         defaultMessage: "Sources with this text",

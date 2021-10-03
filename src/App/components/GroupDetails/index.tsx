@@ -44,7 +44,7 @@ const EventsWithGroup = ({ id }: { id: string }) => {
         <EventsFilterSettings query={query} setQuery={setQuery} />
       }
       headingLevel={2}
-      linkBase="event"
+      linkBase="events"
       heading={formatMessage({
         description: "Group events list heading",
         defaultMessage: "Events with this group as participant",

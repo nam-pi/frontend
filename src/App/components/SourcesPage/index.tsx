@@ -34,7 +34,7 @@ export const SourcesPage = () => {
             defaultMessage: "Sources",
           })}
           itemType={namespaces.core.source}
-          linkBase="source"
+          linkBase="sources"
           query={query}
           resetQuery={setQuery}
         />

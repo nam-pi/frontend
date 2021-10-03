@@ -34,7 +34,7 @@ export const AspectsPage = () => {
             defaultMessage: "Aspects",
           })}
           itemType={namespaces.core.aspect}
-          linkBase="aspect"
+          linkBase="aspects"
           query={query}
           resetQuery={setQuery}
         />
