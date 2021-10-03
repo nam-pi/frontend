@@ -111,75 +111,73 @@ export const Navbar = ({ className }: Props) => {
           <div className="hidden sm:block sm:ml-6 space-x-3">
             <Links />
           </div>
-          <div className="sm:absolute right-0">
-            <div>
-              <Link
-                className="mr-4 hover:opacity-80 hidden sm:inline-block"
-                title={formatMessage({
-                  description: "Desktop search link title text",
-                  defaultMessage: "Go to search",
-                })}
-                to="/search"
-              >
-                <Icon icon={faSearch} />
-              </Link>
-              {initialized && !loading ? (
-                authenticated && data ? (
-                  <Menu as="div" className="relative text-gray-800">
-                    <Menu.Button className="px-3 py-2 rounded-full border-2 border-white text-white hover:opacity-80 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-current">
-                      <Icon icon={faUser} />
-                    </Menu.Button>
-                    <Transition
-                      as={Fragment}
-                      enter="transition ease-out duration-100"
-                      enterFrom="transform opacity-0 scale-95"
-                      enterTo="transform opacity-100 scale-100"
-                      leave="transition ease-in duration-75"
-                      leaveFrom="transform opacity-100 scale-100"
-                      leaveTo="transform opacity-0 scale-95"
-                    >
-                      <Menu.Items className="absolute min-w-max mt-1 right-0 bg-white shadow-lg rounded flex flex-col p-2">
-                        <Menu.Item>
-                          {({ active }) => (
-                            <Link to="/profile">
-                              <FormattedMessage
-                                description="User profile link text"
-                                defaultMessage="Profile"
-                              />
-                            </Link>
-                          )}
-                        </Menu.Item>
-                        <Menu.Item>
-                          {({ active }) => (
-                            <button type="button" onClick={() => logout()}>
-                              <FormattedMessage
-                                description="Logout button label"
-                                defaultMessage="Log out"
-                              />
-                            </button>
-                          )}
-                        </Menu.Item>
-                      </Menu.Items>
-                    </Transition>
-                  </Menu>
-                ) : (
-                  <Link
-                    className="hover:opacity-80"
-                    to={{
-                      pathname: "/login",
-                      state: { from: window.location.href },
-                    }}
+          <div className="sm:absolute right-0 flex flex-row items-center">
+            <Link
+              className="mr-4 hover:opacity-80 hidden sm:inline-block"
+              title={formatMessage({
+                description: "Desktop search link title text",
+                defaultMessage: "Go to search",
+              })}
+              to="/search"
+            >
+              <Icon icon={faSearch} />
+            </Link>
+            {initialized && !loading ? (
+              authenticated && data ? (
+                <Menu as="div" className="relative text-gray-800">
+                  <Menu.Button className="px-3 py-2 rounded-full border-2 border-white text-white hover:opacity-80 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-current">
+                    <Icon icon={faUser} />
+                  </Menu.Button>
+                  <Transition
+                    as={Fragment}
+                    enter="transition ease-out duration-100"
+                    enterFrom="transform opacity-0 scale-95"
+                    enterTo="transform opacity-100 scale-100"
+                    leave="transition ease-in duration-75"
+                    leaveFrom="transform opacity-100 scale-100"
+                    leaveTo="transform opacity-0 scale-95"
                   >
-                    <FormattedMessage
-                      description="Login link text"
-                      defaultMessage="Log in"
-                    />
-                  </Link>
-                )
+                    <Menu.Items className="absolute min-w-max mt-1 right-0 bg-white shadow-lg rounded flex flex-col p-2">
+                      <Menu.Item>
+                        {({ active }) => (
+                          <Link to="/profile">
+                            <FormattedMessage
+                              description="User profile link text"
+                              defaultMessage="Profile"
+                            />
+                          </Link>
+                        )}
+                      </Menu.Item>
+                      <Menu.Item>
+                        {({ active }) => (
+                          <button type="button" onClick={() => logout()}>
+                            <FormattedMessage
+                              description="Logout button label"
+                              defaultMessage="Log out"
+                            />
+                          </button>
+                        )}
+                      </Menu.Item>
+                    </Menu.Items>
+                  </Transition>
+                </Menu>
               ) : (
-                <LoadingPlaceholder />
-              )}
-            </div>
+                <Link
+                  className="hover:opacity-80"
+                  to={{
+                    pathname: "/login",
+                    state: { from: window.location.href },
+                  }}
+                >
+                  <FormattedMessage
+                    description="Login link text"
+                    defaultMessage="Log in"
+                  />
+                </Link>
+              )
+            ) : (
+              <LoadingPlaceholder />
+            )}
           </div>
         </div>
       </div>
