@@ -2,6 +2,8 @@ import { SECONDARY_ITEM_LIMIT } from "App/constants";
 import { useEventLabel } from "App/hooks/useEventLabel";
 import { useLocaleLiteral } from "App/hooks/useLocaleLiteral";
 import { namespaces } from "App/namespaces";
+import clsx from "clsx";
+import { LatLngTuple } from "leaflet";
 import { EventsQuery, usePlace } from "nampi-use-api";
 import { useEffect, useMemo, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -11,6 +13,8 @@ import { Heading } from "../Heading";
 import { ItemInheritance } from "../ItemInheritance";
 import { ItemLabels } from "../ItemLabels";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
+import { Map } from "../Map";
+import { Marker } from "../Marker";
 
 interface Props {
   idLocal: string;
@@ -58,17 +62,40 @@ const EventsWithPlace = ({ id }: { id: string }) => {
 export const PlaceDetails = ({ idLocal }: Props) => {
   const getText = useLocaleLiteral();
   const { data } = usePlace({ idLocal });
+  const coordinates: undefined | LatLngTuple =
+    data?.latitude && data.longitude
+      ? [data.latitude, data.longitude]
+      : undefined;
   return data ? (
     <>
-      <Heading>
-        <FormattedMessage
-          description="Place heading"
-          defaultMessage="Place: {label}"
-          values={{ label: getText(data.labels) }}
-        />
-      </Heading>
-      <ItemInheritance item={data} />
-      <ItemLabels item={data} />
+      <div
+        className={clsx(
+          "md:grid",
+          "gap-8",
+          coordinates ? "grid-cols-6" : "grid-cols-4"
+        )}
+      >
+        <div className="col-span-4">
+          <Heading>
+            <FormattedMessage
+              description="Place heading"
+              defaultMessage="Place: {label}"
+              values={{ label: getText(data.labels) }}
+            />
+          </Heading>
+          <ItemInheritance item={data} />
+          <ItemLabels item={data} />
+        </div>
+        {coordinates && (
+          <Map
+            className="w-full h-64 col-span-2 mt-8 md:mt-0"
+            center={coordinates}
+            zoom={16}
+          >
+            <Marker className="text-red-500 text-3xl" position={coordinates} />
+          </Map>
+        )}
+      </div>
       <EventsWithPlace id={data.id} />
     </>
   ) : (
