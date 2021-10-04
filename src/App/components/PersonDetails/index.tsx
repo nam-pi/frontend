@@ -1,10 +1,13 @@
+import { faEdit } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { SECONDARY_ITEM_LIMIT } from "App/constants";
 import { useEventLabel } from "App/hooks/useEventLabel";
 import { useLocaleLiteral } from "App/hooks/useLocaleLiteral";
 import { namespaces } from "App/namespaces";
-import { EventsQuery, usePerson } from "nampi-use-api";
+import { EventsQuery, useAuth, usePerson } from "nampi-use-api";
 import { useEffect, useMemo, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
+import { Link } from "react-router-dom";
 import { EventsFilterSettings } from "../EventsFilterSettings";
 import { FilterableItemList } from "../FilterableItemList";
 import { Heading } from "../Heading";
@@ -59,16 +62,24 @@ const EventsWithPerson = ({ id }: { id: string }) => {
 
 export const PersonDetails = ({ idLocal }: Props) => {
   const getText = useLocaleLiteral();
+  const { authenticated } = useAuth();
   const { data } = usePerson({ idLocal });
   return data ? (
     <>
-      <Heading>
-        <FormattedMessage
-          description="Person heading"
-          defaultMessage="Person: {label}"
-          values={{ label: getText(data.labels) }}
-        />
-      </Heading>
+      <div className="flex items-center">
+        <Heading>
+          <FormattedMessage
+            description="Person heading"
+            defaultMessage="Person: {label}"
+            values={{ label: getText(data.labels) }}
+          />
+        </Heading>
+        {authenticated && (
+          <Link className="ml-4 text-gray-400" to={`/persons/${idLocal}?edit`}>
+            <FontAwesomeIcon icon={faEdit} />
+          </Link>
+        )}
+      </div>
       <ItemInheritance item={data} />
       <ItemLabels item={data} />
       <EventsWithPerson id={data.id} />

@@ -1,14 +1,19 @@
-import { faBars, faSearch, faUser } from "@fortawesome/free-solid-svg-icons";
+import {
+    faBars,
+    faPlus,
+    faSearch,
+    faUserCircle
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Menu, Transition } from "@headlessui/react";
 import { APP_NAME } from "App/constants";
 import { useToggle } from "App/hooks/useToggle";
 import clsx from "clsx";
 import { useAuth, useUser } from "nampi-use-api";
-import { Fragment, useEffect, useRef } from "react";
+import { Fragment, ReactNode, useEffect, useRef } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { Link, useLocation } from "react-router-dom";
 import { Icon } from "../Icon";
-import { IconButton } from "../IconButton";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
 import { NampiLogo } from "../NampiLogo";
 
@@ -16,6 +21,60 @@ interface Props {
   className?: string;
 }
 
+const MenuItem = ({
+  action,
+  children,
+  label,
+}: {
+  children: ReactNode;
+  action: string | VoidFunction;
+  label?: string;
+}) => (
+  <Menu.Item>
+    {(active) =>
+      typeof action === "string" ? (
+        <Link to={action}>{children}</Link>
+      ) : (
+        <button type="button" onClick={action} aria-label={label}>
+          {children}
+        </button>
+      )
+    }
+  </Menu.Item>
+);
+const NavMenu = ({
+  buttonContent,
+  buttonLabel,
+  children,
+  className,
+}: {
+  buttonContent: ReactNode;
+  buttonLabel?: string;
+  children: ReactNode | ReactNode[];
+  className?: string;
+}) => (
+  <Menu as="div" className={clsx("relative text-gray-800", className)}>
+    <Menu.Button
+      className="text-white hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-current"
+      aria-label={buttonLabel}
+    >
+      {buttonContent}
+    </Menu.Button>
+    <Transition
+      as={Fragment}
+      enter="transition ease-out duration-100"
+      enterFrom="transform opacity-0 scale-95"
+      enterTo="transform opacity-100 scale-100"
+      leave="transition ease-in duration-75"
+      leaveFrom="transform opacity-100 scale-100"
+      leaveTo="transform opacity-0 scale-95"
+    >
+      <Menu.Items className="absolute min-w-max mt-1 right-0 bg-white shadow-lg rounded flex flex-col p-2">
+        {children}
+      </Menu.Items>
+    </Transition>
+  </Menu>
+);
 const Links = () => (
   <>
     <Link to="/events" className="hover:opacity-80">
@@ -63,10 +122,36 @@ const Links = () => (
   </>
 );
 
+const EditMenu = () => {
+  const intl = useIntl();
+  return (
+    <NavMenu
+      buttonContent={<FontAwesomeIcon className="mr-4" icon={faPlus} />}
+      buttonLabel={intl.formatMessage({
+        description: "New items button label",
+        defaultMessage: "Toggle the new items menu",
+      })}
+    >
+      <MenuItem
+        action="/persons?edit"
+        label={intl.formatMessage({
+          description: "Create persons item label",
+          defaultMessage: "Create new person",
+        })}
+      >
+        <FormattedMessage
+          description="New person button label"
+          defaultMessage="New person"
+        />
+      </MenuItem>
+    </NavMenu>
+  );
+};
+
 export const Navbar = ({ className }: Props) => {
   const { pathname } = useLocation();
   const oldPath = useRef(pathname);
-  const { formatMessage } = useIntl();
+  const intl = useIntl();
   const { authenticated, logout } = useAuth();
   const { initialized, loading, data } = useUser();
   const [mobileMenu, toggleMobileMenu] = useToggle();
@@ -80,17 +165,6 @@ export const Navbar = ({ className }: Props) => {
     <nav className={clsx("bg-gray-400", "text-white", className)}>
       <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
         <div className="relative flex flex-1 items-center justify-between h-16 sm:justify-start">
-          <IconButton
-            className="sm:hidden rounded shadow-none border-2 border-white"
-            aria-controls="mobile-menu"
-            aria-expanded="false"
-            icon={faBars}
-            label={formatMessage({
-              description: "Mobile toggle button label",
-              defaultMessage: "Open main menu",
-            })}
-            onClick={toggleMobileMenu}
-          />
           <div className="flex">
             <Link
               to="/"
@@ -112,9 +186,22 @@ export const Navbar = ({ className }: Props) => {
             <Links />
           </div>
           <div className="sm:absolute right-0 flex flex-row items-center">
+            <button
+              className="sm:hidden bg-transparent mr-4 text-white hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-current"
+              aria-controls="mobile-menu"
+              aria-expanded="false"
+              aria-label={intl.formatMessage({
+                description: "Mobile toggle button label",
+                defaultMessage: "Toggle main menu",
+              })}
+              onClick={toggleMobileMenu}
+            >
+              <FontAwesomeIcon icon={faBars} />
+            </button>
+            {authenticated && data && <EditMenu />}
             <Link
               className="mr-4 hover:opacity-80 hidden sm:inline-block"
-              title={formatMessage({
+              title={intl.formatMessage({
                 description: "Desktop search link title text",
                 defaultMessage: "Go to search",
               })}
@@ -124,43 +211,32 @@ export const Navbar = ({ className }: Props) => {
             </Link>
             {initialized && !loading ? (
               authenticated && data ? (
-                <Menu as="div" className="relative text-gray-800">
-                  <Menu.Button className="px-3 py-2 rounded-full border-2 border-white text-white hover:opacity-80 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-current">
-                    <Icon icon={faUser} />
-                  </Menu.Button>
-                  <Transition
-                    as={Fragment}
-                    enter="transition ease-out duration-100"
-                    enterFrom="transform opacity-0 scale-95"
-                    enterTo="transform opacity-100 scale-100"
-                    leave="transition ease-in duration-75"
-                    leaveFrom="transform opacity-100 scale-100"
-                    leaveTo="transform opacity-0 scale-95"
+                <NavMenu
+                  buttonContent={<Icon icon={faUserCircle} />}
+                  buttonLabel={intl.formatMessage({
+                    description: "Profile menu button label",
+                    defaultMessage: "Toggle profile menu",
+                  })}
+                >
+                  <MenuItem action="/profile">
+                    <FormattedMessage
+                      description="User profile link text"
+                      defaultMessage="Profile"
+                    />
+                  </MenuItem>
+                  <MenuItem
+                    action={logout}
+                    label={intl.formatMessage({
+                      description: "Logout button label",
+                      defaultMessage: "Log out of user account",
+                    })}
                   >
-                    <Menu.Items className="absolute min-w-max mt-1 right-0 bg-white shadow-lg rounded flex flex-col p-2">
-                      <Menu.Item>
-                        {({ active }) => (
-                          <Link to="/profile">
-                            <FormattedMessage
-                              description="User profile link text"
-                              defaultMessage="Profile"
-                            />
-                          </Link>
-                        )}
-                      </Menu.Item>
-                      <Menu.Item>
-                        {({ active }) => (
-                          <button type="button" onClick={() => logout()}>
-                            <FormattedMessage
-                              description="Logout button label"
-                              defaultMessage="Log out"
-                            />
-                          </button>
-                        )}
-                      </Menu.Item>
-                    </Menu.Items>
-                  </Transition>
-                </Menu>
+                    <FormattedMessage
+                      description="Logout button label"
+                      defaultMessage="Log out"
+                    />
+                  </MenuItem>
+                </NavMenu>
               ) : (
                 <Link
                   className="hover:opacity-80"

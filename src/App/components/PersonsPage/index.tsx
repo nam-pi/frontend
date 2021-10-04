@@ -1,23 +1,20 @@
+import { useEntityUrl } from "App/hooks/useEntityUrl";
 import { usePersonLabel } from "App/hooks/usePersonLabel";
 import { namespaces } from "App/namespaces";
 import { Person, PersonsQuery } from "nampi-use-api";
 import { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
-import { useParams } from "react-router-dom";
 import { FilterableItemList } from "../FilterableItemList";
 import { PersonDetails } from "../PersonDetails";
+import { PersonEditor } from "../PersonEditor";
 import { PersonsFilterSettings } from "../PersonsFilterSettings";
 import { PlaceholderText } from "../PlaceholderText";
 import { SidebarPage } from "../SidebarPage";
 
-interface Params {
-  idLocal: string;
-}
-
 export const PersonsPage = () => {
   const getLabel = usePersonLabel();
   const { formatMessage } = useIntl();
-  const { idLocal } = useParams<Params>();
+  const { idLocal, edit } = useEntityUrl();
   const [query, setQuery] = useState<PersonsQuery>({
     orderBy: "label",
     text: "",
@@ -43,7 +40,9 @@ export const PersonsPage = () => {
         />
       }
       main={
-        idLocal ? (
+        edit ? (
+          <PersonEditor idLocal={idLocal} />
+        ) : idLocal ? (
           <PersonDetails idLocal={idLocal} />
         ) : (
           <PlaceholderText>
