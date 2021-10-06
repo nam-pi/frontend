@@ -4,6 +4,7 @@ import { TranslationState } from "./types";
 export const DEFAULT_LOCALE = "en-GB";
 
 export const DEFAULT_TRANSLATION_STATE: TranslationState = {
+  languages: [],
   locale: DEFAULT_LOCALE,
   setLocale: () => {},
 };
