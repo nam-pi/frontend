@@ -7,6 +7,7 @@ import { ComboBox, Option, Props as ComboBoxProps } from "../ComboBox";
 interface Props
   extends Omit<ComboBoxProps, "options" | "matches" | "value" | "onChange"> {
   onChange: (text: string, value?: string) => void;
+  value?: string;
 }
 
 type Languages = TranslationState["languages"];
@@ -44,6 +45,9 @@ const findValue = (text: string, matches: Languages) =>
     ? matches[0].value
     : undefined;
 
+const findText = (value: string, matches: Languages): string =>
+  matches.find((match) => match.value === value)?.text || "";
+
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case "changeText": {
@@ -76,22 +80,28 @@ const reducer = (state: State, action: Action): State => {
 
 export const LanguageSelect = ({
   onChange = () => undefined,
+  value: externalValue = "",
   ...props
 }: Props) => {
   const languages = useLanguages();
-  const [{ text, matches, value }, dispatch] = useReducer(
-    reducer,
-    initialState
-  );
+  const [{ text, matches, value }, dispatch] = useReducer(reducer, {
+    ...initialState,
+    text: findText(externalValue, languages),
+  });
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch({ type: "changeText", text: e.target.value });
+  }, []);
+  useEffect(() => {
+    const text = findText(externalValue, languages);
+    return dispatch({ type: "changeText", text });
+  }, [externalValue, languages]);
   useEffect(() => {
     dispatch({ type: "setLanguages", languages });
   }, [languages]);
   useEffect(() => {
     onChange(text, value);
   }, [onChange, text, value]);
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch({ type: "changeText", text: e.target.value });
-  }, []);
+  console.log(value);
   return (
     <ComboBox
       {...props}
