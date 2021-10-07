@@ -1,23 +1,17 @@
 import clsx from "clsx";
-import { DetailedHTMLProps, forwardRef, InputHTMLAttributes } from "react";
+import { DetailedHTMLProps, forwardRef, TextareaHTMLAttributes } from "react";
 
-export interface Props
+interface Props
   extends DetailedHTMLProps<
-    InputHTMLAttributes<HTMLInputElement>,
-    HTMLInputElement
+    TextareaHTMLAttributes<HTMLTextAreaElement>,
+    HTMLTextAreaElement
   > {
   label?: string;
 }
 
-export const Input = forwardRef<HTMLInputElement, Props>(
+export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
   (
-    {
-      className,
-      id = String(+new Date() * Math.random()),
-      label,
-      type = "text",
-      ...props
-    },
+    { className, id = String(+new Date() * Math.random()), label, ...props },
     ref
   ) => (
     <div
@@ -31,10 +25,9 @@ export const Input = forwardRef<HTMLInputElement, Props>(
           {label}
         </label>
       )}
-      <input
+      <textarea
         {...props}
         ref={ref}
-        type={type}
         className="py-1 px-2 w-full bg-transparent border-none shadow-none outline-none focus:ring-transparent focus:border-transparent focus:outline-none focus:shadow-outline focus:border-none"
       />
     </div>

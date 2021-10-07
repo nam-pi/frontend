@@ -87,21 +87,17 @@ export const LanguageSelect = ({
   const [{ text, matches, value }, dispatch] = useReducer(reducer, {
     ...initialState,
     text: findText(externalValue, languages),
+    value: externalValue,
   });
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({ type: "changeText", text: e.target.value });
   }, []);
-  useEffect(() => {
-    const text = findText(externalValue, languages);
-    return dispatch({ type: "changeText", text });
-  }, [externalValue, languages]);
   useEffect(() => {
     dispatch({ type: "setLanguages", languages });
   }, [languages]);
   useEffect(() => {
     onChange(text, value);
   }, [onChange, text, value]);
-  console.log(value);
   return (
     <ComboBox
       {...props}

@@ -2,8 +2,6 @@ import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
 import React, {
-    DetailedHTMLProps,
-    InputHTMLAttributes,
     useCallback,
     useEffect,
     useMemo,
@@ -11,12 +9,7 @@ import React, {
     useState
 } from "react";
 import { useIntl } from "react-intl";
-import { Input } from "../Input";
-
-type InputProps = DetailedHTMLProps<
-  InputHTMLAttributes<HTMLInputElement>,
-  HTMLInputElement
->;
+import { Input, Props as InputProps } from "../Input";
 
 export type Option = { text: string; value: string };
 
@@ -114,10 +107,10 @@ export const ComboBox = ({
   );
 
   const handleBlur = useCallback(() => {
-    if (active >= 0) {
+    if (expanded && matches.length >= 0) {
       fireEvent(matches[active].text);
     }
-  }, [active, fireEvent, matches]);
+  }, [active, expanded, fireEvent, matches]);
 
   const handleInputFocus = useCallback(
     (e: React.FocusEvent<HTMLInputElement>) => {
@@ -195,14 +188,14 @@ export const ComboBox = ({
 
   return (
     <div
-      className={clsx(className, "relative")}
+      className={clsx(className, "w-full relative")}
       onBlur={handleBlur}
       onKeyDown={handleKeyPress}
     >
       <div className="relative w-full">
         <Input
           {...inputProps}
-          className="w-full relative"
+          className="relative w-full"
           onChange={handleChange}
           onFocus={handleInputFocus}
           ref={inputElement}
@@ -217,6 +210,7 @@ export const ComboBox = ({
           disabled={!expanded && !expandable}
           onMouseDown={handleExpandToggleClick}
           tabIndex={-1}
+          type="button"
         >
           <FontAwesomeIcon icon={expanded ? faCaretUp : faCaretDown} />
         </button>
