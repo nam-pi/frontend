@@ -1,5 +1,10 @@
+export interface Language {
+  text: string;
+  value: string;
+}
+
 export interface TranslationState {
   locale: string;
   setLocale: (locale: string) => void;
-  languages: { text: string; value: string }[];
+  languages: Language[];
 }

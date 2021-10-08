@@ -4,7 +4,7 @@ import { ButtonHTMLAttributes } from "react";
 export interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {}
 
 export const Button = ({ className = "", type, ...props }: Props) => {
-  let defaultClasses = "disabled:opacity-50";
+  let defaultClasses = "disabled:opacity-50 disabled:cursor-default";
   if (!className.includes("p-") && !className.includes("px-")) {
     defaultClasses += " px-2";
   }

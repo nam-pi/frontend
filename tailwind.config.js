@@ -24,6 +24,7 @@ module.exports = {
       ringColor: ["focus-visible"],
       ringWidth: ["focus-visible"],
       ringOffsetWidth: ["focus-visible"],
+      cursor: ["disabled"],
     },
   },
   plugins: [require("@tailwindcss/forms")],

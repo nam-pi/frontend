@@ -14,8 +14,8 @@ import { Input, Props as InputProps } from "../Input";
 export type Option = { text: string; value: string };
 
 export interface Props extends Omit<InputProps, "type"> {
-  options?: Option[];
-  matches?: Option[];
+  options?: string[];
+  matches?: string[];
 }
 
 export const ComboBox = ({
@@ -33,8 +33,7 @@ export const ComboBox = ({
 
   const expandable = useMemo(
     () =>
-      (matches.length === 1 &&
-        matches[0].text !== inputElement.current?.value) ||
+      (matches.length === 1 && matches[0] !== inputElement.current?.value) ||
       matches.length > 1,
     [matches]
   );
@@ -107,8 +106,8 @@ export const ComboBox = ({
   );
 
   const handleBlur = useCallback(() => {
-    if (expanded && matches.length >= 0) {
-      fireEvent(matches[active].text);
+    if (expanded && matches.length >= 0 && matches[active]) {
+      fireEvent(matches[active]);
     }
   }, [active, expanded, fireEvent, matches]);
 
@@ -141,7 +140,7 @@ export const ComboBox = ({
     (e: React.KeyboardEvent<HTMLDivElement>) => {
       switch (e.code) {
         case "Tab": {
-          const text = matches[active]?.text;
+          const text = matches[active];
           if (text && active >= 0) {
             fireEvent(text);
           }
@@ -158,7 +157,7 @@ export const ComboBox = ({
           break;
         case "Enter": {
           if (active >= 0) {
-            fireEvent(matches[active].text, true);
+            fireEvent(matches[active], true);
             break;
           }
         }
@@ -207,20 +206,22 @@ export const ComboBox = ({
             defaultMessage: "Expand item selection menu",
           })}
           className="absolute right-4 top-0 bottom-0 text-gray-500 disabled:opacity-50"
-          disabled={!expanded && !expandable}
+          disabled={!expandable}
           onMouseDown={handleExpandToggleClick}
           tabIndex={-1}
           type="button"
         >
-          <FontAwesomeIcon icon={expanded ? faCaretUp : faCaretDown} />
+          <FontAwesomeIcon
+            icon={expandable && expanded ? faCaretUp : faCaretDown}
+          />
         </button>
       </div>
       {expanded && matches.length > 0 && (
         <div
-          className="max-h-64 w-64 overflow-y-auto shadow bg-white border border-gray-400 rounded py-1 absolute right-0 z-10 mt-2 p-2"
+          className="max-h-64 w-full overflow-y-auto shadow bg-white border border-gray-400 rounded py-1 absolute right-0 z-10 mt-2 p-2"
           ref={listContainer}
         >
-          {matches.map(({ text }, idx) => (
+          {matches.map((text, idx) => (
             <div
               className={clsx(
                 "cursor-pointer hover:bg-gray-100",
