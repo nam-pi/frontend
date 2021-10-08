@@ -1,4 +1,5 @@
 import { faPlus, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     ComponentPropsWithoutRef,
     ComponentType,
@@ -76,16 +77,15 @@ export const Repeater = <
           }}
         />
       </div>
-      <div className="grid grid-flow-row mt-2">
+      <div className="grid grid-flow-row my-2">
         {values.map((value, idx) => (
-          <div key={idx} className="flex">
+          <div key={idx} className="flex items-center">
             <div className="w-full">
               {createElement(outputComponent, value)}
             </div>
-            <IconButton
-              className="ml-4 border-none shadow-none text-red-500 hover:text-red-400"
-              icon={faTimes}
-              label={intl.formatMessage({
+            <button
+              className="mx-2 border-none shadow-none text-red-500 hover:text-red-400"
+              aria-label={intl.formatMessage({
                 description: "Delete button label",
                 defaultMessage: "Delete item",
               })}
@@ -96,7 +96,10 @@ export const Repeater = <
                 setNewValue(undefined);
                 setValues(newValues);
               }}
-            />
+              type="button"
+            >
+              <FontAwesomeIcon icon={faTimes} />
+            </button>
           </div>
         ))}
       </div>
