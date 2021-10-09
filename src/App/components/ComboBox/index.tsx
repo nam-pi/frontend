@@ -194,7 +194,7 @@ export const ComboBox = ({
 
   return (
     <div
-      className={clsx(className, "w-full relative")}
+      className={clsx(className, "w-full")}
       onBlur={handleBlur}
       onKeyDown={handleKeyPress}
     >
