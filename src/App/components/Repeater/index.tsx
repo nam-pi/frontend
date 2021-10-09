@@ -1,13 +1,13 @@
 import { faPlus, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  ComponentPropsWithoutRef,
-  ComponentType,
-  createElement,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
+    ComponentPropsWithoutRef,
+    ComponentType,
+    createElement,
+    useCallback,
+    useEffect,
+    useRef,
+    useState
 } from "react";
 import { useIntl } from "react-intl";
 import { IconButton } from "../IconButton";
