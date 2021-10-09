@@ -26,7 +26,6 @@ const TranslationProvider = ({ children }: Props) => {
       ? navigator.language
       : DEFAULT_LOCALE,
   });
-  console.log(allLanguages, state.locale);
   const languages = useMemo(() => allLanguages[state.locale], [state.locale]);
   const setLocale = useCallback((locale: string) => setState({ locale }), []);
   return (
