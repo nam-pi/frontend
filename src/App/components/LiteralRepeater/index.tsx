@@ -15,11 +15,7 @@ export const LiteralRepeater = ({ onChange, values, ...inputProps }: Props) => (
     outputComponent={(label) => <MultiLangTexts texts={label} />}
     props={inputProps}
     valid={(label) => {
-      return (
-        (label?.value || "").replace(/\s/g, "").length > 0 &&
-        label?.language !== undefined &&
-        label.language.length > 0
-      );
+      return (label?.value || "").replace(/\s/g, "").length > 0;
     }}
     values={values}
   />
