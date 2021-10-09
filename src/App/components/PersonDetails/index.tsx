@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 import { EventsFilterSettings } from "../EventsFilterSettings";
 import { FilterableItemList } from "../FilterableItemList";
 import { Heading } from "../Heading";
+import { ItemComments } from "../ItemComments";
 import { ItemInheritance } from "../ItemInheritance";
 import { ItemLabels } from "../ItemLabels";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
@@ -82,6 +83,7 @@ export const PersonDetails = ({ idLocal }: Props) => {
       </div>
       <ItemInheritance item={data} />
       <ItemLabels item={data} />
+      <ItemComments item={data} />
       <EventsWithPerson id={data.id} />
     </>
   ) : (
