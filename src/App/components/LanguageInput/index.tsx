@@ -41,7 +41,7 @@ export const LanguageInput = ({
     [languages]
   );
   const [text, setText] = useState<string>(findText(value, languages));
-  const [matches, setMatches] = useState<Language[]>(
+  const [matches, setMatches] = useState<Languages>(
     findMatches(text, options, languages)
   );
   const lastText = useRef(text);

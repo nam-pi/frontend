@@ -1,13 +1,13 @@
 import { faPlus, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    ComponentPropsWithoutRef,
-    ComponentType,
-    createElement,
-    useCallback,
-    useEffect,
-    useRef,
-    useState
+  ComponentPropsWithoutRef,
+  ComponentType,
+  createElement,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
 } from "react";
 import { useIntl } from "react-intl";
 import { IconButton } from "../IconButton";
@@ -75,7 +75,7 @@ export const Repeater = <
     }
   }, [externalValues, values]);
   return (
-    <>
+    <div>
       <div className="flex items-start" ref={inputContainer}>
         {createElement(addComponent, {
           ...props,
@@ -93,26 +93,28 @@ export const Repeater = <
           onClick={handleAddClick}
         />
       </div>
-      <div className="grid grid-flow-row my-2">
-        {values.map((value, idx) => (
-          <div key={idx} className="flex items-center">
-            <div className="w-full">
-              {createElement(outputComponent, value)}
+      {values.length > 0 && (
+        <div className="grid grid-flow-row mt-2">
+          {values.map((value, idx) => (
+            <div key={idx} className="flex items-center">
+              <div className="w-full">
+                {createElement(outputComponent, value)}
+              </div>
+              <button
+                className="mx-2 border-none shadow-none text-red-500 hover:text-red-400"
+                aria-label={intl.formatMessage({
+                  description: "Delete button label",
+                  defaultMessage: "Delete item",
+                })}
+                onClick={() => handleRemoveClick(idx)}
+                type="button"
+              >
+                <FontAwesomeIcon icon={faTimes} />
+              </button>
             </div>
-            <button
-              className="mx-2 border-none shadow-none text-red-500 hover:text-red-400"
-              aria-label={intl.formatMessage({
-                description: "Delete button label",
-                defaultMessage: "Delete item",
-              })}
-              onClick={() => handleRemoveClick(idx)}
-              type="button"
-            >
-              <FontAwesomeIcon icon={faTimes} />
-            </button>
-          </div>
-        ))}
-      </div>
-    </>
+          ))}
+        </div>
+      )}
+    </div>
   );
 };
