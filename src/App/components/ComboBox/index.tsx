@@ -11,8 +11,6 @@ import React, {
 import { useIntl } from "react-intl";
 import { Input, Props as InputProps } from "../Input";
 
-export type Option = { text: string; value: string };
-
 export interface Props extends Omit<InputProps, "type"> {
   options?: string[];
   matches?: string[];

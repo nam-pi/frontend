@@ -3,7 +3,7 @@ import { LiteralString } from "nampi-use-api";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useIntl } from "react-intl";
 import { Input } from "../Input";
-import { LanguageSelect } from "../LanguageSelect";
+import { LanguageInput } from "../LanguageInput";
 import { Textarea } from "../Textarea";
 
 export interface Props {
@@ -78,7 +78,7 @@ export const LiteralInput = ({
           value={text || ""}
         />
       )}
-      <LanguageSelect
+      <LanguageInput
         className="col-span-6 md:col-span-3"
         onChange={handleLanguageChange}
         label={intl.formatMessage({

@@ -2,7 +2,7 @@ import { useLanguages } from "App/hooks/useLanguages";
 import Fuse from "fuse.js";
 import { Language, TranslationState } from "I18n/types";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ComboBox, Option, Props as ComboBoxProps } from "../ComboBox";
+import { ComboBox, Props as ComboBoxProps } from "../ComboBox";
 
 interface Props
   extends Omit<ComboBoxProps, "options" | "matches" | "value" | "onChange"> {
@@ -14,7 +14,7 @@ type Languages = TranslationState["languages"];
 
 const findMatches = (
   text: string,
-  options: Fuse<Option>,
+  options: Fuse<Language>,
   languages: Languages
 ) => (text ? options.search(text).map((r) => r.item) : languages);
 
@@ -26,7 +26,7 @@ const findValue = (text: string, matches: Languages) =>
     ? matches[0].value
     : undefined;
 
-export const LanguageSelect = ({
+export const LanguageInput = ({
   onChange = () => undefined,
   value,
   ...props
