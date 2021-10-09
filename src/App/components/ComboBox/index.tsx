@@ -26,6 +26,7 @@ export const ComboBox = ({
   const intl = useIntl();
   const inputElement = useRef<HTMLInputElement>(null);
   const listContainer = useRef<HTMLDivElement>(null);
+  const fromButton = useRef<boolean>(false);
   const [expanded, setExpanded] = useState<boolean>(false);
   const [active, setActive] = useState<number>(-1);
 
@@ -104,10 +105,8 @@ export const ComboBox = ({
   );
 
   const handleBlur = useCallback(() => {
-    if (expanded && matches.length >= 0 && matches[active]) {
-      fireEvent(matches[active]);
-    }
-  }, [active, expanded, fireEvent, matches]);
+    collapse();
+  }, [collapse]);
 
   const handleInputFocus = useCallback(
     (e: React.FocusEvent<HTMLInputElement>) => {
@@ -129,7 +128,12 @@ export const ComboBox = ({
     (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
       e.preventDefault();
       e.stopPropagation();
-      return expanded ? collapse(true) : expandTo();
+      if (expanded) {
+        collapse(true);
+      } else {
+        expandTo();
+        fromButton.current = true;
+      }
     },
     [collapse, expandTo, expanded]
   );
@@ -172,9 +176,14 @@ export const ComboBox = ({
 
   useEffect(() => {
     if (expanded) {
+      if (fromButton.current) {
+        listContainer.current?.focus();
+        fromButton.current = false;
+      }
       const active = listContainer.current?.getElementsByClassName("active");
       if (active && active.length > 0) {
-        active[0].scrollIntoView({
+        const div = active[0] as HTMLDivElement;
+        div.scrollIntoView({
           behavior: "auto",
           block: "center",
           inline: "center",
@@ -189,7 +198,7 @@ export const ComboBox = ({
       onBlur={handleBlur}
       onKeyDown={handleKeyPress}
     >
-      <div className="relative w-full">
+      <div className="relative w-full" onKeyDown={handleKeyPress}>
         <Input
           {...inputProps}
           className="relative w-full pr-4"
@@ -216,8 +225,10 @@ export const ComboBox = ({
       </div>
       {expanded && matches.length > 0 && (
         <div
-          className="max-h-64 w-full overflow-y-auto shadow bg-white border border-gray-400 rounded py-1 absolute right-0 z-10 mt-2 p-2"
+          className="max-h-64 w-full overflow-y-auto shadow bg-white outline-none border border-gray-400 rounded py-1 absolute right-0 z-10 mt-2 p-2"
+          onKeyDown={handleKeyPress}
           ref={listContainer}
+          tabIndex={-1}
         >
           {matches.map((text, idx) => (
             <div

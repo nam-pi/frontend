@@ -21,12 +21,16 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
       )}
     >
       {label && (
-        <label className="min-w-6 px-2 py-1 bg-gray-400 text-white">
+        <label
+          className="min-w-6 px-2 py-1 bg-gray-400 text-white"
+          htmlFor={id}
+        >
           {label}
         </label>
       )}
       <textarea
         {...props}
+        id={id}
         ref={ref}
         className="py-1 px-2 w-full bg-transparent border-none shadow-none outline-none focus:ring-transparent focus:border-transparent focus:outline-none focus:shadow-outline focus:border-none"
       />
