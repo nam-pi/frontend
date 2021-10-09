@@ -194,7 +194,7 @@ export const ComboBox = ({
       <div className="relative w-full">
         <Input
           {...inputProps}
-          className="relative w-full"
+          className="relative w-full pr-4"
           onChange={handleChange}
           onFocus={handleInputFocus}
           ref={inputElement}
@@ -205,7 +205,7 @@ export const ComboBox = ({
             description: "Expand button label",
             defaultMessage: "Expand item selection menu",
           })}
-          className="absolute right-4 top-0 bottom-0 text-gray-500 disabled:opacity-50"
+          className="absolute right-2 top-0 bottom-0 text-gray-500 disabled:opacity-50"
           disabled={!expandable}
           onMouseDown={handleExpandToggleClick}
           tabIndex={-1}

@@ -4,6 +4,7 @@ import {
     ComponentPropsWithoutRef,
     ComponentType,
     createElement,
+    useCallback,
     useEffect,
     useRef,
     useState
@@ -42,21 +43,45 @@ export const Repeater = <
   const [newValue, setNewValue] = useState<V>();
   const [values, setValues] = useState(externalValues);
   const lastValues = useRef<typeof values>(values);
+  const handleAddClick = useCallback(() => {
+    if (newValue) {
+      const newValues = [...values, newValue];
+      lastValues.current = newValues;
+      onChange(newValues);
+      setNewValue(undefined);
+      setValues(newValues);
+      const elements = inputContainer.current?.querySelectorAll(
+        "input,textarea,select"
+      );
+      if (elements) {
+        (elements[0] as HTMLElement).focus();
+      }
+    }
+  }, [newValue, onChange, values]);
+  const handleRemoveClick = useCallback(
+    (idx: number) => {
+      const newValues = [...values];
+      newValues.splice(idx, 1);
+      onChange(newValues);
+      setNewValue(undefined);
+      setValues(newValues);
+    },
+    [onChange, values]
+  );
   useEffect(() => {
-    if (externalValues !== lastValues.current) {
+    if (externalValues.length !== lastValues.current.length) {
       lastValues.current = values;
       setValues(externalValues);
     }
   }, [externalValues, values]);
   return (
     <>
-      <div className="flex" ref={inputContainer}>
+      <div className="flex items-start" ref={inputContainer}>
         {createElement(addComponent, {
           ...props,
           onChange: (v: V) => setNewValue(v),
           value: newValue,
         } as unknown as P)}
-
         <IconButton
           className="ml-4"
           disabled={!valid(newValue)}
@@ -65,16 +90,7 @@ export const Repeater = <
             description: "Add item label",
             defaultMessage: "Add new item",
           })}
-          onClick={() => {
-            if (newValue) {
-              const newValues = [...values, newValue];
-              lastValues.current = newValues;
-              onChange(newValues);
-              setNewValue(undefined);
-              setValues(newValues);
-              inputContainer.current?.getElementsByTagName("input")[0]?.focus();
-            }
-          }}
+          onClick={handleAddClick}
         />
       </div>
       <div className="grid grid-flow-row my-2">
@@ -89,13 +105,7 @@ export const Repeater = <
                 description: "Delete button label",
                 defaultMessage: "Delete item",
               })}
-              onClick={() => {
-                const newValues = [...values];
-                newValues.splice(idx, 1);
-                onChange(newValues);
-                setNewValue(undefined);
-                setValues(newValues);
-              }}
+              onClick={() => handleRemoveClick(idx)}
               type="button"
             >
               <FontAwesomeIcon icon={faTimes} />

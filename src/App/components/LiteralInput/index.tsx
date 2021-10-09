@@ -75,7 +75,7 @@ export const LiteralInput = ({
           className="col-span-6"
           label={label}
           onChange={handleTextChange}
-          value={text}
+          value={text || ""}
         />
       )}
       <LanguageSelect
