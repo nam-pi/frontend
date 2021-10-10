@@ -20,7 +20,7 @@ interface ComponentProps<V> {
 interface Props<V, P extends ComponentProps<V>, T extends ComponentType<P>> {
   addComponent: T;
   onChange?: (values: V[]) => void;
-  outputComponent: ComponentType<V>;
+  outputComponent: ComponentType<{ value: V }>;
   props?: Omit<ComponentPropsWithoutRef<T>, "onChange" | "values" | "focus">;
   valid: (value: undefined | V) => boolean;
   values?: V[];
@@ -98,7 +98,7 @@ export const Repeater = <
           {values.map((value, idx) => (
             <div key={idx} className="flex items-center">
               <div className="w-full">
-                {createElement(outputComponent, value)}
+                {createElement(outputComponent, { value })}
               </div>
               <button
                 className="mx-2 border-none shadow-none text-red-500 hover:text-red-400"

@@ -4,6 +4,7 @@ import { useLocaleLiteral } from "App/hooks/useLocaleLiteral";
 import {
     LiteralString,
     Person,
+    useHierarchy,
     usePerson,
     usePersonUpdate
 } from "nampi-use-api";
@@ -16,7 +17,8 @@ import { Heading } from "../Heading";
 import { LiteralRepeater } from "../LiteralRepeater";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
 import { TextRepeater } from "../TextRepeater";
-import { TypeInput } from "../TypeInput";
+import { Type } from "../TypeInput";
+import { TypeRepeater } from "../TypeRepeater";
 
 interface Props {
   idLocal?: string;
@@ -28,10 +30,25 @@ const serializeLiteral = (literals: undefined | LiteralString[]) =>
   );
 
 const Editor = ({ person }: { person: Person }) => {
+  const literal = useLocaleLiteral();
+  const hierarchy = useHierarchy({ query: { iri: person.id } });
   const history = useHistory();
   const intl = useIntl();
   const [form, setForm] = useState<Person>(person);
+  const [types, setTypes] = useState<Type[]>([]);
   const [mutate, { data, loading }] = usePersonUpdate(person.idLocal);
+  useEffect(() => {
+    if (hierarchy.data) {
+      setTypes(
+        hierarchy.data.paths
+          .map((path) => path[1] || path[0])
+          .map<Type>((value) => ({
+            text: literal(hierarchy.data?.items[value].labels),
+            value,
+          }))
+      );
+    }
+  }, [hierarchy.data, literal]);
   useEffect(() => {
     if (!loading && data) {
       history.push("/persons/" + person.idLocal);
@@ -42,13 +59,13 @@ const Editor = ({ person }: { person: Person }) => {
       <Field
         label={intl.formatMessage({
           description: "Person type field label",
-          defaultMessage: "Person type",
+          defaultMessage: "Person types",
         })}
       >
-        <TypeInput
-          onChange={(v) => v && setForm((old) => ({ ...old, types: [v] }))}
+        <TypeRepeater
+          onChange={setTypes}
           parent="https://purl.org/nampi/owl/core#person"
-          value={form.types[form.types.length - 1]}
+          values={types}
         />
       </Field>
       <Field
@@ -117,7 +134,7 @@ const Editor = ({ person }: { person: Person }) => {
           disabled={loading}
           onClick={() =>
             mutate({
-              type: form.types[form.types.length - 1],
+              types: types.map((t) => t.value || ""),
               texts: serializeLiteral(form.texts),
               comments: serializeLiteral(form.comments),
               labels: serializeLiteral(form.labels),

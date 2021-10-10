@@ -7,14 +7,14 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useIntl } from "react-intl";
 import { ComboBox, Props as ComboBoxProps } from "../ComboBox";
 
-interface Props
+export interface Props
   extends Omit<ComboBoxProps, "options" | "matches" | "value" | "onChange"> {
   parent: string;
-  onChange: (value: undefined | string, text: string) => void;
-  value?: string;
+  onChange: (type: Type) => void;
+  value?: Type;
 }
 
-interface Type {
+export interface Type {
   text: string;
   value: undefined | string;
 }
@@ -42,7 +42,6 @@ export const TypeInput = ({
   const intl = useIntl();
   const literal = useLocaleLiteral();
   const { data, loading, initialized } = useTypes({ query: { type: parent } });
-  const oldData = useRef<typeof data>(data);
   const types = useMemo<Types>(
     () =>
       (data || [])
@@ -53,6 +52,7 @@ export const TypeInput = ({
         .sort((a, b) => a.text.localeCompare(b.text)),
     [data, literal]
   );
+  const oldTypes = useRef<typeof types>(types);
   const options = useMemo(
     () =>
       new Fuse<Type>(types, {
@@ -61,34 +61,12 @@ export const TypeInput = ({
       }),
     [types]
   );
-  const [text, setText] = useState<string>(findText(value, types));
+  const [text, setText] = useState<string>(findText(value?.value, types));
   const [matches, setMatches] = useState<Type[]>(
     findMatches(text, options, types)
   );
   const lastText = useRef(text);
-  const lastValue = useRef<undefined | string>(value);
-
-  useEffect(() => {
-    if (oldData.current !== data) {
-      oldData.current = data;
-      const newMatches = findMatches(text, options, types);
-      setMatches(newMatches);
-      if (newMatches.length > 0) {
-        setText(newMatches[0].text);
-      }
-    }
-  }, [data, options, text, types]);
-
-  useEffect(() => {
-    if (text === lastText.current && value !== lastValue.current) {
-      const newText = findText(value, types);
-      const newMatches = findMatches(newText, options, types);
-      lastValue.current = value;
-      lastText.current = newText;
-      setText(newText);
-      setMatches(newMatches);
-    }
-  }, [types, matches, options, text, value]);
+  const lastValue = useRef<undefined | string>(value?.value);
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -98,13 +76,32 @@ export const TypeInput = ({
       if (text !== newText) {
         lastValue.current = newValue;
         lastText.current = newText;
-        onChange(newValue, newText);
+        onChange({ value: newValue, text: newText });
         setText(newText);
         setMatches(newMatches);
       }
     },
     [types, onChange, options, text]
   );
+
+  useEffect(() => {
+    if (oldTypes.current !== types) {
+      oldTypes.current = types;
+      const newMatches = findMatches(text, options, types);
+      setMatches(newMatches);
+    }
+  }, [data, options, text, types]);
+
+  useEffect(() => {
+    if (text === lastText.current && value !== lastValue.current) {
+      const newText = findText(value?.value, types);
+      const newMatches = findMatches(newText, options, types);
+      lastValue.current = value?.value;
+      lastText.current = newText;
+      setText(newText);
+      setMatches(newMatches);
+    }
+  }, [options, text, types, value]);
 
   return (
     <ComboBox
