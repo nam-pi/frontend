@@ -1,65 +1,83 @@
-import { faCircleNotch } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useEditorTypes } from "App/hooks/useEditorTypes";
 import { useLocaleLiteral } from "App/hooks/useLocaleLiteral";
+import { namespaces } from "App/namespaces";
+import { serializeLiteral } from "App/utils/serializeLiteral";
 import {
-    LiteralString,
     Person,
-    useHierarchy,
     usePerson,
+    usePersonCreate,
     usePersonUpdate
 } from "nampi-use-api";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useHistory } from "react-router-dom";
-import { Button } from "../Button";
+import { EditorControls } from "../EditorControls";
+import { EditorForm } from "../EditorForm";
 import { Field } from "../Field";
 import { Heading } from "../Heading";
 import { LiteralRepeater } from "../LiteralRepeater";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
+import { Paragraph } from "../Paragraph";
 import { TextRepeater } from "../TextRepeater";
-import { Type } from "../TypeInput";
 import { TypeRepeater } from "../TypeRepeater";
 
 interface Props {
   idLocal?: string;
 }
 
-const serializeLiteral = (literals: undefined | LiteralString[]) =>
-  (literals || []).map(
-    (t) => `${t.value}${t.language ? `@${t.language}` : ""}`
-  );
-
-const Editor = ({ person }: { person: Person }) => {
-  const literal = useLocaleLiteral();
-  const hierarchy = useHierarchy({ query: { iri: person.id } });
+const useData = (baseUrl: string, person: undefined | Person) => {
+  const defaultType = namespaces.core.person;
   const history = useHistory();
+  const [form, setForm] = useState<Person>(person || ({} as Person));
+  const [types, setTypes] = useEditorTypes(
+    person ? { itemId: person.id } : { defaultType }
+  );
+  const update = usePersonUpdate(person?.idLocal || "");
+  const create = usePersonCreate();
+  let mutate = create[0];
+  let state = create[1];
+  if (person) {
+    mutate = update[0];
+    state = update[1];
+  }
+  const valid = useMemo(
+    () => types.length > 0 && (form.labels?.length || 0) > 0,
+    [form.labels?.length, types.length]
+  );
+  useEffect(() => {
+    if (!state.loading && state.data) {
+      history.push(baseUrl + state.data.idLocal);
+    }
+  }, [baseUrl, history, state, state.data, state.loading]);
+  return { form, setForm, types, setTypes, mutate, state, valid };
+};
+
+const Editor = ({ person }: { person?: Person }) => {
+  const baseUrl = "/persons/";
+  const literal = useLocaleLiteral();
   const intl = useIntl();
-  const [form, setForm] = useState<Person>(person);
-  const [types, setTypes] = useState<Type[]>([]);
-  const [mutate, { data, loading }] = usePersonUpdate(person.idLocal);
-  useEffect(() => {
-    if (hierarchy.data) {
-      setTypes(
-        hierarchy.data.paths
-          .map((path) => path[1] || path[0])
-          .map<Type>((value) => ({
-            text: literal(hierarchy.data?.items[value].labels),
-            value,
-          }))
-      );
-    }
-  }, [hierarchy.data, literal]);
-  useEffect(() => {
-    if (!loading && data) {
-      history.push("/persons/" + person.idLocal);
-    }
-  }, [data, history, loading, person.idLocal]);
+  const { form, setForm, types, setTypes, mutate, state, valid } = useData(
+    baseUrl,
+    person
+  );
   return (
-    <form className="grid grid-flow-row gap-4">
+    <EditorForm>
+      {state.error && (
+        <Paragraph className="italic p-2 rounded bg-red-500 text-white">
+          <span>
+            <FormattedMessage
+              description="Error heading"
+              defaultMessage="Error"
+            />
+          </span>
+          :&nbsp;
+          {literal(state.error.description)}
+        </Paragraph>
+      )}
       <Field
         label={intl.formatMessage({
           description: "Person type field label",
-          defaultMessage: "Person types",
+          defaultMessage: "Person types *",
         })}
       >
         <TypeRepeater
@@ -71,7 +89,7 @@ const Editor = ({ person }: { person: Person }) => {
       <Field
         label={intl.formatMessage({
           description: "Labels field label",
-          defaultMessage: "Labels",
+          defaultMessage: "Labels *",
         })}
       >
         <LiteralRepeater
@@ -129,46 +147,31 @@ const Editor = ({ person }: { person: Person }) => {
           values={form.comments}
         />
       </Field>
-      <div className="flex justify-start">
-        <Button
-          disabled={loading}
-          onClick={() =>
-            mutate({
-              types: types.map((t) => t.value || ""),
-              texts: serializeLiteral(form.texts),
-              comments: serializeLiteral(form.comments),
-              labels: serializeLiteral(form.labels),
-            })
-          }
-        >
-          {loading ? (
-            <FontAwesomeIcon icon={faCircleNotch} spin />
-          ) : (
-            <FormattedMessage
-              description="Submit button label"
-              defaultMessage="Submit"
-            />
-          )}
-        </Button>
-        <Button
-          className="ml-4"
-          onClick={() => history.push("/persons/" + person.idLocal)}
-        >
-          <FormattedMessage
-            description="Cancel button label"
-            defaultMessage="Cancel"
-          />
-        </Button>
-      </div>
-    </form>
+      <EditorControls
+        cancelUrl={baseUrl + (person?.idLocal || "")}
+        loading={state.loading}
+        mutate={() =>
+          mutate({
+            types: types.map((t) => t.value || ""),
+            texts: serializeLiteral(form.texts),
+            comments: serializeLiteral(form.comments),
+            labels: serializeLiteral(form.labels),
+          })
+        }
+        valid={valid}
+      />
+    </EditorForm>
   );
 };
 
 export const PersonEditor = ({ idLocal }: Props) => {
-  const { data } = usePerson({ idLocal: idLocal || "", paused: !idLocal });
+  const { data, initialized, loading } = usePerson({
+    idLocal: idLocal || "",
+    paused: !idLocal,
+  });
   const literal = useLocaleLiteral();
   const create = idLocal === undefined;
-  return data ? (
+  return initialized && !loading ? (
     <>
       <Heading>
         {create ? (
@@ -180,7 +183,7 @@ export const PersonEditor = ({ idLocal }: Props) => {
           <FormattedMessage
             description="New person heading"
             defaultMessage="Edit {person}"
-            values={{ person: literal(data.labels) }}
+            values={{ person: literal(data?.labels) }}
           />
         )}
       </Heading>

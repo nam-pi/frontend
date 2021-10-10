@@ -94,7 +94,7 @@ export const Repeater = <
         />
       </div>
       {values.length > 0 && (
-        <div className="grid grid-flow-row mt-2">
+        <div className="ml-2 grid grid-flow-row mt-2">
           {values.map((value, idx) => (
             <div key={idx} className="flex items-center">
               <div className="w-full">

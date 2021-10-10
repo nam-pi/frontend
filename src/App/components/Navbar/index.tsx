@@ -69,7 +69,7 @@ const NavMenu = ({
       leaveFrom="transform opacity-100 scale-100"
       leaveTo="transform opacity-0 scale-95"
     >
-      <Menu.Items className="absolute min-w-max mt-1 right-0 bg-white shadow-lg rounded flex flex-col p-2">
+      <Menu.Items className="absolute min-w-8 mt-1 right-0 bg-white shadow-lg rounded flex flex-col p-2">
         {children}
       </Menu.Items>
     </Transition>
