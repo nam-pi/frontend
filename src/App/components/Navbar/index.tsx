@@ -31,15 +31,17 @@ const MenuItem = ({
   label?: string;
 }) => (
   <Menu.Item>
-    {(active) =>
-      typeof action === "string" ? (
-        <Link to={action}>{children}</Link>
-      ) : (
-        <button type="button" onClick={action} aria-label={label}>
-          {children}
-        </button>
-      )
-    }
+    {(active) => (
+      <div className="hover:bg-gray-100">
+        {typeof action === "string" ? (
+          <Link to={action}>{children}</Link>
+        ) : (
+          <button type="button" onClick={action} aria-label={label}>
+            {children}
+          </button>
+        )}
+      </div>
+    )}
   </Menu.Item>
 );
 const NavMenu = ({
@@ -132,6 +134,18 @@ const EditMenu = () => {
         defaultMessage: "Toggle the new items menu",
       })}
     >
+      <MenuItem
+        action="/events?edit"
+        label={intl.formatMessage({
+          description: "Create events item label",
+          defaultMessage: "Create new event",
+        })}
+      >
+        <FormattedMessage
+          description="New event button label"
+          defaultMessage="New event"
+        />
+      </MenuItem>
       <MenuItem
         action="/persons?edit"
         label={intl.formatMessage({

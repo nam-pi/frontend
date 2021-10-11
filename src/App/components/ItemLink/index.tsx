@@ -13,21 +13,21 @@ interface Props {
 
 const getUrl = (item: Item) => {
   if (item.types.includes(namespaces.core.act)) {
-    return "/act/" + item.idLocal;
+    return "/acts/" + item.idLocal;
   } else if (item.types.includes(namespaces.core.aspect)) {
-    return "/aspect/" + item.idLocal;
+    return "/aspects/" + item.idLocal;
   } else if (item.types.includes(namespaces.core.author)) {
-    return "/author/" + item.idLocal;
+    return "/authors/" + item.idLocal;
   } else if (item.types.includes(namespaces.core.event)) {
-    return "/event/" + item.idLocal;
+    return "/events/" + item.idLocal;
   } else if (item.types.includes(namespaces.core.group)) {
-    return "/group/" + item.idLocal;
+    return "/groups/" + item.idLocal;
   } else if (item.types.includes(namespaces.core.person)) {
-    return "/person/" + item.idLocal;
+    return "/persons/" + item.idLocal;
   } else if (item.types.includes(namespaces.core.place)) {
-    return "/place/" + item.idLocal;
+    return "/places/" + item.idLocal;
   } else if (item.types.includes(namespaces.core.source)) {
-    return "/source/" + item.idLocal;
+    return "/sources/" + item.idLocal;
   }
   throw new Error("Cannot find URL for item " + item.id);
 };

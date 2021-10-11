@@ -1,13 +1,7 @@
 import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
-import React, {
-    useCallback,
-    useEffect,
-    useMemo,
-    useRef,
-    useState
-} from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useIntl } from "react-intl";
 import { Input, Props as InputProps } from "../Input";
 
@@ -30,28 +24,19 @@ export const ComboBox = ({
   const [expanded, setExpanded] = useState<boolean>(false);
   const [active, setActive] = useState<number>(-1);
 
-  const expandable = useMemo(
-    () =>
-      (matches.length === 1 && matches[0] !== inputElement.current?.value) ||
-      matches.length > 1,
-    [matches]
-  );
-
   const expandTo = useCallback(
     (activeCallback?: (old: number) => number) => {
-      if (expandable) {
-        if (!expanded) {
-          setExpanded(true);
-        }
-        setActive(activeCallback || 0);
+      if (!expanded) {
+        setExpanded(true);
       }
+      setActive(activeCallback || 0);
     },
-    [expandable, expanded]
+    [expanded]
   );
 
   const collapse = useCallback(
     (focus?: boolean) => {
-      if (expandable && expanded) {
+      if (expanded) {
         setExpanded(false);
         setActive(-1);
         if (focus) {
@@ -60,7 +45,7 @@ export const ComboBox = ({
         }
       }
     },
-    [expandable, expanded]
+    [expanded]
   );
 
   const focusNext = useCallback(
@@ -152,9 +137,11 @@ export const ComboBox = ({
           collapse(true);
           break;
         case "ArrowDown":
+          e.stopPropagation();
           focusNext();
           break;
         case "ArrowUp":
+          e.stopPropagation();
           focusPrev();
           break;
         case "Enter": {
@@ -167,12 +154,6 @@ export const ComboBox = ({
     },
     [active, collapse, fireEvent, focusNext, focusPrev, matches]
   );
-
-  useEffect(() => {
-    if (matches.length === 0) {
-      collapse();
-    }
-  }, [collapse, expanded, matches.length]);
 
   useEffect(() => {
     if (expanded) {
@@ -213,13 +194,13 @@ export const ComboBox = ({
             defaultMessage: "Expand item selection menu",
           })}
           className="absolute right-2 top-0 bottom-0 text-gray-500 disabled:opacity-50"
-          disabled={!expandable}
+          disabled={matches.length === 0}
           onMouseDown={handleExpandToggleClick}
           tabIndex={-1}
           type="button"
         >
           <FontAwesomeIcon
-            icon={expandable && expanded ? faCaretUp : faCaretDown}
+            icon={matches.length > 0 && expanded ? faCaretUp : faCaretDown}
           />
         </button>
       </div>

@@ -32,7 +32,7 @@
     "husky": "^7.0.2",
     "leaflet": "^1.7.1",
     "lint-staged": "^11.2.2",
-    "nampi-use-api": "^0.2.6",
+    "nampi-use-api": "^0.2.7",
     "postcss": "^7",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",

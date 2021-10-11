@@ -8467,10 +8467,10 @@ multicast-dns@^6.0.1:
     dns-packet "^1.3.1"
     thunky "^1.0.2"
 
-nampi-use-api@^0.2.6:
-  version "0.2.6"
-  resolved "https://registry.yarnpkg.com/nampi-use-api/-/nampi-use-api-0.2.6.tgz#ac0f314a97e55dad7164e93381993788191b304c"
-  integrity sha512-3q6Ca4X0ASO25HtxojYuExV4Hvu8HbOe9L322e4W5GEoLj9xffvo8eJS5vDJST/4og6G1+TBawaN3X464iA0HA==
+nampi-use-api@^0.2.7:
+  version "0.2.7"
+  resolved "https://registry.yarnpkg.com/nampi-use-api/-/nampi-use-api-0.2.7.tgz#0572a2f1ac7b5322709ddf9fe479b2accc1af2c9"
+  integrity sha512-UPjsGMrJ/0gxyPuWyxexJN7ybwM6UqIg0rDCUisw9I+RydhVAJ09+FGQXdOYA4Y89AVPAWODmhk4tCRVYZHo5Q==
   dependencies:
     jsonld "^5.2.0"
     keycloak-js "^15.0.2"

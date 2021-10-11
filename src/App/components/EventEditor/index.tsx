@@ -3,11 +3,11 @@ import { useLocaleLiteral } from "App/hooks/useLocaleLiteral";
 import { namespaces } from "App/namespaces";
 import { serializeLiteral } from "App/utils/serializeLiteral";
 import {
+    Event,
     LiteralString,
-    Person,
-    usePerson,
-    usePersonCreate,
-    usePersonUpdate
+    useEvent,
+    useEventCreate,
+    useEventUpdate
 } from "nampi-use-api";
 import { useEffect, useMemo, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -16,10 +16,15 @@ import { EditorControls } from "../EditorControls";
 import { EditorForm } from "../EditorForm";
 import { Field } from "../Field";
 import { Heading } from "../Heading";
+import {
+    Individual,
+    IndividualsInput,
+    useIndividual
+} from "../IndividualsInput";
+import { Input } from "../Input";
 import { LiteralRepeater } from "../LiteralRepeater";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
 import { Paragraph } from "../Paragraph";
-import { TextRepeater } from "../TextRepeater";
 import { TypeRepeater } from "../TypeRepeater";
 
 interface Props {
@@ -29,36 +34,56 @@ interface Props {
 interface FormState {
   comments: undefined | LiteralString[];
   labels: undefined | LiteralString[];
-  sameAs: undefined | string[];
+  mainParticipant: undefined | Individual;
+  place: undefined | Individual;
+  source: undefined | Individual;
+  sourceLocation: undefined | string;
   texts: undefined | LiteralString[];
 }
 
 const useForm = (
   baseUrl: string,
   defaultType: string,
-  person: undefined | Person
+  event: undefined | Event
 ) => {
   const history = useHistory();
+  const individual = useIndividual();
   const [form, setForm] = useState<FormState>({
-    comments: person?.comments,
-    labels: person?.labels,
-    sameAs: person?.sameAs,
-    texts: person?.texts,
+    comments: event?.comments,
+    labels: event?.labels,
+    mainParticipant: individual(event?.mainParticipant),
+    place: individual(event?.place),
+    source: individual(event?.act.sourceLocation.source),
+    sourceLocation: event?.act.sourceLocation.text,
+    texts: event?.texts,
   });
   const [types, setTypes] = useEditorTypes(
-    person ? { itemId: person.id } : { defaultType }
+    event ? { itemId: event.id } : { defaultType }
   );
-  const update = usePersonUpdate(person?.idLocal || "");
-  const create = usePersonCreate();
+  const update = useEventUpdate(event?.idLocal || "");
+  const create = useEventCreate();
   let mutate = create[0];
   let state = create[1];
-  if (person) {
+  if (event) {
     mutate = update[0];
     state = update[1];
   }
   const valid = useMemo(
-    () => types.length > 0 && (form.labels?.length || 0) > 0,
-    [form.labels?.length, types.length]
+    () =>
+      types.length > 0 &&
+      form.labels !== undefined &&
+      form.labels.length > 0 &&
+      form.mainParticipant?.id !== undefined &&
+      form.source?.id !== undefined &&
+      form.sourceLocation !== undefined &&
+      form.sourceLocation.replace(/\s/g, "").length > 0,
+    [
+      form.labels,
+      form.mainParticipant?.id,
+      form.source?.id,
+      form.sourceLocation,
+      types.length,
+    ]
   );
   useEffect(() => {
     if (!state.loading && state.data) {
@@ -68,16 +93,17 @@ const useForm = (
   return { form, setForm, types, setTypes, mutate, state, valid };
 };
 
-const Editor = ({ person }: { person?: Person }) => {
-  const defaultType = namespaces.core.person;
-  const baseUrl = "/persons/";
+const Editor = ({ event }: { event?: Event }) => {
+  const defaultType = namespaces.core.event;
+  const baseUrl = "/events/";
   const literal = useLocaleLiteral();
   const intl = useIntl();
   const { form, setForm, types, setTypes, mutate, state, valid } = useForm(
     baseUrl,
     defaultType,
-    person
+    event
   );
+  console.log(form, types);
   return (
     <EditorForm>
       {state.error && (
@@ -94,8 +120,8 @@ const Editor = ({ person }: { person?: Person }) => {
       )}
       <Field
         label={intl.formatMessage({
-          description: "Person type field label",
-          defaultMessage: "Person types *",
+          description: "Event type field label",
+          defaultMessage: "Event types *",
         })}
       >
         <TypeRepeater onChange={setTypes} parent={defaultType} values={types} />
@@ -132,17 +158,69 @@ const Editor = ({ person }: { person?: Person }) => {
       </Field>
       <Field
         label={intl.formatMessage({
-          description: "Sameas field label",
-          defaultMessage: "Same as URLs",
+          description: "Main participant label",
+          defaultMessage: "Main participant *",
         })}
       >
-        <TextRepeater
+        <IndividualsInput
           label={intl.formatMessage({
-            description: "Sameas input label",
-            defaultMessage: "Same as",
+            description: "Main participant input label",
+            defaultMessage: "Label",
           })}
-          onChange={(sameAs) => setForm((old) => ({ ...old, sameAs }))}
-          values={form.sameAs}
+          onChange={(mainParticipant) =>
+            setForm((old) => ({ ...old, mainParticipant }))
+          }
+          type="persons"
+          value={form.mainParticipant}
+        />
+      </Field>
+      <Field
+        label={intl.formatMessage({
+          description: "Source label",
+          defaultMessage: "Source *",
+        })}
+      >
+        <IndividualsInput
+          label={intl.formatMessage({
+            description: "Source input label",
+            defaultMessage: "Label",
+          })}
+          onChange={(source) => setForm((old) => ({ ...old, source }))}
+          type="sources"
+          value={form.source}
+        />
+      </Field>
+      <Field
+        label={intl.formatMessage({
+          description: "Source location label",
+          defaultMessage: "Source location *",
+        })}
+      >
+        <Input
+          label={intl.formatMessage({
+            description: "Source location input label",
+            defaultMessage: "Text",
+          })}
+          onChange={(e) =>
+            setForm((old) => ({ ...old, sourceLocation: e.target.value }))
+          }
+          value={form.sourceLocation}
+        />
+      </Field>
+      <Field
+        label={intl.formatMessage({
+          description: "Place label",
+          defaultMessage: "Place",
+        })}
+      >
+        <IndividualsInput
+          label={intl.formatMessage({
+            description: "Place input label",
+            defaultMessage: "Label",
+          })}
+          onChange={(place) => setForm((old) => ({ ...old, place }))}
+          type="places"
+          value={form.place}
         />
       </Field>
       <Field
@@ -162,14 +240,22 @@ const Editor = ({ person }: { person?: Person }) => {
         />
       </Field>
       <EditorControls
-        cancelUrl={baseUrl + (person?.idLocal || "")}
+        cancelUrl={baseUrl + (event?.idLocal || "")}
         loading={state.loading}
         mutate={() =>
           mutate({
-            types: types.map((t) => t.value || ""),
-            texts: serializeLiteral(form.texts),
+            aspects: [],
+            authors: [],
             comments: serializeLiteral(form.comments),
+            date: "",
             labels: serializeLiteral(form.labels),
+            mainParticipant: "",
+            otherParticipants: [],
+            place: "",
+            source: "",
+            sourceLocation: "",
+            texts: serializeLiteral(form.texts),
+            types: types.map((t) => t.value || ""),
           })
         }
         valid={valid}
@@ -178,8 +264,8 @@ const Editor = ({ person }: { person?: Person }) => {
   );
 };
 
-export const PersonEditor = ({ idLocal }: Props) => {
-  const { data, initialized, loading } = usePerson({
+export const EventEditor = ({ idLocal }: Props) => {
+  const { data, initialized, loading } = useEvent({
     idLocal: idLocal || "",
     paused: !idLocal,
   });
@@ -190,18 +276,18 @@ export const PersonEditor = ({ idLocal }: Props) => {
       <Heading>
         {create ? (
           <FormattedMessage
-            description="Create person heading"
-            defaultMessage="Create new person"
+            description="Create event heading"
+            defaultMessage="Create new event"
           />
         ) : (
           <FormattedMessage
-            description="New person heading"
-            defaultMessage="Edit {person}"
-            values={{ person: literal(data?.labels) }}
+            description="New event heading"
+            defaultMessage="Edit {event}"
+            values={{ event: literal(data?.labels) }}
           />
         )}
       </Heading>
-      <Editor person={data} />
+      <Editor event={data} />
     </>
   ) : (
     <LoadingPlaceholder />

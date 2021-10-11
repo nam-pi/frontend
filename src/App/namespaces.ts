@@ -21,6 +21,7 @@ export const namespaces = {
     event: core.resource("event"),
     group: core.resource("group"),
     hasParticipant: core.resource("has_participant"),
+    hasUrl: core.resource("has_url"),
     person: core.resource("person"),
     place: core.resource("place"),
     source: core.resource("source"),
