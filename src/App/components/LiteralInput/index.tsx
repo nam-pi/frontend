@@ -75,6 +75,7 @@ export const LiteralInput = ({
           className="col-span-6"
           label={label}
           onChange={handleTextChange}
+          rows={1}
           value={text || ""}
         />
       )}

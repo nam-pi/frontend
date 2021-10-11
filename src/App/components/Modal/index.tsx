@@ -7,9 +7,9 @@ interface Props {
   active: boolean;
   children: ReactNode;
   closeCallback: VoidFunction;
-  okButtonText?: string;
+  okButtonText?: ReactNode;
   rightElement?: ReactNode;
-  title: string;
+  title: ReactNode;
 }
 
 export const Modal = ({
@@ -61,7 +61,7 @@ export const Modal = ({
               <div className="inline-block w-full max-w-lg p-6 my-8 text-left align-middle transition-all transform bg-white shadow-lg rounded-lg border-2">
                 <Dialog.Title
                   as="h3"
-                  className="text-lg font-medium leading-6 text-gray-900 mb-6"
+                  className="text-lg font-medium leading-6 text-gray-900"
                 >
                   {title}
                 </Dialog.Title>

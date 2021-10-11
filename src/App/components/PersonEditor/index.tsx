@@ -49,7 +49,7 @@ const useData = (
   );
   useEffect(() => {
     if (!state.loading && state.data) {
-      history.push(baseUrl + state.data.idLocal);
+      window.location.assign(baseUrl + state.data.idLocal);
     }
   }, [baseUrl, history, state, state.data, state.loading]);
   return { form, setForm, types, setTypes, mutate, state, valid };
