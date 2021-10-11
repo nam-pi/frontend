@@ -20,9 +20,9 @@ export const useEditorTypes = (
   const iri = isWithItem(config) ? config.itemId : config.defaultType;
   const hierarchy = useHierarchy({ query: { iri } });
   const [types, setTypes] = useState<Type[]>([]);
-  const oldTypes = useRef<undefined | typeof types>();
+  const initialized = useRef(false);
   useEffect(() => {
-    if (hierarchy.data && oldTypes.current !== types) {
+    if (hierarchy.data && !initialized.current) {
       const newTypes = isWithItem(config)
         ? hierarchy.data.paths
             .map((path) => path[1] || path[0])
@@ -31,7 +31,7 @@ export const useEditorTypes = (
               value,
             }))
         : [{ value: iri, text: literal(hierarchy.data?.items[iri].labels) }];
-      oldTypes.current = newTypes;
+      initialized.current = true;
       setTypes(newTypes);
     }
   }, [config, hierarchy, hierarchy.data, iri, literal, types]);

@@ -25,8 +25,11 @@ interface Props {
   idLocal?: string;
 }
 
-const useData = (baseUrl: string, person: undefined | Person) => {
-  const defaultType = namespaces.core.person;
+const useData = (
+  baseUrl: string,
+  defaultType: string,
+  person: undefined | Person
+) => {
   const history = useHistory();
   const [form, setForm] = useState<Person>(person || ({} as Person));
   const [types, setTypes] = useEditorTypes(
@@ -53,11 +56,13 @@ const useData = (baseUrl: string, person: undefined | Person) => {
 };
 
 const Editor = ({ person }: { person?: Person }) => {
+  const defaultType = namespaces.core.person;
   const baseUrl = "/persons/";
   const literal = useLocaleLiteral();
   const intl = useIntl();
   const { form, setForm, types, setTypes, mutate, state, valid } = useData(
     baseUrl,
+    defaultType,
     person
   );
   return (
@@ -80,11 +85,7 @@ const Editor = ({ person }: { person?: Person }) => {
           defaultMessage: "Person types *",
         })}
       >
-        <TypeRepeater
-          onChange={setTypes}
-          parent="https://purl.org/nampi/owl/core#person"
-          values={types}
-        />
+        <TypeRepeater onChange={setTypes} parent={defaultType} values={types} />
       </Field>
       <Field
         label={intl.formatMessage({
