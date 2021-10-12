@@ -166,8 +166,8 @@ export const ComboBox = ({
         const div = active[0] as HTMLDivElement;
         div.scrollIntoView({
           behavior: "auto",
-          block: "center",
-          inline: "center",
+          block: "nearest",
+          inline: "nearest",
         });
       }
     }

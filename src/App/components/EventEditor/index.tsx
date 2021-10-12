@@ -15,6 +15,7 @@ import { useEffect, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useHistory } from "react-router-dom";
 import { Couple, CoupleInput } from "../CoupleInput";
+import { CoupleRepeater } from "../CoupleRepeater";
 import { EditorControls } from "../EditorControls";
 import { EditorForm } from "../EditorForm";
 import { Field } from "../Field";
@@ -33,15 +34,19 @@ interface Props {
 }
 
 interface FormState {
+  aspects: undefined | Couple[];
   authors: undefined | Individual[];
   comments: undefined | LiteralString[];
   labels: undefined | LiteralString[];
   mainParticipant: undefined | Couple;
+  participants: undefined | Couple[];
   place: undefined | Individual;
   source: undefined | Individual;
   sourceLocation: undefined | string;
   texts: undefined | LiteralString[];
 }
+
+const { core } = namespaces;
 
 const validate = (form: FormState, types: Type[]) =>
   form.authors !== undefined &&
@@ -55,8 +60,8 @@ const validate = (form: FormState, types: Type[]) =>
   form.sourceLocation !== undefined &&
   form.sourceLocation.replace(/\s/g, "").length > 0;
 
-const findInHierarchy = (id: string, hierarchy: Hierarchy) =>
-  hierarchy.items[id] !== undefined;
+const findInHierarchy = (id: string, hierarchy: Hierarchy, fallback: string) =>
+  id === fallback || hierarchy.items[id] !== undefined;
 
 const indexInHierarchy = (id: string, hierarchy: Hierarchy) => {
   const path = hierarchy.paths.find((path) => path.includes(id));
@@ -73,35 +78,36 @@ const useCouples = (event?: Event) => {
   >();
   // participant hierarchy
   const pHierarchy = useHierarchy({
-    query: { iri: namespaces.core.hasParticipant, descendants: true },
+    query: { iri: core.hasParticipant, descendants: true },
     paused: !event,
   })?.data;
   // mainParticipant hierarchy
   const mHierarchy = useHierarchy({
-    query: { iri: namespaces.core.hasMainParticipant, descendants: true },
+    query: { iri: core.hasMainParticipant, descendants: true },
     paused: !event,
   })?.data;
   // aspects hierarchy
   const aHierarchy = useHierarchy({
-    query: { iri: namespaces.core.usesAspect, descendants: true },
+    query: { iri: core.usesAspect, descendants: true },
     paused: !event,
   })?.data;
   useEffect(() => {
     if (pHierarchy && mHierarchy && aHierarchy) {
+      console.log("start", event);
       const main: { [id: string]: string[] } = {};
       const part: { [id: string]: string[] } = {};
       const asp: { [id: string]: string[] } = {};
       for (const [propId, value] of Object.entries(event || {})) {
-        if (findInHierarchy(propId, mHierarchy)) {
-          value.forEach((v: any) => {
+        if (findInHierarchy(propId, mHierarchy, "mainParticipant")) {
+          (Array.isArray(value) ? value : [value]).forEach((v: any) => {
             main[v.id] = [...(main[v.id] || []), propId];
           });
-        } else if (findInHierarchy(propId, pHierarchy)) {
-          value.forEach((v: any) => {
+        } else if (findInHierarchy(propId, pHierarchy, "participants")) {
+          value?.forEach((v: any) => {
             part[v.id] = [...(part[v.id] || []), propId];
           });
-        } else if (findInHierarchy(propId, aHierarchy)) {
-          value.forEach((v: any) => {
+        } else if (findInHierarchy(propId, aHierarchy, "aspect")) {
+          value?.forEach((v: any) => {
             asp[v.id] = [...(asp[v.id] || []), propId];
           });
         }
@@ -112,7 +118,10 @@ const useCouples = (event?: Event) => {
       };
       for (const [id, types] of Object.entries(main)) {
         const idxs = types.map((type) => indexInHierarchy(type, mHierarchy));
-        const value = types[maxIdx(idxs)] || namespaces.core.hasMainParticipant;
+        let value = types[maxIdx(idxs)] || core.hasMainParticipant;
+        if (value === "mainParticipant") {
+          value = core.hasMainParticipant;
+        }
         const label = literal(
           event?.[value]?.[id]?.labels || event?.mainParticipant.labels
         );
@@ -123,7 +132,10 @@ const useCouples = (event?: Event) => {
       const partCouples: Couple[] = [];
       for (const [id, types] of Object.entries(part)) {
         const idxs = types.map((type) => indexInHierarchy(type, pHierarchy));
-        const value = types[maxIdx(idxs)] || namespaces.core.hasParticipant;
+        let value = types[maxIdx(idxs)] || core.hasParticipant;
+        if (value === "participants") {
+          value = core.hasParticipant;
+        }
         const label = literal(
           event?.[value]?.find((a: any) => a.id === id)?.labels ||
             event?.participants.find((a: any) => a.id === id)?.labels
@@ -134,7 +146,10 @@ const useCouples = (event?: Event) => {
       const aspCouples: Couple[] = [];
       for (const [id, types] of Object.entries(asp)) {
         const idxs = types.map((type) => indexInHierarchy(type, aHierarchy));
-        const value = types[maxIdx(idxs)] || namespaces.core.usesAspect;
+        let value = types[maxIdx(idxs)] || core.usesAspect;
+        if (value === "aspects") {
+          value = core.usesAspect;
+        }
         const label = literal(
           event?.[value]?.find((a: any) => a.id === id)?.labels ||
             event?.aspects.find((a: any) => a.id === id)?.labels
@@ -156,16 +171,17 @@ const useForm = (
   const history = useHistory();
   const individual = useIndividual();
   const [form, setForm] = useState<FormState>({
+    aspects: undefined,
     authors: event?.act.authors.map((a) => individual(a)!),
     comments: event?.comments,
     labels: event?.labels,
     mainParticipant: undefined,
+    participants: undefined,
     place: individual(event?.place),
     source: individual(event?.act.sourceLocation.source),
     sourceLocation: event?.act.sourceLocation.text,
     texts: event?.texts,
   });
-  console.log(form);
   const [types, setTypes] = useEditorTypes(
     event ? { itemId: event.id } : { defaultType }
   );
@@ -180,7 +196,12 @@ const useForm = (
   const couples = useCouples(event);
   useEffect(() => {
     if (couples) {
-      setForm((old) => ({ ...old, mainParticipant: couples[0] }));
+      setForm((old) => ({
+        ...old,
+        aspects: couples[2],
+        mainParticipant: couples[0],
+        participants: couples[1],
+      }));
     }
   }, [couples]);
   useEffect(() => {
@@ -192,7 +213,7 @@ const useForm = (
 };
 
 const Editor = ({ event }: { event?: Event }) => {
-  const defaultType = namespaces.core.event;
+  const defaultType = core.event;
   const baseUrl = "/events/";
   const literal = useLocaleLiteral();
   const intl = useIntl();
@@ -280,8 +301,36 @@ const Editor = ({ event }: { event?: Event }) => {
             setForm((old) => ({ ...old, mainParticipant }))
           }
           individualType="persons"
-          propertyType={namespaces.core.hasMainParticipant}
+          propertyType={core.hasMainParticipant}
           value={form.mainParticipant}
+        />
+      </Field>
+      <Field
+        label={intl.formatMessage({
+          description: "Other participants label",
+          defaultMessage: "Other participants ",
+        })}
+      >
+        <CoupleRepeater
+          onChange={(participants) =>
+            setForm((old) => ({ ...old, participants }))
+          }
+          individualType="actors"
+          propertyType={core.hasParticipant}
+          values={form.participants}
+        />
+      </Field>
+      <Field
+        label={intl.formatMessage({
+          description: "Aspects label",
+          defaultMessage: "Aspects ",
+        })}
+      >
+        <CoupleRepeater
+          onChange={(aspects) => setForm((old) => ({ ...old, aspects }))}
+          individualType="aspects"
+          propertyType={core.usesAspect}
+          values={form.aspects}
         />
       </Field>
       <Field
@@ -354,16 +403,21 @@ const Editor = ({ event }: { event?: Event }) => {
         loading={state.loading}
         mutate={() =>
           mutate({
-            aspects: [],
+            aspects:
+              form.aspects?.map((p) => `${p.type.value}|${p.individual.id}`) ||
+              [],
             authors: form.authors?.map((a) => a.id!) || [],
             comments: serializeLiteral(form.comments),
             date: "",
             labels: serializeLiteral(form.labels),
-            mainParticipant: "",
-            otherParticipants: [],
-            place: "",
-            source: "",
-            sourceLocation: "",
+            mainParticipant: `${form.mainParticipant?.type.value}|${form.mainParticipant?.individual.id}`,
+            otherParticipants:
+              form.participants?.map(
+                (p) => `${p.type.value}|${p.individual.id}`
+              ) || [],
+            place: form.place?.id || "",
+            source: form.source?.id || "",
+            sourceLocation: form.sourceLocation || "",
             texts: serializeLiteral(form.texts),
             types: types.map((t) => t.value || ""),
           })

@@ -6,7 +6,7 @@ import {
 } from "../IndividualInput";
 import { Props as TypeInputProps, Type, TypeInput } from "../TypeInput";
 
-interface Props {
+export interface Props {
   individualType: IndividualInputProps["type"];
   onChange?: (value: Couple) => void;
   propertyType: TypeInputProps["parent"];
@@ -35,7 +35,7 @@ export const CoupleInput = ({
     setIndividual(value?.individual || { label: "", id: "" });
   }, [value?.individual, value?.type]);
   return (
-    <div>
+    <div className="w-full">
       <TypeInput
         parent={propertyType}
         onChange={(t) => {

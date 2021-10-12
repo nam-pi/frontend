@@ -49,7 +49,7 @@ const useQuery = (
   const conf = (active: Props["type"]) => ({
     query: { text: label, orderBy: "label" },
     paused:
-      active !== type ||
+      (active !== type && type !== "actors") ||
       (type === "actors" && active !== "groups" && active !== "persons") ||
       (label?.length || 0) === 0 ||
       id !== undefined,
@@ -62,7 +62,7 @@ const useQuery = (
   const source = useSources(conf("sources"))?.data?.map(individual);
   switch (type) {
     case "actors":
-      return person && group ? [...person, ...group] : undefined;
+      return [...(person || []), ...(group || [])];
     case "aspects":
       return aspect;
     case "authors":
