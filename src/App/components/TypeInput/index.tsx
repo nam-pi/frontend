@@ -10,7 +10,7 @@ import { ComboBox, Props as ComboBoxProps } from "../ComboBox";
 export interface Props
   extends Omit<ComboBoxProps, "options" | "matches" | "value" | "onChange"> {
   parent: string;
-  onChange: (type: Type) => void;
+  onChange?: (type: Type) => void;
   value?: Type;
 }
 

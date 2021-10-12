@@ -62,17 +62,11 @@ export const LiteralInput = ({
     }
   }, [onChange, value]);
   return (
-    <div className={clsx(className, "w-full grid grid-cols-6 gap-4")}>
+    <div className={clsx(className, "w-full")}>
       {type === "single" ? (
-        <Input
-          className="col-span-6 md:col-span-3"
-          label={label}
-          onChange={handleTextChange}
-          value={text || ""}
-        />
+        <Input label={label} onChange={handleTextChange} value={text || ""} />
       ) : (
         <Textarea
-          className="col-span-6"
           label={label}
           onChange={handleTextChange}
           rows={1}
@@ -80,7 +74,7 @@ export const LiteralInput = ({
         />
       )}
       <LanguageInput
-        className="col-span-6 md:col-span-3"
+        className="mt-4"
         onChange={handleLanguageChange}
         label={intl.formatMessage({
           description: "Langue input label",

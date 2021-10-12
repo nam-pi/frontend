@@ -9,6 +9,7 @@ import {
     useSources
 } from "nampi-use-api";
 import { useEffect, useMemo, useState } from "react";
+import { useIntl } from "react-intl";
 import { ComboBox, Props as ComboBoxProps } from "../ComboBox";
 
 export interface Individual {
@@ -18,7 +19,14 @@ export interface Individual {
 
 export interface Props
   extends Omit<ComboBoxProps, "options" | "matches" | "value" | "onChange"> {
-  type: "aspects" | "authors" | "groups" | "persons" | "places" | "sources";
+  type:
+    | "actors"
+    | "aspects"
+    | "authors"
+    | "groups"
+    | "persons"
+    | "places"
+    | "sources";
   onChange?: (individual: Individual) => void;
   value?: Individual;
 }
@@ -37,17 +45,24 @@ const useQuery = (
   label: undefined | string,
   id: undefined | string
 ) => {
+  const individual = useIndividual();
   const conf = (active: Props["type"]) => ({
     query: { text: label, orderBy: "label" },
-    paused: active !== type || (label?.length || 0) === 0 || id !== undefined,
+    paused:
+      active !== type ||
+      (type === "actors" && active !== "groups" && active !== "persons") ||
+      (label?.length || 0) === 0 ||
+      id !== undefined,
   });
-  const aspect = useAspects(conf("aspects"));
-  const authors = useAuthors(conf("authors"));
-  const group = useGroups(conf("groups"));
-  const person = usePersons(conf("persons"));
-  const place = usePlaces(conf("places"));
-  const source = useSources(conf("sources"));
+  const aspect = useAspects(conf("aspects"))?.data?.map(individual);
+  const authors = useAuthors(conf("authors"))?.data?.map(individual);
+  const group = useGroups(conf("groups"))?.data?.map(individual);
+  const person = usePersons(conf("persons"))?.data?.map(individual);
+  const place = usePlaces(conf("places"))?.data?.map(individual);
+  const source = useSources(conf("sources"))?.data?.map(individual);
   switch (type) {
+    case "actors":
+      return person && group ? [...person, ...group] : undefined;
     case "aspects":
       return aspect;
     case "authors":
@@ -63,23 +78,22 @@ const useQuery = (
   }
 };
 export const IndividualInput = ({
+  label: inputLabel,
   onChange = () => {},
   value,
   type,
   ...comboBoxProps
 }: Props) => {
-  const individual = useIndividual();
+  const intl = useIntl();
   const [label, setLabel] = useState(value?.label);
   const [id, setId] = useState(value?.id);
-  const { data } = useQuery(type, label, id);
+  const individuals = useQuery(type, label, id);
   const options = useMemo(
     () =>
-      label
-        ? (data || [])
-            .map(individual)
-            .sort((a, b) => a!.label.localeCompare(b!.label))
+      label && individuals
+        ? individuals.sort((a, b) => a!.label.localeCompare(b!.label))
         : [],
-    [data, individual, label]
+    [individuals, label]
   );
   const matches = useMemo(
     () => options.map((option) => option?.label || ""),
@@ -92,6 +106,13 @@ export const IndividualInput = ({
   return (
     <ComboBox
       {...comboBoxProps}
+      label={
+        inputLabel ||
+        intl.formatMessage({
+          description: "Default input label",
+          defaultMessage: "Label",
+        })
+      }
       matches={matches}
       onChange={(e) => {
         const newLabel = e.target.value;

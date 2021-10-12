@@ -4,14 +4,17 @@ import { namespaces } from "App/namespaces";
 import { serializeLiteral } from "App/utils/serializeLiteral";
 import {
     Event,
+    Hierarchy,
     LiteralString,
     useEvent,
     useEventCreate,
-    useEventUpdate
+    useEventUpdate,
+    useHierarchy
 } from "nampi-use-api";
 import { useEffect, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useHistory } from "react-router-dom";
+import { Couple, CoupleInput } from "../CoupleInput";
 import { EditorControls } from "../EditorControls";
 import { EditorForm } from "../EditorForm";
 import { Field } from "../Field";
@@ -33,7 +36,7 @@ interface FormState {
   authors: undefined | Individual[];
   comments: undefined | LiteralString[];
   labels: undefined | LiteralString[];
-  mainParticipant: undefined | Individual;
+  mainParticipant: undefined | Couple;
   place: undefined | Individual;
   source: undefined | Individual;
   sourceLocation: undefined | string;
@@ -46,10 +49,104 @@ const validate = (form: FormState, types: Type[]) =>
   types.length > 0 &&
   form.labels !== undefined &&
   form.labels.length > 0 &&
-  form.mainParticipant?.id !== undefined &&
+  form.mainParticipant?.type.value !== undefined &&
+  form.mainParticipant?.individual.id !== undefined &&
   form.source?.id !== undefined &&
   form.sourceLocation !== undefined &&
   form.sourceLocation.replace(/\s/g, "").length > 0;
+
+const findInHierarchy = (id: string, hierarchy: Hierarchy) =>
+  hierarchy.items[id] !== undefined;
+
+const indexInHierarchy = (id: string, hierarchy: Hierarchy) => {
+  const path = hierarchy.paths.find((path) => path.includes(id));
+  return path?.indexOf(id) || -1;
+};
+
+const maxIdx = (a: number[]) =>
+  a.reduce((iMax, x, i, arr) => (x > arr[iMax] ? i : iMax), 0);
+
+const useCouples = (event?: Event) => {
+  const literal = useLocaleLiteral();
+  const [couples, setCouples] = useState<
+    undefined | [main: Couple, participants: Couple[], aspects: Couple[]]
+  >();
+  // participant hierarchy
+  const pHierarchy = useHierarchy({
+    query: { iri: namespaces.core.hasParticipant, descendants: true },
+    paused: !event,
+  })?.data;
+  // mainParticipant hierarchy
+  const mHierarchy = useHierarchy({
+    query: { iri: namespaces.core.hasMainParticipant, descendants: true },
+    paused: !event,
+  })?.data;
+  // aspects hierarchy
+  const aHierarchy = useHierarchy({
+    query: { iri: namespaces.core.usesAspect, descendants: true },
+    paused: !event,
+  })?.data;
+  useEffect(() => {
+    if (pHierarchy && mHierarchy && aHierarchy) {
+      const main: { [id: string]: string[] } = {};
+      const part: { [id: string]: string[] } = {};
+      const asp: { [id: string]: string[] } = {};
+      for (const [propId, value] of Object.entries(event || {})) {
+        if (findInHierarchy(propId, mHierarchy)) {
+          value.forEach((v: any) => {
+            main[v.id] = [...(main[v.id] || []), propId];
+          });
+        } else if (findInHierarchy(propId, pHierarchy)) {
+          value.forEach((v: any) => {
+            part[v.id] = [...(part[v.id] || []), propId];
+          });
+        } else if (findInHierarchy(propId, aHierarchy)) {
+          value.forEach((v: any) => {
+            asp[v.id] = [...(asp[v.id] || []), propId];
+          });
+        }
+      }
+      const mainCouple: Couple = {
+        individual: { label: "", id: "" },
+        type: { text: "", value: "" },
+      };
+      for (const [id, types] of Object.entries(main)) {
+        const idxs = types.map((type) => indexInHierarchy(type, mHierarchy));
+        const value = types[maxIdx(idxs)] || namespaces.core.hasMainParticipant;
+        const label = literal(
+          event?.[value]?.[id]?.labels || event?.mainParticipant.labels
+        );
+        const text = literal(mHierarchy.items[value]?.labels);
+        mainCouple.individual = { label, id };
+        mainCouple.type = { text, value };
+      }
+      const partCouples: Couple[] = [];
+      for (const [id, types] of Object.entries(part)) {
+        const idxs = types.map((type) => indexInHierarchy(type, pHierarchy));
+        const value = types[maxIdx(idxs)] || namespaces.core.hasParticipant;
+        const label = literal(
+          event?.[value]?.find((a: any) => a.id === id)?.labels ||
+            event?.participants.find((a: any) => a.id === id)?.labels
+        );
+        const text = literal(pHierarchy.items[value].labels);
+        partCouples.push({ individual: { id, label }, type: { text, value } });
+      }
+      const aspCouples: Couple[] = [];
+      for (const [id, types] of Object.entries(asp)) {
+        const idxs = types.map((type) => indexInHierarchy(type, aHierarchy));
+        const value = types[maxIdx(idxs)] || namespaces.core.usesAspect;
+        const label = literal(
+          event?.[value]?.find((a: any) => a.id === id)?.labels ||
+            event?.aspects.find((a: any) => a.id === id)?.labels
+        );
+        const text = literal(aHierarchy.items[value].labels);
+        aspCouples.push({ individual: { id, label }, type: { text, value } });
+      }
+      setCouples([mainCouple, partCouples, aspCouples]);
+    }
+  }, [event, mHierarchy, pHierarchy, aHierarchy, literal]);
+  return couples;
+};
 
 const useForm = (
   baseUrl: string,
@@ -62,12 +159,13 @@ const useForm = (
     authors: event?.act.authors.map((a) => individual(a)!),
     comments: event?.comments,
     labels: event?.labels,
-    mainParticipant: individual(event?.mainParticipant),
+    mainParticipant: undefined,
     place: individual(event?.place),
     source: individual(event?.act.sourceLocation.source),
     sourceLocation: event?.act.sourceLocation.text,
     texts: event?.texts,
   });
+  console.log(form);
   const [types, setTypes] = useEditorTypes(
     event ? { itemId: event.id } : { defaultType }
   );
@@ -79,6 +177,12 @@ const useForm = (
     mutate = update[0];
     state = update[1];
   }
+  const couples = useCouples(event);
+  useEffect(() => {
+    if (couples) {
+      setForm((old) => ({ ...old, mainParticipant: couples[0] }));
+    }
+  }, [couples]);
   useEffect(() => {
     if (!state.loading && state.data) {
       window.location.assign(baseUrl + state.data.idLocal);
@@ -97,7 +201,6 @@ const Editor = ({ event }: { event?: Event }) => {
     defaultType,
     event
   );
-  console.log(form, types);
   return (
     <EditorForm>
       {state.error && (
@@ -172,15 +275,12 @@ const Editor = ({ event }: { event?: Event }) => {
           defaultMessage: "Main participant *",
         })}
       >
-        <IndividualInput
-          label={intl.formatMessage({
-            description: "Main participant input label",
-            defaultMessage: "Label",
-          })}
+        <CoupleInput
           onChange={(mainParticipant) =>
             setForm((old) => ({ ...old, mainParticipant }))
           }
-          type="persons"
+          individualType="persons"
+          propertyType={namespaces.core.hasMainParticipant}
           value={form.mainParticipant}
         />
       </Field>

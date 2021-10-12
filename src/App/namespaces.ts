@@ -20,11 +20,13 @@ export const namespaces = {
     author: core.resource("author"),
     event: core.resource("event"),
     group: core.resource("group"),
+    hasMainParticipant: core.resource("has_main_participant"),
     hasParticipant: core.resource("has_participant"),
     hasUrl: core.resource("has_url"),
     person: core.resource("person"),
     place: core.resource("place"),
     source: core.resource("source"),
     sourceLocation: core.resource("source_location"),
+    usesAspect: core.resource("uses_aspect"),
   },
 };
