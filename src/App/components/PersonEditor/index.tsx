@@ -9,7 +9,7 @@ import {
     usePersonCreate,
     usePersonUpdate
 } from "nampi-use-api";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useHistory } from "react-router-dom";
 import { EditorControls } from "../EditorControls";
@@ -20,6 +20,7 @@ import { LiteralRepeater } from "../LiteralRepeater";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
 import { Paragraph } from "../Paragraph";
 import { TextRepeater } from "../TextRepeater";
+import { Type } from "../TypeInput";
 import { TypeRepeater } from "../TypeRepeater";
 
 interface Props {
@@ -32,6 +33,9 @@ interface FormState {
   sameAs: undefined | string[];
   texts: undefined | LiteralString[];
 }
+
+const validate = (form: FormState, types: Type[]) =>
+  types.length > 0 && (form.labels?.length || 0) > 0;
 
 const useForm = (
   baseUrl: string,
@@ -56,16 +60,12 @@ const useForm = (
     mutate = update[0];
     state = update[1];
   }
-  const valid = useMemo(
-    () => types.length > 0 && (form.labels?.length || 0) > 0,
-    [form.labels?.length, types.length]
-  );
   useEffect(() => {
     if (!state.loading && state.data) {
       window.location.assign(baseUrl + state.data.idLocal);
     }
   }, [baseUrl, history, state, state.data, state.loading]);
-  return { form, setForm, types, setTypes, mutate, state, valid };
+  return { form, setForm, types, setTypes, mutate, state };
 };
 
 const Editor = ({ person }: { person?: Person }) => {
@@ -73,7 +73,7 @@ const Editor = ({ person }: { person?: Person }) => {
   const baseUrl = "/persons/";
   const literal = useLocaleLiteral();
   const intl = useIntl();
-  const { form, setForm, types, setTypes, mutate, state, valid } = useForm(
+  const { form, setForm, types, setTypes, mutate, state } = useForm(
     baseUrl,
     defaultType,
     person
@@ -172,7 +172,7 @@ const Editor = ({ person }: { person?: Person }) => {
             labels: serializeLiteral(form.labels),
           })
         }
-        valid={valid}
+        valid={validate(form, types)}
       />
     </EditorForm>
   );

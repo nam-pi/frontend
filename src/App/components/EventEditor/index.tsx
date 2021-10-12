@@ -9,22 +9,20 @@ import {
     useEventCreate,
     useEventUpdate
 } from "nampi-use-api";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useHistory } from "react-router-dom";
 import { EditorControls } from "../EditorControls";
 import { EditorForm } from "../EditorForm";
 import { Field } from "../Field";
 import { Heading } from "../Heading";
-import {
-    Individual,
-    IndividualsInput,
-    useIndividual
-} from "../IndividualsInput";
+import { Individual, IndividualInput, useIndividual } from "../IndividualInput";
+import { IndividualRepeater } from "../IndividualRepeater";
 import { Input } from "../Input";
 import { LiteralRepeater } from "../LiteralRepeater";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
 import { Paragraph } from "../Paragraph";
+import { Type } from "../TypeInput";
 import { TypeRepeater } from "../TypeRepeater";
 
 interface Props {
@@ -32,6 +30,7 @@ interface Props {
 }
 
 interface FormState {
+  authors: undefined | Individual[];
   comments: undefined | LiteralString[];
   labels: undefined | LiteralString[];
   mainParticipant: undefined | Individual;
@@ -41,6 +40,17 @@ interface FormState {
   texts: undefined | LiteralString[];
 }
 
+const validate = (form: FormState, types: Type[]) =>
+  form.authors !== undefined &&
+  form.authors.length > 0 &&
+  types.length > 0 &&
+  form.labels !== undefined &&
+  form.labels.length > 0 &&
+  form.mainParticipant?.id !== undefined &&
+  form.source?.id !== undefined &&
+  form.sourceLocation !== undefined &&
+  form.sourceLocation.replace(/\s/g, "").length > 0;
+
 const useForm = (
   baseUrl: string,
   defaultType: string,
@@ -49,6 +59,7 @@ const useForm = (
   const history = useHistory();
   const individual = useIndividual();
   const [form, setForm] = useState<FormState>({
+    authors: event?.act.authors.map((a) => individual(a)!),
     comments: event?.comments,
     labels: event?.labels,
     mainParticipant: individual(event?.mainParticipant),
@@ -68,29 +79,12 @@ const useForm = (
     mutate = update[0];
     state = update[1];
   }
-  const valid = useMemo(
-    () =>
-      types.length > 0 &&
-      form.labels !== undefined &&
-      form.labels.length > 0 &&
-      form.mainParticipant?.id !== undefined &&
-      form.source?.id !== undefined &&
-      form.sourceLocation !== undefined &&
-      form.sourceLocation.replace(/\s/g, "").length > 0,
-    [
-      form.labels,
-      form.mainParticipant?.id,
-      form.source?.id,
-      form.sourceLocation,
-      types.length,
-    ]
-  );
   useEffect(() => {
     if (!state.loading && state.data) {
       window.location.assign(baseUrl + state.data.idLocal);
     }
   }, [baseUrl, history, state, state.data, state.loading]);
-  return { form, setForm, types, setTypes, mutate, state, valid };
+  return { form, setForm, types, setTypes, mutate, state };
 };
 
 const Editor = ({ event }: { event?: Event }) => {
@@ -98,7 +92,7 @@ const Editor = ({ event }: { event?: Event }) => {
   const baseUrl = "/events/";
   const literal = useLocaleLiteral();
   const intl = useIntl();
-  const { form, setForm, types, setTypes, mutate, state, valid } = useForm(
+  const { form, setForm, types, setTypes, mutate, state } = useForm(
     baseUrl,
     defaultType,
     event
@@ -158,11 +152,27 @@ const Editor = ({ event }: { event?: Event }) => {
       </Field>
       <Field
         label={intl.formatMessage({
+          description: "Authors label",
+          defaultMessage: "Authors *",
+        })}
+      >
+        <IndividualRepeater
+          label={intl.formatMessage({
+            description: "Authors input label",
+            defaultMessage: "Label",
+          })}
+          onChange={(authors) => setForm((old) => ({ ...old, authors }))}
+          type="authors"
+          values={form.authors}
+        />
+      </Field>
+      <Field
+        label={intl.formatMessage({
           description: "Main participant label",
           defaultMessage: "Main participant *",
         })}
       >
-        <IndividualsInput
+        <IndividualInput
           label={intl.formatMessage({
             description: "Main participant input label",
             defaultMessage: "Label",
@@ -180,7 +190,7 @@ const Editor = ({ event }: { event?: Event }) => {
           defaultMessage: "Source *",
         })}
       >
-        <IndividualsInput
+        <IndividualInput
           label={intl.formatMessage({
             description: "Source input label",
             defaultMessage: "Label",
@@ -213,7 +223,7 @@ const Editor = ({ event }: { event?: Event }) => {
           defaultMessage: "Place",
         })}
       >
-        <IndividualsInput
+        <IndividualInput
           label={intl.formatMessage({
             description: "Place input label",
             defaultMessage: "Label",
@@ -245,7 +255,7 @@ const Editor = ({ event }: { event?: Event }) => {
         mutate={() =>
           mutate({
             aspects: [],
-            authors: [],
+            authors: form.authors?.map((a) => a.id!) || [],
             comments: serializeLiteral(form.comments),
             date: "",
             labels: serializeLiteral(form.labels),
@@ -258,7 +268,7 @@ const Editor = ({ event }: { event?: Event }) => {
             types: types.map((t) => t.value || ""),
           })
         }
-        valid={valid}
+        valid={validate(form, types)}
       />
     </EditorForm>
   );

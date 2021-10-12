@@ -62,7 +62,7 @@ const useQuery = (
       return source;
   }
 };
-export const IndividualsInput = ({
+export const IndividualInput = ({
   onChange = () => {},
   value,
   type,
