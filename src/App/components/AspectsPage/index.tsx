@@ -1,21 +1,18 @@
+import { useEntityUrl } from "App/hooks/useEntityUrl";
 import { namespaces } from "App/namespaces";
 import { Aspect, AspectsQuery } from "nampi-use-api";
 import { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
-import { useParams } from "react-router-dom";
 import { AspectDetails } from "../AspectDetails";
+import { AspectEditor } from "../AspectEditor";
 import { AspectsFilterSettings } from "../AspectsFilterSettings";
 import { FilterableItemList } from "../FilterableItemList";
 import { PlaceholderText } from "../PlaceholderText";
 import { SidebarPage } from "../SidebarPage";
 
-interface Params {
-  idLocal: string;
-}
-
 export const AspectsPage = () => {
   const { formatMessage } = useIntl();
-  const { idLocal } = useParams<Params>();
+  const { idLocal, edit } = useEntityUrl();
   const [query, setQuery] = useState<AspectsQuery>({
     orderBy: "label",
     text: "",
@@ -40,7 +37,9 @@ export const AspectsPage = () => {
         />
       }
       main={
-        idLocal ? (
+        edit ? (
+          <AspectEditor idLocal={idLocal} />
+        ) : idLocal ? (
           <AspectDetails idLocal={idLocal} />
         ) : (
           <PlaceholderText>

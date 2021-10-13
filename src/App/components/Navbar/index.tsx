@@ -182,6 +182,18 @@ const EditMenu = () => {
           defaultMessage="New place"
         />
       </MenuItem>
+      <MenuItem
+        action="/aspects?edit"
+        label={intl.formatMessage({
+          description: "Create aspects item label",
+          defaultMessage: "Create new aspect",
+        })}
+      >
+        <FormattedMessage
+          description="New aspect button label"
+          defaultMessage="New aspect"
+        />
+      </MenuItem>
     </NavMenu>
   );
 };
