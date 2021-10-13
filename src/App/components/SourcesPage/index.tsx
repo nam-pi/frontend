@@ -1,21 +1,18 @@
+import { useEntityUrl } from "App/hooks/useEntityUrl";
 import { namespaces } from "App/namespaces";
 import { SourcesQuery } from "nampi-use-api";
 import { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
-import { useParams } from "react-router-dom";
 import { FilterableItemList } from "../FilterableItemList";
 import { PlaceholderText } from "../PlaceholderText";
 import { SidebarPage } from "../SidebarPage";
 import { SourceDetails } from "../SourceDetails";
+import { SourceEditor } from "../SourceEditor";
 import { SourcesFilterSettings } from "../SourcesFilterSettings";
-
-interface Params {
-  idLocal: string;
-}
 
 export const SourcesPage = () => {
   const { formatMessage } = useIntl();
-  const { idLocal } = useParams<Params>();
+  const { idLocal, edit } = useEntityUrl();
   const [query, setQuery] = useState<SourcesQuery>({
     orderBy: "label",
     text: "",
@@ -34,13 +31,15 @@ export const SourcesPage = () => {
             defaultMessage: "Sources",
           })}
           itemType={namespaces.core.source}
-          linkBase="source"
+          linkBase="sources"
           query={query}
           resetQuery={setQuery}
         />
       }
       main={
-        idLocal ? (
+        edit ? (
+          <SourceEditor idLocal={idLocal} />
+        ) : idLocal ? (
           <SourceDetails idLocal={idLocal} />
         ) : (
           <PlaceholderText>

@@ -1,15 +1,23 @@
+import { faEdit } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { SECONDARY_ITEM_LIMIT } from "App/constants";
 import { useEventLabel } from "App/hooks/useEventLabel";
 import { useLocaleLiteral } from "App/hooks/useLocaleLiteral";
 import { namespaces } from "App/namespaces";
-import { EventsQuery, useGroup } from "nampi-use-api";
+import { EventsQuery, useAuth, useGroup } from "nampi-use-api";
 import { useEffect, useMemo, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
+import { Link } from "react-router-dom";
+import { DeleteButton } from "../DeleteButton";
 import { EventsFilterSettings } from "../EventsFilterSettings";
 import { FilterableItemList } from "../FilterableItemList";
 import { Heading } from "../Heading";
+import { ItemComments } from "../ItemComments";
 import { ItemInheritance } from "../ItemInheritance";
 import { ItemLabels } from "../ItemLabels";
+import { ItemLink } from "../ItemLink";
+import { ItemSameAs } from "../ItemSameAs";
+import { ItemTexts } from "../ItemTexts";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
 
 interface Props {
@@ -44,7 +52,7 @@ const EventsWithGroup = ({ id }: { id: string }) => {
         <EventsFilterSettings query={query} setQuery={setQuery} />
       }
       headingLevel={2}
-      linkBase="event"
+      linkBase="events"
       heading={formatMessage({
         description: "Group events list heading",
         defaultMessage: "Events with this group as participant",
@@ -59,18 +67,67 @@ const EventsWithGroup = ({ id }: { id: string }) => {
 
 export const GroupDetails = ({ idLocal }: Props) => {
   const getText = useLocaleLiteral();
+  const { authenticated } = useAuth();
   const { data } = useGroup({ idLocal });
+  console.log(data);
   return data ? (
     <>
-      <Heading>
-        <FormattedMessage
-          description="Group heading"
-          defaultMessage="Group: {label}"
-          values={{ label: getText(data.labels) }}
-        />
-      </Heading>
+      <div className="flex items-center">
+        <Heading>
+          <FormattedMessage
+            description="Group heading"
+            defaultMessage="Group: {label}"
+            values={{ label: getText(data.labels) }}
+          />
+        </Heading>
+        {authenticated && (
+          <>
+            <Link className="ml-4 text-gray-400" to={`/groups/${idLocal}?edit`}>
+              <FontAwesomeIcon icon={faEdit} />
+            </Link>
+            <DeleteButton
+              entityLabels={data.labels}
+              idLocal={idLocal}
+              type="groups"
+            />
+          </>
+        )}
+      </div>
       <ItemInheritance item={data} />
       <ItemLabels item={data} />
+      <ItemTexts item={data} />
+      <ItemSameAs item={data} />
+      {data.isPartOf && (
+        <div>
+          <Heading level={2}>
+            <FormattedMessage
+              description="Is part of list heading text"
+              defaultMessage="Is part of"
+            />
+          </Heading>
+          <div className="flex flex-col">
+            {data.isPartOf?.map((g) => (
+              <ItemLink key={g.idLocal} item={g} />
+            ))}
+          </div>
+        </div>
+      )}
+      {data.hasPart && (
+        <div>
+          <Heading level={2}>
+            <FormattedMessage
+              description="has parts list heading text"
+              defaultMessage="Has as part"
+            />
+          </Heading>
+          <div className="flex flex-col">
+            {data.hasPart?.map((g) => (
+              <ItemLink key={g.idLocal} item={g} />
+            ))}
+          </div>
+        </div>
+      )}
+      <ItemComments item={data} />
       <EventsWithGroup id={data.id} />
     </>
   ) : (

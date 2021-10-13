@@ -29,42 +29,42 @@ export const App = () => {
             <Route exact path="/" component={Home} />
             <Route
               exact
-              path={["/acts", "/act/:idLocal"]}
+              path={["/acts", "/acts/:idLocal"]}
               component={ActsPage}
             />
             <Route
               exact
-              path={["/aspects", "/aspect/:idLocal"]}
+              path={["/aspects", "/aspects/:idLocal"]}
               component={AspectsPage}
             />
             <Route
               exact
-              path={["/authors", "/author/:idLocal"]}
+              path={["/authors", "/authors/:idLocal"]}
               component={AuthorsPage}
             />
             <Route
               exact
-              path={["/events", "/event/:idLocal"]}
+              path={["/events", "/events/:idLocal"]}
               component={EventsPage}
             />
             <Route
               exact
-              path={["/groups", "/group/:idLocal"]}
+              path={["/groups", "/groups/:idLocal"]}
               component={GroupsPage}
             />
             <Route
               exact
-              path={["/persons", "/person/:idLocal"]}
+              path={["/persons", "/persons/:idLocal"]}
               component={PersonsPage}
             />
             <Route
               exact
-              path={["/places", "/place/:idLocal"]}
+              path={["/places", "/places/:idLocal"]}
               component={PlacesPage}
             />
             <Route
               exact
-              path={["/sources", "/source/:idLocal"]}
+              path={["/sources", "/sources/:idLocal"]}
               component={SourcesPage}
             />
             <Route exact path="/search" component={SearchPage} />

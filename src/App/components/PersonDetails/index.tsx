@@ -1,15 +1,22 @@
+import { faEdit } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { SECONDARY_ITEM_LIMIT } from "App/constants";
 import { useEventLabel } from "App/hooks/useEventLabel";
 import { useLocaleLiteral } from "App/hooks/useLocaleLiteral";
 import { namespaces } from "App/namespaces";
-import { EventsQuery, usePerson } from "nampi-use-api";
+import { EventsQuery, useAuth, usePerson } from "nampi-use-api";
 import { useEffect, useMemo, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
+import { Link } from "react-router-dom";
+import { DeleteButton } from "../DeleteButton";
 import { EventsFilterSettings } from "../EventsFilterSettings";
 import { FilterableItemList } from "../FilterableItemList";
 import { Heading } from "../Heading";
+import { ItemComments } from "../ItemComments";
 import { ItemInheritance } from "../ItemInheritance";
 import { ItemLabels } from "../ItemLabels";
+import { ItemSameAs } from "../ItemSameAs";
+import { ItemTexts } from "../ItemTexts";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
 
 interface Props {
@@ -44,7 +51,7 @@ const EventsWithPerson = ({ id }: { id: string }) => {
         <EventsFilterSettings query={query} setQuery={setQuery} />
       }
       headingLevel={2}
-      linkBase="event"
+      linkBase="events"
       heading={formatMessage({
         description: "Person events list heading",
         defaultMessage: "Events with this person as participant",
@@ -59,18 +66,39 @@ const EventsWithPerson = ({ id }: { id: string }) => {
 
 export const PersonDetails = ({ idLocal }: Props) => {
   const getText = useLocaleLiteral();
+  const { authenticated } = useAuth();
   const { data } = usePerson({ idLocal });
   return data ? (
     <>
-      <Heading>
-        <FormattedMessage
-          description="Person heading"
-          defaultMessage="Person: {label}"
-          values={{ label: getText(data.labels) }}
-        />
-      </Heading>
+      <div className="flex items-center">
+        <Heading>
+          <FormattedMessage
+            description="Person heading"
+            defaultMessage="Person: {label}"
+            values={{ label: getText(data.labels) }}
+          />
+        </Heading>
+        {authenticated && (
+          <>
+            <Link
+              className="ml-4 text-gray-400"
+              to={`/persons/${idLocal}?edit`}
+            >
+              <FontAwesomeIcon icon={faEdit} />
+            </Link>
+            <DeleteButton
+              entityLabels={data.labels}
+              idLocal={idLocal}
+              type="persons"
+            />
+          </>
+        )}
+      </div>
       <ItemInheritance item={data} />
       <ItemLabels item={data} />
+      <ItemTexts item={data} />
+      <ItemSameAs item={data} />
+      <ItemComments item={data} />
       <EventsWithPerson id={data.id} />
     </>
   ) : (

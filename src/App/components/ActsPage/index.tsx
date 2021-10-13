@@ -23,7 +23,7 @@ export const ActsPage = () => {
             defaultMessage: "Acts",
           })}
           itemType={namespaces.core.act}
-          linkBase="act"
+          linkBase="acts"
         />
       }
       main={

@@ -1,18 +1,24 @@
+import { faEdit } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { SECONDARY_ITEM_LIMIT } from "App/constants";
 import { useEventLabel } from "App/hooks/useEventLabel";
 import { useLocaleLiteral } from "App/hooks/useLocaleLiteral";
 import { usePersonLabel } from "App/hooks/usePersonLabel";
 import { namespaces } from "App/namespaces";
-import { EventsQuery, PersonsQuery, useAspect } from "nampi-use-api";
+import { EventsQuery, PersonsQuery, useAspect, useAuth } from "nampi-use-api";
 import { useEffect, useMemo, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
+import { Link } from "react-router-dom";
+import { DeleteButton } from "../DeleteButton";
 import { EventsFilterSettings } from "../EventsFilterSettings";
 import { FilterableItemList } from "../FilterableItemList";
 import { Heading } from "../Heading";
+import { ItemComments } from "../ItemComments";
 import { ItemInheritance } from "../ItemInheritance";
 import { ItemLabels } from "../ItemLabels";
+import { ItemSameAs } from "../ItemSameAs";
+import { ItemTexts } from "../ItemTexts";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
-import { MultiLangTexts } from "../MultiLangTexts";
 import { PersonsFilterSettings } from "../PersonsFilterSettings";
 
 interface Props {
@@ -46,7 +52,7 @@ const EventsWithAspect = ({ id }: { id: string }) => {
         <EventsFilterSettings query={query} setQuery={setQuery} />
       }
       headingLevel={2}
-      linkBase="event"
+      linkBase="events"
       heading={formatMessage({
         description: "Aspect events list heading",
         defaultMessage: "Events that use this aspect",
@@ -85,7 +91,7 @@ const PersonsWithAspect = ({ id }: { id: string }) => {
         <PersonsFilterSettings query={query} setQuery={setQuery} />
       }
       headingLevel={2}
-      linkBase="person"
+      linkBase="persons"
       heading={formatMessage({
         description: "Person events list heading",
         defaultMessage: "Persons that use this aspect",
@@ -100,33 +106,39 @@ const PersonsWithAspect = ({ id }: { id: string }) => {
 
 export const AspectDetails = ({ idLocal }: Props) => {
   const getText = useLocaleLiteral();
+  const { authenticated } = useAuth();
   const { data } = useAspect({ idLocal });
-  const textCount = data?.text?.length;
   return data ? (
     <>
-      <Heading>
-        <FormattedMessage
-          description="Aspect heading"
-          defaultMessage="Aspect: {label}"
-          values={{ label: getText(data.labels) }}
-        />
-      </Heading>
+      <div className="flex items-center">
+        <Heading>
+          <FormattedMessage
+            description="Aspect heading"
+            defaultMessage="Aspect: {label}"
+            values={{ label: getText(data.labels) }}
+          />
+        </Heading>
+        {authenticated && (
+          <>
+            <Link
+              className="ml-4 text-gray-400"
+              to={`/aspects/${idLocal}?edit`}
+            >
+              <FontAwesomeIcon icon={faEdit} />
+            </Link>
+            <DeleteButton
+              entityLabels={data.labels}
+              idLocal={idLocal}
+              type="aspects"
+            />
+          </>
+        )}
+      </div>
       <ItemInheritance item={data} />
       <ItemLabels item={data} />
-      {textCount && (
-        <div>
-          <Heading level={2}>
-            <FormattedMessage
-              description="Texts list list heading text"
-              defaultMessage="{textCount, plural, one {Text content} other {Text content variants}}"
-              values={{ textCount }}
-            />
-          </Heading>
-          <div className="flex flex-col">
-            <MultiLangTexts texts={data.text} />
-          </div>
-        </div>
-      )}
+      <ItemTexts item={data} />
+      <ItemSameAs item={data} />
+      <ItemComments item={data} />
       <div className="space-y-4 lg:space-y-0 lg:grid lg:grid-cols-2 lg:gap-8">
         <EventsWithAspect id={data.id} />
         <PersonsWithAspect id={data.id} />

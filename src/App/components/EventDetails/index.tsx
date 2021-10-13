@@ -1,11 +1,24 @@
+import { faEdit, faLink } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEventDate } from "App/hooks/useEventDate";
 import { useLocaleLiteral } from "App/hooks/useLocaleLiteral";
-import { Event, useEvent } from "nampi-use-api";
+import { namespaces } from "App/namespaces";
+import {
+    Event,
+    LiteralString,
+    SourceLocation,
+    useEvent,
+    useUser
+} from "nampi-use-api";
+import { ReactNode, useMemo } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
+import { Link } from "react-router-dom";
+import { DeleteButton } from "../DeleteButton";
 import { Heading } from "../Heading";
 import { ItemInheritance } from "../ItemInheritance";
 import { ItemLabels } from "../ItemLabels";
 import { ItemLink } from "../ItemLink";
+import { ItemTexts } from "../ItemTexts";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
 import { PlaceholderText } from "../PlaceholderText";
 
@@ -16,23 +29,63 @@ interface Props {
 const getOtherParticipants = (data: undefined | Event): Event["participants"] =>
   data?.participants.filter((p) => p.id !== data?.mainParticipant.id) || [];
 
+const getLocation = (location: undefined | SourceLocation): ReactNode => {
+  const url = (
+    location as unknown as Record<string, undefined | LiteralString[]>
+  )[namespaces.core.hasUrl] as undefined | LiteralString[];
+  return Array.isArray(url) ? (
+    <a href={url[0].value} className="hover:opacity-80 inline-block">
+      <FormattedMessage
+        description="Source link description"
+        defaultMessage="[link]"
+      />
+      <FontAwesomeIcon className="text-blue-500 text-xs ml-1" icon={faLink} />
+    </a>
+  ) : (
+    location?.text
+  );
+};
+
 export const EventDetails = ({ idLocal }: Props) => {
   const getText = useLocaleLiteral();
   const getDate = useEventDate();
   const { data } = useEvent({ idLocal });
+  const date = getDate(data, "full");
+  const user = useUser();
+  const isAuthor = useMemo(
+    () =>
+      data?.act.authors.find((a) => a.id === user.data?.author?.id) !==
+      undefined,
+    [data?.act.authors, user.data?.author?.id]
+  );
   const { formatDate, formatList } = useIntl();
   const otherParticipants = getOtherParticipants(data);
   return data ? (
     <>
-      <Heading>
-        <FormattedMessage
-          description="Event heading"
-          defaultMessage="Event: {label}"
-          values={{ label: getText(data.labels) }}
-        />
-      </Heading>
+      <div className="flex items-center">
+        <Heading>
+          <FormattedMessage
+            description="Event heading"
+            defaultMessage="Event: {label}"
+            values={{ label: getText(data.labels) }}
+          />
+        </Heading>
+        {isAuthor && (
+          <>
+            <Link className="ml-4 text-gray-400" to={`/events/${idLocal}?edit`}>
+              <FontAwesomeIcon icon={faEdit} />
+            </Link>
+            <DeleteButton
+              entityLabels={data.labels}
+              idLocal={idLocal}
+              type="events"
+            />
+          </>
+        )}
+      </div>
       <ItemInheritance item={data} />
       <ItemLabels item={data} />
+      <ItemTexts item={data} />
       <Heading level={2}>
         <FormattedMessage
           description="Document interpretation act heading"
@@ -69,7 +122,7 @@ export const EventDetails = ({ idLocal }: Props) => {
             defaultMessage="Source: {source}, {location}"
             values={{
               source: <ItemLink item={data.act.sourceLocation.source} />,
-              location: data.act.sourceLocation.text,
+              location: getLocation(data.act.sourceLocation),
             }}
           />
         </li>
@@ -87,7 +140,14 @@ export const EventDetails = ({ idLocal }: Props) => {
             description="Event date text"
             defaultMessage="Event date: {date}"
             values={{
-              date: getDate(data, "full"),
+              date: date || (
+                <PlaceholderText>
+                  <FormattedMessage
+                    description="Unknown date text"
+                    defaultMessage="unknown"
+                  />
+                </PlaceholderText>
+              ),
             }}
           />
         </li>

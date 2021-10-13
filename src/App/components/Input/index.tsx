@@ -1,23 +1,57 @@
 import clsx from "clsx";
-import { InputHTMLAttributes } from "react";
+import {
+    DetailedHTMLProps,
+    forwardRef,
+    InputHTMLAttributes,
+    ReactNode
+} from "react";
 
-interface Props extends InputHTMLAttributes<HTMLInputElement> {}
+export interface Props
+  extends DetailedHTMLProps<
+    InputHTMLAttributes<HTMLInputElement>,
+    HTMLInputElement
+  > {
+  label?: ReactNode;
+}
 
-export const Input = ({ className, type = "text", ...props }: Props) => (
-  <input
-    {...props}
-    type={type}
-    className={clsx(
-      "px-2",
-      "py-1",
-      "rounded",
-      "border-gray-400",
-      "shadow",
-      "focus:outline-none",
-      "focus-visible:ring-2",
-      "focus-visible:ring-offset-2",
-      "focus-visible:ring-current",
-      className
-    )}
-  />
+export const Input = forwardRef<HTMLInputElement, Props>(
+  (
+    {
+      className,
+      id = String(+new Date() * Math.random()),
+      label,
+      type = "text",
+      ...props
+    },
+    ref
+  ) => (
+    <div
+      className={clsx(
+        className,
+        type === "checkbox" ? "items-center" : "w-full",
+        "flex rounded border border-gray-400 shadow focus-within:ring-2 focus-visible:ring-2 focus-within:ring-offset-2 focus-within:ring-current"
+      )}
+    >
+      {label && (
+        <label
+          className="min-w-6 px-2 py-1 bg-gray-400 text-white"
+          htmlFor={id}
+        >
+          {label}
+        </label>
+      )}
+      <input
+        {...props}
+        id={id}
+        ref={ref}
+        type={type}
+        className={clsx(
+          type === "checkbox"
+            ? "p-4 rounded-tr rounded-br border-blue-500 cursor-pointer"
+            : "py-1 px-2 bg-transparent w-full",
+          "border-none shadow-none outline-none focus:ring-transparent focus:border-transparent focus:outline-none focus:shadow-outline focus:border-none"
+        )}
+      />
+    </div>
+  )
 );

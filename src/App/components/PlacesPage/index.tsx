@@ -1,21 +1,18 @@
+import { useEntityUrl } from "App/hooks/useEntityUrl";
 import { namespaces } from "App/namespaces";
 import { PlacesQuery } from "nampi-use-api";
 import { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
-import { useParams } from "react-router-dom";
 import { FilterableItemList } from "../FilterableItemList";
 import { PlaceDetails } from "../PlaceDetails";
+import { PlaceEditor } from "../PlaceEditor";
 import { PlaceholderText } from "../PlaceholderText";
 import { PlacesFilterSettings } from "../PlacesFilterSettings";
 import { SidebarPage } from "../SidebarPage";
 
-interface Params {
-  idLocal: string;
-}
-
 export const PlacesPage = () => {
   const { formatMessage } = useIntl();
-  const { idLocal } = useParams<Params>();
+  const { idLocal, edit } = useEntityUrl();
   const [query, setQuery] = useState<PlacesQuery>({
     orderBy: "label",
     text: "",
@@ -34,13 +31,15 @@ export const PlacesPage = () => {
             defaultMessage: "Places",
           })}
           itemType={namespaces.core.place}
-          linkBase="place"
+          linkBase="places"
           query={query}
           resetQuery={setQuery}
         />
       }
       main={
-        idLocal ? (
+        edit ? (
+          <PlaceEditor idLocal={idLocal} />
+        ) : idLocal ? (
           <PlaceDetails idLocal={idLocal} />
         ) : (
           <PlaceholderText>

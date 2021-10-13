@@ -74,7 +74,7 @@ export const Select = <V extends OptionValue = string>({
             leaveFrom="transform scale-100 opacity-100"
             leaveTo="transform scale-95 opacity-0"
           >
-            <Listbox.Options className="max-h-64 overflow-y-auto shadow bg-white border border-gray-400 rounded py-1 absolute right-0 z-10 mt-2">
+            <Listbox.Options className="max-h-64 w-full overflow-y-auto shadow bg-white border border-gray-400 rounded py-1 absolute right-0 z-10 mt-2">
               {options.map((value, idx) => (
                 <Listbox.Option key={idx} value={value}>
                   {({ active, selected }) => {

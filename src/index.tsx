@@ -1,4 +1,5 @@
 import { TranslationProvider } from "I18n/TranslationContext";
+import "leaflet/dist/leaflet.css";
 import { NampiProvider } from "nampi-use-api";
 import React from "react";
 import ReactDOM from "react-dom";
