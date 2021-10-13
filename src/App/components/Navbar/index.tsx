@@ -194,6 +194,18 @@ const EditMenu = () => {
           defaultMessage="New aspect"
         />
       </MenuItem>
+      <MenuItem
+        action="/sources?edit"
+        label={intl.formatMessage({
+          description: "Create sources item label",
+          defaultMessage: "Create new source",
+        })}
+      >
+        <FormattedMessage
+          description="New source button label"
+          defaultMessage="New source"
+        />
+      </MenuItem>
     </NavMenu>
   );
 };
