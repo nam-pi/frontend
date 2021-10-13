@@ -1,16 +1,10 @@
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { SECONDARY_ITEM_LIMIT } from "App/constants";
-import { useEventLabel } from "App/hooks/useEventLabel";
 import { useLocaleLiteral } from "App/hooks/useLocaleLiteral";
-import { namespaces } from "App/namespaces";
-import { EventsQuery, useAuth, useSource } from "nampi-use-api";
-import { useEffect, useMemo, useState } from "react";
-import { FormattedMessage, useIntl } from "react-intl";
+import { useAuth, useSource } from "nampi-use-api";
+import { FormattedMessage } from "react-intl";
 import { Link } from "react-router-dom";
 import { DeleteButton } from "../DeleteButton";
-import { EventsFilterSettings } from "../EventsFilterSettings";
-import { FilterableItemList } from "../FilterableItemList";
 import { Heading } from "../Heading";
 import { ItemComments } from "../ItemComments";
 import { ItemInheritance } from "../ItemInheritance";
