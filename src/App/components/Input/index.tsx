@@ -28,7 +28,8 @@ export const Input = forwardRef<HTMLInputElement, Props>(
     <div
       className={clsx(
         className,
-        "w-full flex rounded border border-gray-400 shadow focus-within:ring-2 focus-visible:ring-2 focus-within:ring-offset-2 focus-within:ring-current"
+        type === "checkbox" ? "items-center" : "w-full",
+        "flex rounded border border-gray-400 shadow focus-within:ring-2 focus-visible:ring-2 focus-within:ring-offset-2 focus-within:ring-current"
       )}
     >
       {label && (
@@ -44,7 +45,12 @@ export const Input = forwardRef<HTMLInputElement, Props>(
         id={id}
         ref={ref}
         type={type}
-        className="py-1 px-2 w-full bg-transparent border-none shadow-none outline-none focus:ring-transparent focus:border-transparent focus:outline-none focus:shadow-outline focus:border-none"
+        className={clsx(
+          type === "checkbox"
+            ? "p-4 rounded-tr rounded-br border-blue-500 cursor-pointer"
+            : "py-1 px-2 bg-transparent",
+          "border-none shadow-none outline-none focus:ring-transparent focus:border-transparent focus:outline-none focus:shadow-outline focus:border-none"
+        )}
       />
     </div>
   )

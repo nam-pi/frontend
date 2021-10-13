@@ -6,7 +6,8 @@ import { namespaces } from "App/namespaces";
 import {
     Event,
     LiteralString,
-    SourceLocation, useEvent,
+    SourceLocation,
+    useEvent,
     useUser
 } from "nampi-use-api";
 import { ReactNode, useMemo } from "react";
@@ -49,6 +50,7 @@ export const EventDetails = ({ idLocal }: Props) => {
   const getText = useLocaleLiteral();
   const getDate = useEventDate();
   const { data } = useEvent({ idLocal });
+  const date = getDate(data, "full");
   const user = useUser();
   const isAuthor = useMemo(
     () =>
@@ -138,7 +140,14 @@ export const EventDetails = ({ idLocal }: Props) => {
             description="Event date text"
             defaultMessage="Event date: {date}"
             values={{
-              date: getDate(data, "full"),
+              date: date || (
+                <PlaceholderText>
+                  <FormattedMessage
+                    description="Unknown date text"
+                    defaultMessage="unknown"
+                  />
+                </PlaceholderText>
+              ),
             }}
           />
         </li>

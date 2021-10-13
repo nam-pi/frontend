@@ -2,6 +2,7 @@ import { useEditorTypes } from "App/hooks/useEditorTypes";
 import { useLocaleLiteral } from "App/hooks/useLocaleLiteral";
 import { namespaces } from "App/namespaces";
 import { serializeLiteral } from "App/utils/serializeLiteral";
+import { format } from "date-fns";
 import {
     Event,
     Hierarchy,
@@ -16,6 +17,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { useHistory } from "react-router-dom";
 import { Couple, CoupleInput } from "../CoupleInput";
 import { CoupleRepeater } from "../CoupleRepeater";
+import { DateInput, Dates } from "../DateInput";
 import { EditorControls } from "../EditorControls";
 import { EditorForm } from "../EditorForm";
 import { Field } from "../Field";
@@ -37,12 +39,14 @@ interface FormState {
   aspects: undefined | Couple[];
   authors: undefined | Individual[];
   comments: undefined | LiteralString[];
+  dates: undefined | Dates;
   labels: undefined | LiteralString[];
   mainParticipant: undefined | Couple;
   participants: undefined | Couple[];
   place: undefined | Individual;
   source: undefined | Individual;
   sourceLocation: undefined | string;
+  start: undefined | string;
   texts: undefined | LiteralString[];
 }
 
@@ -59,6 +63,19 @@ const validate = (form: FormState, types: Type[]) =>
   form.source?.id !== undefined &&
   form.sourceLocation !== undefined &&
   form.sourceLocation.replace(/\s/g, "").length > 0;
+
+const serializeDates = (dates: undefined | Dates): string =>
+  !dates
+    ? ""
+    : dates.exact
+    ? dates.exact
+    : dates.start && dates.end
+    ? `${dates.start}-${dates.end}`
+    : dates.start
+    ? `${dates.start}-`
+    : dates.end
+    ? `-${dates.end}`
+    : "";
 
 const findInHierarchy = (id: string, hierarchy: Hierarchy, fallback: string) =>
   id === fallback || hierarchy.items[id] !== undefined;
@@ -93,7 +110,6 @@ const useCouples = (event?: Event) => {
   })?.data;
   useEffect(() => {
     if (pHierarchy && mHierarchy && aHierarchy) {
-      console.log("start", event);
       const main: { [id: string]: string[] } = {};
       const part: { [id: string]: string[] } = {};
       const asp: { [id: string]: string[] } = {};
@@ -174,10 +190,16 @@ const useForm = (
     aspects: undefined,
     authors: event?.act.authors.map((a) => individual(a)!),
     comments: event?.comments,
+    dates: {
+      exact: event?.exact ? format(event.exact, "yyyy-MM-dd") : undefined,
+      start: event?.earliest ? format(event.earliest, "yyyy-MM-dd") : undefined,
+      end: event?.latest ? format(event.latest, "yyyy-MM-dd") : undefined,
+    },
     labels: event?.labels,
     mainParticipant: undefined,
     participants: undefined,
     place: individual(event?.place),
+    start: event?.earliest ? format(event.earliest, "yyyy-MM-dd") : "",
     source: individual(event?.act.sourceLocation.source),
     sourceLocation: event?.act.sourceLocation.text,
     texts: event?.texts,
@@ -222,6 +244,7 @@ const Editor = ({ event }: { event?: Event }) => {
     defaultType,
     event
   );
+  console.log(form);
   return (
     <EditorForm>
       {state.error && (
@@ -257,6 +280,17 @@ const Editor = ({ event }: { event?: Event }) => {
           })}
           onChange={(labels) => setForm((old) => ({ ...old, labels }))}
           values={form.labels}
+        />
+      </Field>
+      <Field
+        label={intl.formatMessage({
+          description: "Date label",
+          defaultMessage: "Date",
+        })}
+      >
+        <DateInput
+          onChange={(dates) => setForm((old) => ({ ...old, dates }))}
+          value={form.dates}
         />
       </Field>
       <Field
@@ -363,7 +397,7 @@ const Editor = ({ event }: { event?: Event }) => {
           onChange={(e) =>
             setForm((old) => ({ ...old, sourceLocation: e.target.value }))
           }
-          value={form.sourceLocation}
+          value={form.sourceLocation || ""}
         />
       </Field>
       <Field
@@ -408,7 +442,7 @@ const Editor = ({ event }: { event?: Event }) => {
               [],
             authors: form.authors?.map((a) => a.id!) || [],
             comments: serializeLiteral(form.comments),
-            date: "",
+            date: serializeDates(form.dates),
             labels: serializeLiteral(form.labels),
             mainParticipant: `${form.mainParticipant?.type.value}|${form.mainParticipant?.individual.id}`,
             otherParticipants:
