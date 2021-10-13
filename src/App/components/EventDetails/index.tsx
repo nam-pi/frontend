@@ -6,11 +6,10 @@ import { namespaces } from "App/namespaces";
 import {
     Event,
     LiteralString,
-    SourceLocation,
-    useAuth,
-    useEvent
+    SourceLocation, useEvent,
+    useUser
 } from "nampi-use-api";
-import { ReactNode } from "react";
+import { ReactNode, useMemo } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { Link } from "react-router-dom";
 import { DeleteButton } from "../DeleteButton";
@@ -49,10 +48,15 @@ const getLocation = (location: undefined | SourceLocation): ReactNode => {
 export const EventDetails = ({ idLocal }: Props) => {
   const getText = useLocaleLiteral();
   const getDate = useEventDate();
-  const { authenticated } = useAuth();
   const { data } = useEvent({ idLocal });
+  const user = useUser();
+  const isAuthor = useMemo(
+    () =>
+      data?.act.authors.find((a) => a.id === user.data?.author?.id) !==
+      undefined,
+    [data?.act.authors, user.data?.author?.id]
+  );
   const { formatDate, formatList } = useIntl();
-  const textCount = data?.texts?.length;
   const otherParticipants = getOtherParticipants(data);
   return data ? (
     <>
@@ -64,7 +68,7 @@ export const EventDetails = ({ idLocal }: Props) => {
             values={{ label: getText(data.labels) }}
           />
         </Heading>
-        {authenticated && (
+        {isAuthor && (
           <>
             <Link className="ml-4 text-gray-400" to={`/events/${idLocal}?edit`}>
               <FontAwesomeIcon icon={faEdit} />
