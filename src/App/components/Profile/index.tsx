@@ -30,7 +30,10 @@ export const Profile = () => {
             values={{
               email: <span className="text-gray-500">{data?.email}</span>,
               author: (
-                <Link className="text-gray-500" to={data?.author?.id || ""}>
+                <Link
+                  className="text-gray-500"
+                  to={`/authors/${data?.author?.idLocal}`}
+                >
                   {literal(data?.labels)}
                   <FontAwesomeIcon
                     className="text-blue-500 text-xs ml-1"
