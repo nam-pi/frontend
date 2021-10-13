@@ -18,6 +18,7 @@ import { Heading } from "../Heading";
 import { ItemInheritance } from "../ItemInheritance";
 import { ItemLabels } from "../ItemLabels";
 import { ItemLink } from "../ItemLink";
+import { ItemTexts } from "../ItemTexts";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
 import { PlaceholderText } from "../PlaceholderText";
 
@@ -51,6 +52,7 @@ export const EventDetails = ({ idLocal }: Props) => {
   const { authenticated } = useAuth();
   const { data } = useEvent({ idLocal });
   const { formatDate, formatList } = useIntl();
+  const textCount = data?.texts?.length;
   const otherParticipants = getOtherParticipants(data);
   return data ? (
     <>
@@ -77,6 +79,7 @@ export const EventDetails = ({ idLocal }: Props) => {
       </div>
       <ItemInheritance item={data} />
       <ItemLabels item={data} />
+      <ItemTexts item={data} />
       <Heading level={2}>
         <FormattedMessage
           description="Document interpretation act heading"

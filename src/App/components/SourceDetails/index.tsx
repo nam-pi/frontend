@@ -2,6 +2,7 @@ import { useLocaleLiteral } from "App/hooks/useLocaleLiteral";
 import { useSource } from "nampi-use-api";
 import { FormattedMessage } from "react-intl";
 import { Heading } from "../Heading";
+import { ItemComments } from "../ItemComments";
 import { ItemInheritance } from "../ItemInheritance";
 import { ItemLabels } from "../ItemLabels";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
@@ -24,6 +25,7 @@ export const SourceDetails = ({ idLocal }: Props) => {
       </Heading>
       <ItemInheritance item={data} />
       <ItemLabels item={data} />
+      <ItemComments item={data} />
     </>
   ) : (
     <LoadingPlaceholder />

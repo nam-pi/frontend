@@ -15,6 +15,7 @@ import { Heading } from "../Heading";
 import { ItemComments } from "../ItemComments";
 import { ItemInheritance } from "../ItemInheritance";
 import { ItemLabels } from "../ItemLabels";
+import { ItemTexts } from "../ItemTexts";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
 
 interface Props {
@@ -94,6 +95,7 @@ export const PersonDetails = ({ idLocal }: Props) => {
       </div>
       <ItemInheritance item={data} />
       <ItemLabels item={data} />
+      <ItemTexts item={data} />
       <ItemComments item={data} />
       <EventsWithPerson id={data.id} />
     </>

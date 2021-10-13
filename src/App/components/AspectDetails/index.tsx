@@ -9,10 +9,11 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { EventsFilterSettings } from "../EventsFilterSettings";
 import { FilterableItemList } from "../FilterableItemList";
 import { Heading } from "../Heading";
+import { ItemComments } from "../ItemComments";
 import { ItemInheritance } from "../ItemInheritance";
 import { ItemLabels } from "../ItemLabels";
+import { ItemTexts } from "../ItemTexts";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
-import { MultiLangTexts } from "../MultiLangTexts";
 import { PersonsFilterSettings } from "../PersonsFilterSettings";
 
 interface Props {
@@ -101,7 +102,6 @@ const PersonsWithAspect = ({ id }: { id: string }) => {
 export const AspectDetails = ({ idLocal }: Props) => {
   const getText = useLocaleLiteral();
   const { data } = useAspect({ idLocal });
-  const textCount = data?.texts?.length;
   return data ? (
     <>
       <Heading>
@@ -113,20 +113,8 @@ export const AspectDetails = ({ idLocal }: Props) => {
       </Heading>
       <ItemInheritance item={data} />
       <ItemLabels item={data} />
-      {textCount && (
-        <div>
-          <Heading level={2}>
-            <FormattedMessage
-              description="Texts list list heading text"
-              defaultMessage="{textCount, plural, one {Text content} other {Text content variants}}"
-              values={{ textCount }}
-            />
-          </Heading>
-          <div className="flex flex-col">
-            <MultiLangTexts texts={data.text} />
-          </div>
-        </div>
-      )}
+      <ItemTexts item={data} />
+      <ItemComments item={data} />
       <div className="space-y-4 lg:space-y-0 lg:grid lg:grid-cols-2 lg:gap-8">
         <EventsWithAspect id={data.id} />
         <PersonsWithAspect id={data.id} />

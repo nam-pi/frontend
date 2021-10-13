@@ -8,8 +8,10 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { EventsFilterSettings } from "../EventsFilterSettings";
 import { FilterableItemList } from "../FilterableItemList";
 import { Heading } from "../Heading";
+import { ItemComments } from "../ItemComments";
 import { ItemInheritance } from "../ItemInheritance";
 import { ItemLabels } from "../ItemLabels";
+import { ItemTexts } from "../ItemTexts";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
 
 interface Props {
@@ -71,6 +73,8 @@ export const GroupDetails = ({ idLocal }: Props) => {
       </Heading>
       <ItemInheritance item={data} />
       <ItemLabels item={data} />
+      <ItemTexts item={data} />
+      <ItemComments item={data} />
       <EventsWithGroup id={data.id} />
     </>
   ) : (
