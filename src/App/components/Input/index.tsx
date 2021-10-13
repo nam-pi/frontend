@@ -48,7 +48,7 @@ export const Input = forwardRef<HTMLInputElement, Props>(
         className={clsx(
           type === "checkbox"
             ? "p-4 rounded-tr rounded-br border-blue-500 cursor-pointer"
-            : "py-1 px-2 bg-transparent",
+            : "py-1 px-2 bg-transparent w-full",
           "border-none shadow-none outline-none focus:ring-transparent focus:border-transparent focus:outline-none focus:shadow-outline focus:border-none"
         )}
       />

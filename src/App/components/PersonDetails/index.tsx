@@ -100,7 +100,6 @@ export const PersonDetails = ({ idLocal }: Props) => {
       <ItemSameAs item={data} />
       <ItemComments item={data} />
       <EventsWithPerson id={data.id} />
-      {}
     </>
   ) : (
     <LoadingPlaceholder />

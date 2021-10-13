@@ -71,7 +71,7 @@ const NavMenu = ({
       leaveFrom="transform opacity-100 scale-100"
       leaveTo="transform opacity-0 scale-95"
     >
-      <Menu.Items className="absolute min-w-8 mt-1 right-0 bg-white shadow-lg rounded flex flex-col p-2">
+      <Menu.Items className="absolute min-w-8 mt-1 right-0 bg-white shadow-lg rounded flex flex-col px-3 pt-2 pb-4 space-y-1">
         {children}
       </Menu.Items>
     </Transition>
@@ -168,6 +168,18 @@ const EditMenu = () => {
         <FormattedMessage
           description="New group button label"
           defaultMessage="New group"
+        />
+      </MenuItem>
+      <MenuItem
+        action="/places?edit"
+        label={intl.formatMessage({
+          description: "Create places item label",
+          defaultMessage: "Create new place",
+        })}
+      >
+        <FormattedMessage
+          description="New place button label"
+          defaultMessage="New place"
         />
       </MenuItem>
     </NavMenu>

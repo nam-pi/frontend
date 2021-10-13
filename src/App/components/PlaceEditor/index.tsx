@@ -3,11 +3,11 @@ import { useLocaleLiteral } from "App/hooks/useLocaleLiteral";
 import { namespaces } from "App/namespaces";
 import { serializeLiteral } from "App/utils/serializeLiteral";
 import {
-    Group,
     LiteralString,
-    useGroup,
-    useGroupCreate,
-    useGroupUpdate
+    Place,
+    usePlace,
+    usePlaceCreate,
+    usePlaceUpdate
 } from "nampi-use-api";
 import { useEffect, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -16,8 +16,7 @@ import { EditorControls } from "../EditorControls";
 import { EditorForm } from "../EditorForm";
 import { Field } from "../Field";
 import { Heading } from "../Heading";
-import { Individual, useIndividual } from "../IndividualInput";
-import { IndividualRepeater } from "../IndividualRepeater";
+import { Input } from "../Input";
 import { LiteralRepeater } from "../LiteralRepeater";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
 import { Paragraph } from "../Paragraph";
@@ -32,36 +31,43 @@ interface Props {
 interface FormState {
   comments: undefined | LiteralString[];
   labels: undefined | LiteralString[];
-  partOf: undefined | Individual[];
+  latitude: undefined | string;
+  longitude: undefined | string;
   sameAs: undefined | string[];
   texts: undefined | LiteralString[];
 }
 
 const validate = (form: FormState, types: Type[]) =>
-  types.length > 0 && (form.labels?.length || 0) > 0;
+  types.length > 0 &&
+  (form.labels?.length || 0) > 0 &&
+  ((form?.latitude === undefined && form?.longitude === undefined) ||
+    (!Number.isNaN(form?.latitude) &&
+      !Number.isNaN(Number.parseFloat(form?.latitude || "")) &&
+      !Number.isNaN(form?.longitude) &&
+      !Number.isNaN(Number.parseFloat(form?.longitude || ""))));
 
 const useForm = (
   baseUrl: string,
   defaultType: string,
-  group: undefined | Group
+  place: undefined | Place
 ) => {
   const history = useHistory();
-  const individual = useIndividual();
   const [form, setForm] = useState<FormState>({
-    comments: group?.comments,
-    labels: group?.labels,
-    partOf: group?.isPartOf?.map((g) => individual(g)!),
-    sameAs: group?.sameAs,
-    texts: group?.texts,
+    comments: place?.comments,
+    labels: place?.labels,
+    sameAs: place?.sameAs,
+    texts: place?.texts,
+    latitude: String(place?.latitude),
+    longitude: String(place?.longitude),
   });
   const [types, setTypes] = useEditorTypes(
-    group ? { itemId: group.id } : { defaultType }
+    place ? { itemId: place.id } : { defaultType }
   );
-  const update = useGroupUpdate(group?.idLocal || "");
-  const create = useGroupCreate();
+  const update = usePlaceUpdate(place?.idLocal || "");
+  const create = usePlaceCreate();
   let mutate = create[0];
   let state = create[1];
-  if (group) {
+  if (place) {
     mutate = update[0];
     state = update[1];
   }
@@ -73,15 +79,15 @@ const useForm = (
   return { form, setForm, types, setTypes, mutate, state };
 };
 
-const Editor = ({ group }: { group?: Group }) => {
-  const defaultType = namespaces.core.group;
-  const baseUrl = "/groups/";
+const Editor = ({ place }: { place?: Place }) => {
+  const defaultType = namespaces.core.place;
+  const baseUrl = "/places/";
   const literal = useLocaleLiteral();
   const intl = useIntl();
   const { form, setForm, types, setTypes, mutate, state } = useForm(
     baseUrl,
     defaultType,
-    group
+    place
   );
   return (
     <EditorForm>
@@ -99,8 +105,8 @@ const Editor = ({ group }: { group?: Group }) => {
       )}
       <Field
         label={intl.formatMessage({
-          description: "Group type field label",
-          defaultMessage: "Group types *",
+          description: "Place type field label",
+          defaultMessage: "Place types *",
         })}
       >
         <TypeRepeater onChange={setTypes} parent={defaultType} values={types} />
@@ -137,19 +143,33 @@ const Editor = ({ group }: { group?: Group }) => {
       </Field>
       <Field
         label={intl.formatMessage({
-          description: "Part of part of",
-          defaultMessage: "Part of *",
+          description: "Coordinates field label",
+          defaultMessage: "Coordinates",
         })}
       >
-        <IndividualRepeater
-          label={intl.formatMessage({
-            description: "Part of input label",
-            defaultMessage: "Label",
-          })}
-          onChange={(partOf) => setForm((old) => ({ ...old, partOf }))}
-          type="groups"
-          values={form.partOf}
-        />
+        <div className="flex flex-col md:flex-row w-full">
+          <Input
+            label={intl.formatMessage({
+              description: "Latitude input label",
+              defaultMessage: "Lat",
+            })}
+            onChange={(e) =>
+              setForm((old) => ({ ...old, latitude: e.target.value }))
+            }
+            value={form.latitude || ""}
+          />
+          <Input
+            className="mt-4 md:mt-0 md:ml-4"
+            label={intl.formatMessage({
+              description: "Longitude input label",
+              defaultMessage: "Lng",
+            })}
+            onChange={(e) =>
+              setForm((old) => ({ ...old, longitude: e.target.value }))
+            }
+            value={form.longitude || ""}
+          />
+        </div>
       </Field>
       <Field
         label={intl.formatMessage({
@@ -183,16 +203,17 @@ const Editor = ({ group }: { group?: Group }) => {
         />
       </Field>
       <EditorControls
-        cancelUrl={baseUrl + (group?.idLocal || "")}
+        cancelUrl={baseUrl + (place?.idLocal || "")}
         loading={state.loading}
         mutate={() =>
           mutate({
-            types: types.map((t) => t.value || ""),
-            texts: serializeLiteral(form.texts),
             comments: serializeLiteral(form.comments),
             labels: serializeLiteral(form.labels),
+            latitude: form.latitude,
+            longitude: form.longitude,
             sameAs: form.sameAs,
-            partOf: form.partOf?.map((p) => p.id!),
+            texts: serializeLiteral(form.texts),
+            types: types.map((t) => t.value || ""),
           })
         }
         valid={validate(form, types)}
@@ -201,8 +222,8 @@ const Editor = ({ group }: { group?: Group }) => {
   );
 };
 
-export const GroupEditor = ({ idLocal }: Props) => {
-  const { data, initialized, loading } = useGroup({
+export const PlaceEditor = ({ idLocal }: Props) => {
+  const { data, initialized, loading } = usePlace({
     idLocal: idLocal || "",
     paused: !idLocal,
   });
@@ -213,18 +234,18 @@ export const GroupEditor = ({ idLocal }: Props) => {
       <Heading>
         {create ? (
           <FormattedMessage
-            description="Create group heading"
-            defaultMessage="Create new group"
+            description="Create place heading"
+            defaultMessage="Create new place"
           />
         ) : (
           <FormattedMessage
-            description="New group heading"
-            defaultMessage="Edit {group}"
-            values={{ group: literal(data?.labels) }}
+            description="New place heading"
+            defaultMessage="Edit {place}"
+            values={{ place: literal(data?.labels) }}
           />
         )}
       </Heading>
-      <Editor group={data} />
+      <Editor place={data} />
     </>
   ) : (
     <LoadingPlaceholder />
