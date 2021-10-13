@@ -70,11 +70,11 @@ const serializeDates = (dates: undefined | Dates): string =>
     : dates.exact
     ? dates.exact
     : dates.start && dates.end
-    ? `${dates.start}-${dates.end}`
+    ? `${dates.start}|${dates.end}`
     : dates.start
-    ? `${dates.start}-`
+    ? `${dates.start}|`
     : dates.end
-    ? `-${dates.end}`
+    ? `|${dates.end}`
     : "";
 
 const findInHierarchy = (id: string, hierarchy: Hierarchy, fallback: string) =>
