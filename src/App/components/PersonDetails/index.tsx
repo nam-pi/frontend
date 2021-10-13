@@ -15,6 +15,7 @@ import { Heading } from "../Heading";
 import { ItemComments } from "../ItemComments";
 import { ItemInheritance } from "../ItemInheritance";
 import { ItemLabels } from "../ItemLabels";
+import { ItemSameAs } from "../ItemSameAs";
 import { ItemTexts } from "../ItemTexts";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
 
@@ -96,8 +97,10 @@ export const PersonDetails = ({ idLocal }: Props) => {
       <ItemInheritance item={data} />
       <ItemLabels item={data} />
       <ItemTexts item={data} />
+      <ItemSameAs item={data} />
       <ItemComments item={data} />
       <EventsWithPerson id={data.id} />
+      {}
     </>
   ) : (
     <LoadingPlaceholder />

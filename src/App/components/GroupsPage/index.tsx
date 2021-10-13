@@ -1,21 +1,18 @@
+import { useEntityUrl } from "App/hooks/useEntityUrl";
 import { namespaces } from "App/namespaces";
 import { GroupsQuery } from "nampi-use-api";
 import { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
-import { useParams } from "react-router-dom";
 import { FilterableItemList } from "../FilterableItemList";
 import { GroupDetails } from "../GroupDetails";
+import { GroupEditor } from "../GroupEditor";
 import { GroupsFilterSettings } from "../GroupsFilterSettings";
 import { PlaceholderText } from "../PlaceholderText";
 import { SidebarPage } from "../SidebarPage";
 
-interface Params {
-  idLocal: string;
-}
-
 export const GroupsPage = () => {
   const { formatMessage } = useIntl();
-  const { idLocal } = useParams<Params>();
+  const { idLocal, edit } = useEntityUrl();
   const [query, setQuery] = useState<GroupsQuery>({
     orderBy: "label",
     text: "",
@@ -40,7 +37,9 @@ export const GroupsPage = () => {
         />
       }
       main={
-        idLocal ? (
+        edit ? (
+          <GroupEditor idLocal={idLocal} />
+        ) : idLocal ? (
           <GroupDetails idLocal={idLocal} />
         ) : (
           <PlaceholderText>

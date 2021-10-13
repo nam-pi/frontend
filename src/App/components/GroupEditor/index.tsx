@@ -3,11 +3,11 @@ import { useLocaleLiteral } from "App/hooks/useLocaleLiteral";
 import { namespaces } from "App/namespaces";
 import { serializeLiteral } from "App/utils/serializeLiteral";
 import {
-    LiteralString,
-    Person,
-    usePerson,
-    usePersonCreate,
-    usePersonUpdate
+  Group,
+  LiteralString,
+  useGroup,
+  useGroupCreate,
+  useGroupUpdate,
 } from "nampi-use-api";
 import { useEffect, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -16,6 +16,8 @@ import { EditorControls } from "../EditorControls";
 import { EditorForm } from "../EditorForm";
 import { Field } from "../Field";
 import { Heading } from "../Heading";
+import { Individual, useIndividual } from "../IndividualInput";
+import { IndividualRepeater } from "../IndividualRepeater";
 import { LiteralRepeater } from "../LiteralRepeater";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
 import { Paragraph } from "../Paragraph";
@@ -30,6 +32,7 @@ interface Props {
 interface FormState {
   comments: undefined | LiteralString[];
   labels: undefined | LiteralString[];
+  partOf: undefined | Individual[];
   sameAs: undefined | string[];
   texts: undefined | LiteralString[];
 }
@@ -40,23 +43,25 @@ const validate = (form: FormState, types: Type[]) =>
 const useForm = (
   baseUrl: string,
   defaultType: string,
-  person: undefined | Person
+  group: undefined | Group
 ) => {
   const history = useHistory();
+  const individual = useIndividual();
   const [form, setForm] = useState<FormState>({
-    comments: person?.comments,
-    labels: person?.labels,
-    sameAs: person?.sameAs,
-    texts: person?.texts,
+    comments: group?.comments,
+    labels: group?.labels,
+    partOf: group?.isPartOf?.map((g) => individual(g)!),
+    sameAs: group?.sameAs,
+    texts: group?.texts,
   });
   const [types, setTypes] = useEditorTypes(
-    person ? { itemId: person.id } : { defaultType }
+    group ? { itemId: group.id } : { defaultType }
   );
-  const update = usePersonUpdate(person?.idLocal || "");
-  const create = usePersonCreate();
+  const update = useGroupUpdate(group?.idLocal || "");
+  const create = useGroupCreate();
   let mutate = create[0];
   let state = create[1];
-  if (person) {
+  if (group) {
     mutate = update[0];
     state = update[1];
   }
@@ -68,15 +73,15 @@ const useForm = (
   return { form, setForm, types, setTypes, mutate, state };
 };
 
-const Editor = ({ person }: { person?: Person }) => {
-  const defaultType = namespaces.core.person;
-  const baseUrl = "/persons/";
+const Editor = ({ group }: { group?: Group }) => {
+  const defaultType = namespaces.core.group;
+  const baseUrl = "/groups/";
   const literal = useLocaleLiteral();
   const intl = useIntl();
   const { form, setForm, types, setTypes, mutate, state } = useForm(
     baseUrl,
     defaultType,
-    person
+    group
   );
   return (
     <EditorForm>
@@ -94,8 +99,8 @@ const Editor = ({ person }: { person?: Person }) => {
       )}
       <Field
         label={intl.formatMessage({
-          description: "Person type field label",
-          defaultMessage: "Person types *",
+          description: "Group type field label",
+          defaultMessage: "Group types *",
         })}
       >
         <TypeRepeater onChange={setTypes} parent={defaultType} values={types} />
@@ -132,6 +137,22 @@ const Editor = ({ person }: { person?: Person }) => {
       </Field>
       <Field
         label={intl.formatMessage({
+          description: "Part of part of",
+          defaultMessage: "Part of *",
+        })}
+      >
+        <IndividualRepeater
+          label={intl.formatMessage({
+            description: "Part of input label",
+            defaultMessage: "Label",
+          })}
+          onChange={(partOf) => setForm((old) => ({ ...old, partOf }))}
+          type="groups"
+          values={form.partOf}
+        />
+      </Field>
+      <Field
+        label={intl.formatMessage({
           description: "Sameas field label",
           defaultMessage: "Same as URLs",
         })}
@@ -162,7 +183,7 @@ const Editor = ({ person }: { person?: Person }) => {
         />
       </Field>
       <EditorControls
-        cancelUrl={baseUrl + (person?.idLocal || "")}
+        cancelUrl={baseUrl + (group?.idLocal || "")}
         loading={state.loading}
         mutate={() =>
           mutate({
@@ -171,6 +192,7 @@ const Editor = ({ person }: { person?: Person }) => {
             comments: serializeLiteral(form.comments),
             labels: serializeLiteral(form.labels),
             sameAs: form.sameAs,
+            partOf: form.partOf?.map((p) => p.id!),
           })
         }
         valid={validate(form, types)}
@@ -179,8 +201,8 @@ const Editor = ({ person }: { person?: Person }) => {
   );
 };
 
-export const PersonEditor = ({ idLocal }: Props) => {
-  const { data, initialized, loading } = usePerson({
+export const GroupEditor = ({ idLocal }: Props) => {
+  const { data, initialized, loading } = useGroup({
     idLocal: idLocal || "",
     paused: !idLocal,
   });
@@ -191,18 +213,18 @@ export const PersonEditor = ({ idLocal }: Props) => {
       <Heading>
         {create ? (
           <FormattedMessage
-            description="Create person heading"
-            defaultMessage="Create new person"
+            description="Create group heading"
+            defaultMessage="Create new group"
           />
         ) : (
           <FormattedMessage
-            description="New person heading"
-            defaultMessage="Edit {person}"
-            values={{ person: literal(data?.labels) }}
+            description="New group heading"
+            defaultMessage="Edit {group}"
+            values={{ group: literal(data?.labels) }}
           />
         )}
       </Heading>
-      <Editor person={data} />
+      <Editor group={data} />
     </>
   ) : (
     <LoadingPlaceholder />

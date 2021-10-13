@@ -158,6 +158,18 @@ const EditMenu = () => {
           defaultMessage="New person"
         />
       </MenuItem>
+      <MenuItem
+        action="/groups?edit"
+        label={intl.formatMessage({
+          description: "Create groups item label",
+          defaultMessage: "Create new group",
+        })}
+      >
+        <FormattedMessage
+          description="New group button label"
+          defaultMessage="New group"
+        />
+      </MenuItem>
     </NavMenu>
   );
 };
