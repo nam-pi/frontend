@@ -9,7 +9,7 @@ import reportWebVitals from "./reportWebVitals";
 
 const api = process.env.REACT_APP_API;
 const auth = process.env.REACT_APP_AUTH;
-const authLogging = process.env.REACT_LOG_AUTH ? true : false;
+const authLogging = process.env.REACT_AUTH_LOG ? true : false;
 const client = process.env.REACT_APP_CLIENT;
 const realm = process.env.REACT_APP_REALM;
 

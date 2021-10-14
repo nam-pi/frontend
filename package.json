@@ -1,6 +1,6 @@
 {
   "name": "nampi-frontend",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "private": true,
   "dependencies": {
     "//": "TODO: Replace with the original react-leaflet package after this [issue](https://github.com/PaulLeCam/react-leaflet/issues/891) is resolved.",
@@ -32,7 +32,7 @@
     "husky": "^7.0.2",
     "leaflet": "^1.7.1",
     "lint-staged": "^11.2.2",
-    "nampi-use-api": "^0.2.12",
+    "nampi-use-api": "^0.2.14",
     "postcss": "^7",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
