@@ -8481,10 +8481,10 @@ multicast-dns@^6.0.1:
     dns-packet "^1.3.1"
     thunky "^1.0.2"
 
-nampi-use-api@^0.2.12:
-  version "0.2.12"
-  resolved "https://registry.yarnpkg.com/nampi-use-api/-/nampi-use-api-0.2.12.tgz#4202fffa6625f4b8fe9966483bec71f635467d9e"
-  integrity sha512-SqW3AWxt/2YDAPO0bjkMOoofFkRuRNE6FA8ZcUQiL2jf7fW6jPtglIFXnnGtxo2ysZpkl+cJUctcLWW4riVT0A==
+nampi-use-api@^0.2.14:
+  version "0.2.14"
+  resolved "https://registry.yarnpkg.com/nampi-use-api/-/nampi-use-api-0.2.14.tgz#0cb476b6d7d56d2358184795610bcb7888aaa70e"
+  integrity sha512-gZWQAGIfuBoOt1i5o0ywUiOQo3BSaVZmjzOBFVsTQW/KaLOEUInsdrI1OXa8rvN2VBllaoVZgdLBc9yKhrjSOQ==
   dependencies:
     jsonld "^5.2.0"
     keycloak-js "^15.0.2"
