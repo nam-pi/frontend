@@ -1,6 +1,6 @@
 {
   "name": "nampi-frontend",
-  "version": "0.3.4",
+  "version": "0.4.0",
   "private": true,
   "dependencies": {
     "//": "TODO: Replace with the original react-leaflet package after this [issue](https://github.com/PaulLeCam/react-leaflet/issues/891) is resolved.",
@@ -21,6 +21,7 @@
     "@types/react": "^17.0.30",
     "@types/react-dom": "^17.0.9",
     "@types/react-router-dom": "^5.3.1",
+    "@types/uuid": "^8.3.1",
     "autoprefixer": "^9",
     "babel-plugin-react-intl": "^8.2.25",
     "clsx": "^1.1.1",
@@ -30,9 +31,10 @@
     "focus-visible": "^5.2.0",
     "fuse.js": "^6.4.6",
     "husky": "^7.0.2",
+    "jsonld": "^5.2.0",
+    "keycloak-js": "^15.0.2",
     "leaflet": "^1.7.1",
     "lint-staged": "^11.2.2",
-    "nampi-use-api": "^0.2.22",
     "postcss": "^7",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -43,6 +45,7 @@
     "react-scripts": "4.0.3",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat",
     "typescript": "^4.4.4",
+    "uuid": "^8.3.2",
     "web-vitals": "^2.1.2"
   },
   "husky": {
