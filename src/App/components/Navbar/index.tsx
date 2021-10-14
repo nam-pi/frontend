@@ -32,11 +32,18 @@ const MenuItem = ({
 }) => (
   <Menu.Item>
     {(active) => (
-      <div className="hover:bg-gray-100">
+      <div className="hover:bg-gray-100 w-full">
         {typeof action === "string" ? (
-          <Link to={action}>{children}</Link>
+          <Link className="inline-block w-full" to={action}>
+            {children}
+          </Link>
         ) : (
-          <button type="button" onClick={action} aria-label={label}>
+          <button
+            className="inline-block w-full text-left"
+            type="button"
+            onClick={action}
+            aria-label={label}
+          >
             {children}
           </button>
         )}
