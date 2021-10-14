@@ -9,6 +9,7 @@ import reportWebVitals from "./reportWebVitals";
 
 const api = process.env.REACT_APP_API;
 const auth = process.env.REACT_APP_AUTH;
+const authLogging = process.env.REACT_LOG_AUTH ? true : false;
 const client = process.env.REACT_APP_CLIENT;
 const realm = process.env.REACT_APP_REALM;
 
@@ -22,6 +23,7 @@ ReactDOM.render(
       <NampiProvider
         api={api}
         auth={auth}
+        authLogging={authLogging}
         client={client}
         realm={realm}
         searchTimeout={200}
