@@ -2187,10 +2187,10 @@
     "@types/scheduler" "*"
     csstype "^3.0.2"
 
-"@types/react@^17.0.29":
-  version "17.0.29"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.29.tgz#9535f3fc01a4981ce9cadcf0daa2593c0c2f2251"
-  integrity sha512-HSenIfBEBZ70BLrrVhtEtHpqaP79waauPtA8XKlczTxL3hXrW/ElGNLTpD1TmqkykgGlOAK55+D3SmUHEirpFw==
+"@types/react@^17.0.30":
+  version "17.0.30"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.30.tgz#2f8e6f5ab6415c091cc5e571942ee9064b17609e"
+  integrity sha512-3Dt/A8gd3TCXi2aRe84y7cK1K8G+N9CZRDG8kDGguOKa0kf/ZkSwTmVIDPsm/KbQOVMaDJXwhBtuOXxqwdpWVg==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
@@ -8481,10 +8481,10 @@ multicast-dns@^6.0.1:
     dns-packet "^1.3.1"
     thunky "^1.0.2"
 
-nampi-use-api@^0.2.14:
-  version "0.2.14"
-  resolved "https://registry.yarnpkg.com/nampi-use-api/-/nampi-use-api-0.2.14.tgz#0cb476b6d7d56d2358184795610bcb7888aaa70e"
-  integrity sha512-gZWQAGIfuBoOt1i5o0ywUiOQo3BSaVZmjzOBFVsTQW/KaLOEUInsdrI1OXa8rvN2VBllaoVZgdLBc9yKhrjSOQ==
+nampi-use-api@^0.2.15:
+  version "0.2.15"
+  resolved "https://registry.yarnpkg.com/nampi-use-api/-/nampi-use-api-0.2.15.tgz#83a72f18e31571643d93f8f37ab6f7ad7f745c3d"
+  integrity sha512-etgYzzxF9VKoqtqgEvlM7mlGd3Jw+4fSs+KZd62CCAg/r3uKS9hwFESk9/qqF2IqTP0dnBljoE01vhzDem13Fw==
   dependencies:
     jsonld "^5.2.0"
     keycloak-js "^15.0.2"
