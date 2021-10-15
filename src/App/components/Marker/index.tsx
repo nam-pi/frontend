@@ -6,7 +6,7 @@ import { ReactNode } from "react";
 import { renderToString } from "react-dom/server";
 import { Marker as LeafletMarker, MarkerProps, Popup } from "react-leaflet";
 
-interface Props extends Omit<MarkerProps, "icon" | "children"> {
+export interface Props extends Omit<MarkerProps, "icon" | "children"> {
   icon?: IconDefinition;
   className?: string;
   popup?: ReactNode;

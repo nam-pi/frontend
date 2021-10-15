@@ -20,7 +20,7 @@ export const Map = ({ children, className, ...mapProps }: Props) => (
     {...mapProps}
     className={clsx(className, styles.leaflet, "rounded-lg", "border-2")}
   >
-    <ChangeView center={mapProps.center} zoom={mapProps.zoom} />
+    <ChangeView center={mapProps.center || [0, 0]} zoom={mapProps.zoom} />
     <TileLayer
       className="z-0"
       attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
