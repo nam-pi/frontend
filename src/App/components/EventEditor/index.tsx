@@ -244,7 +244,6 @@ const Editor = ({ event }: { event?: Event }) => {
     defaultType,
     event
   );
-  console.log(form);
   return (
     <EditorForm>
       {state.error && (

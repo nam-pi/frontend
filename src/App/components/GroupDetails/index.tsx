@@ -69,7 +69,6 @@ export const GroupDetails = ({ idLocal }: Props) => {
   const getText = useLocaleLiteral();
   const { authenticated } = useAuth();
   const { data } = useGroup({ idLocal });
-  console.log(data);
   return data ? (
     <>
       <div className="flex items-center">
