@@ -25,11 +25,11 @@ export const Marker = ({
         html: renderToString(
           <FontAwesomeIcon
             className={clsx(className, "transform -translate-y-1/2")}
-            style={{ filter: "drop-shadow(1px 0px 3px #282828)" }}
+            style={{ filter: "drop-shadow(1px 0px 4px #696969)" }}
             icon={icon}
           />
         ),
-        className: "flex items-center justify-center",
+        className: "text-3xl flex items-center justify-center",
         iconSize: [0, 0],
       })
     }

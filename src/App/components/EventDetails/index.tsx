@@ -1,6 +1,6 @@
 import { faEdit, faLink } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useCompletePlaces } from "App/hooks/useCompletePlaces";
+import { useCompletePlace } from "App/hooks/useCompletePlaces";
 import { useEventDate } from "App/hooks/useEventDate";
 import { useLocaleLiteral } from "App/hooks/useLocaleLiteral";
 import { namespaces } from "App/namespaces";
@@ -65,8 +65,7 @@ export const EventDetails = ({ idLocal }: Props) => {
   );
   const { formatDate, formatList } = useIntl();
   const otherParticipants = getOtherParticipants(data);
-  const [places] = useCompletePlaces(data?.place);
-  const place = places?.[0];
+  const [place] = useCompletePlace(data?.place);
   const coordinates: undefined | LatLngTuple =
     place?.latitude && place?.longitude
       ? [place.latitude, place.longitude]
@@ -245,12 +244,11 @@ export const EventDetails = ({ idLocal }: Props) => {
           <Map
             className="w-full h-64 col-span-2 mt-8 md:mt-0"
             center={coordinates}
-            zoom={13}
           >
             <Marker
-              className="text-red-500 text-3xl"
+              className="text-green-500"
               position={coordinates}
-              popup={<ItemLink item={place} />}
+              popup={place && <ItemLink item={place} />}
             />
           </Map>
         )}
