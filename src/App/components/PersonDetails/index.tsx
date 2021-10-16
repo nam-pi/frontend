@@ -1,12 +1,22 @@
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { SECONDARY_ITEM_LIMIT } from "App/constants";
+import { useCompletePlaces } from "App/hooks/useCompletePlaces";
 import { useEventLabel } from "App/hooks/useEventLabel";
 import { useLocaleLiteral } from "App/hooks/useLocaleLiteral";
 import { namespaces } from "App/namespaces";
-import { EventsQuery, useAuth, usePerson } from "nampi-use-api";
-import { useEffect, useMemo, useState } from "react";
+import clsx from "clsx";
+import { LatLngTuple, Map as LeafletMap } from "leaflet";
+import {
+    Event,
+    EventsQuery,
+    useAuth,
+    useEvents,
+    usePerson
+} from "nampi-use-api";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
+import { MapConsumer } from "react-leaflet";
 import { Link } from "react-router-dom";
 import { DeleteButton } from "../DeleteButton";
 import { EventsFilterSettings } from "../EventsFilterSettings";
@@ -15,9 +25,12 @@ import { Heading } from "../Heading";
 import { ItemComments } from "../ItemComments";
 import { ItemInheritance } from "../ItemInheritance";
 import { ItemLabels } from "../ItemLabels";
+import { ItemLink } from "../ItemLink";
 import { ItemSameAs } from "../ItemSameAs";
 import { ItemTexts } from "../ItemTexts";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
+import { Map } from "../Map";
+import { Marker } from "../Marker";
 
 interface Props {
   idLocal: string;
@@ -64,41 +77,116 @@ const EventsWithPerson = ({ id }: { id: string }) => {
   );
 };
 
+const EventsMap = ({
+  events,
+}: {
+  events: ReturnType<typeof useEvents>["data"];
+}) => {
+  const mapRef = useRef<LeafletMap>();
+  const allPlaces = useMemo(() => events?.map((e) => e.place) || [], [events]);
+  const [places] = useCompletePlaces(allPlaces);
+  const mapEvents = useMemo(
+    () =>
+      places.reduce<Event[]>(
+        (prev, curr, idx) =>
+          curr?.latitude && curr?.longitude
+            ? [...prev, { ...events?.[idx], place: curr } as Event]
+            : prev,
+        []
+      ),
+    [events, places]
+  );
+  const bounds = useMemo(
+    () =>
+      mapEvents.map(
+        (e) => [e.place!.latitude, e.place!.longitude] as LatLngTuple
+      ),
+    [mapEvents]
+  );
+  useEffect(() => {
+    if (mapRef.current && bounds.length) {
+      mapRef.current.fitBounds(bounds);
+    }
+  }, [bounds]);
+  return bounds.length ? (
+    <Map bounds={bounds} className="w-full h-64 col-span-2 mt-8 md:mt-0">
+      <MapConsumer>
+        {(map) => {
+          mapRef.current = map;
+          return (
+            <>
+              {mapEvents.map((event, idx) => (
+                <Marker
+                  className="text-green-500"
+                  key={idx}
+                  position={
+                    [
+                      event.place!.latitude,
+                      event.place!.longitude,
+                    ] as LatLngTuple
+                  }
+                  popup={<ItemLink item={event} />}
+                />
+              ))}
+            </>
+          );
+        }}
+      </MapConsumer>
+    </Map>
+  ) : null;
+};
+
 export const PersonDetails = ({ idLocal }: Props) => {
   const getText = useLocaleLiteral();
   const { authenticated } = useAuth();
   const { data } = usePerson({ idLocal });
+  const events = useEvents({
+    query: { participant: data?.id, limit: 100000 },
+    paused: !data?.id,
+  });
+  const map = events ? <EventsMap events={events.data} /> : null;
   return data ? (
     <>
-      <div className="flex items-center">
-        <Heading>
-          <FormattedMessage
-            description="Person heading"
-            defaultMessage="Person: {label}"
-            values={{ label: getText(data.labels) }}
-          />
-        </Heading>
-        {authenticated && (
-          <>
-            <Link
-              className="ml-4 text-gray-400"
-              to={`/persons/${idLocal}?edit`}
-            >
-              <FontAwesomeIcon icon={faEdit} />
-            </Link>
-            <DeleteButton
-              entityLabels={data.labels}
-              idLocal={idLocal}
-              type="persons"
-            />
-          </>
+      <div
+        className={clsx(
+          "md:grid",
+          "gap-8",
+          map ? "grid-cols-6" : "grid-cols-4"
         )}
+      >
+        <div className="col-span-4 space-y-4">
+          <div className="flex items-center">
+            <Heading>
+              <FormattedMessage
+                description="Person heading"
+                defaultMessage="Person: {label}"
+                values={{ label: getText(data.labels) }}
+              />
+            </Heading>
+            {authenticated && (
+              <>
+                <Link
+                  className="ml-4 text-gray-400"
+                  to={`/persons/${idLocal}?edit`}
+                >
+                  <FontAwesomeIcon icon={faEdit} />
+                </Link>
+                <DeleteButton
+                  entityLabels={data.labels}
+                  idLocal={idLocal}
+                  type="persons"
+                />
+              </>
+            )}
+          </div>
+          <ItemInheritance item={data} />
+          <ItemLabels item={data} />
+          <ItemTexts item={data} />
+          <ItemSameAs item={data} />
+          <ItemComments item={data} />
+        </div>
+        {map}
       </div>
-      <ItemInheritance item={data} />
-      <ItemLabels item={data} />
-      <ItemTexts item={data} />
-      <ItemSameAs item={data} />
-      <ItemComments item={data} />
       <EventsWithPerson id={data.id} />
     </>
   ) : (

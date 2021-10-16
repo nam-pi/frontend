@@ -1,3 +1,4 @@
+import { notEmpty } from "App/utils/notEmpty";
 import { Place } from "nampi-use-api";
 import { useEffect, useMemo, useRef, useState } from "react";
 
@@ -5,13 +6,12 @@ const GEONAMES_ID_REGEX = /.*?geonames.*?(?<id>\d{1,9}).*$/;
 const GEONAMES_LAT_REGEX = /<wgs84_pos:lat>(.+)<\/wgs84_pos:lat>/;
 const GEONAMES_LNG_REGEX = /<wgs84_pos:long>(.+)<\/wgs84_pos:long>/;
 
-const notEmpty = <TValue>(
-  value: TValue | null | undefined
-): value is TValue => {
-  return value !== null && value !== undefined;
-};
+type MaybePlace = undefined | Place;
 
-export const addPosition = async (place: Place) => {
+export const addPosition = async (place: MaybePlace): Promise<MaybePlace> => {
+  if (!place) {
+    return;
+  }
   const { latitude, longitude, sameAs } = place;
   if ((latitude && longitude) || !sameAs) {
     return place;
@@ -37,27 +37,33 @@ export const addPosition = async (place: Place) => {
   }
 };
 
+export const useCompletePlace = (place: MaybePlace): [MaybePlace, boolean] => {
+  const places = useMemo(() => [place], [place]);
+  const data = useCompletePlaces(places);
+  return [data[0][0], data[1]];
+};
+
 export const useCompletePlaces = (
-  places: undefined | Place | Place[] = []
-): [places: Place[], loading: boolean] => {
-  const placeArray = useMemo(
-    () => (Array.isArray(places) ? places : [places]),
-    [places]
-  );
-  const oldPlaces = useRef(placeArray);
-  const [loading, setLoading] = useState(false);
-  const [data, setData] = useState<typeof placeArray>([]);
+  places: MaybePlace[] = []
+): [places: MaybePlace[], loading: boolean] => {
+  const oldPlaces = useRef<MaybePlace[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState<MaybePlace[]>([]);
   useEffect(() => {
-    if (!loading && oldPlaces.current !== placeArray) {
-      oldPlaces.current = placeArray;
-      setLoading(true);
+    if (oldPlaces.current !== places) {
+      oldPlaces.current = places;
+      if (!loading) {
+        setLoading(true);
+      }
       const load = async () => {
-        Promise.all(placeArray.map(addPosition))
+        Promise.all(places.map(addPosition))
           .then(setData)
-          .then(() => setLoading(false));
+          .then(() => {
+            setLoading(false);
+          });
       };
       load();
     }
-  }, [data, loading, placeArray]);
+  }, [loading, places]);
   return [data, loading];
 };

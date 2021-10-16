@@ -1,7 +1,7 @@
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { SECONDARY_ITEM_LIMIT } from "App/constants";
-import { useCompletePlaces } from "App/hooks/useCompletePlaces";
+import { useCompletePlace } from "App/hooks/useCompletePlaces";
 import { useEventLabel } from "App/hooks/useEventLabel";
 import { useLocaleLiteral } from "App/hooks/useLocaleLiteral";
 import { namespaces } from "App/namespaces";
@@ -71,8 +71,7 @@ export const PlaceDetails = ({ idLocal }: Props) => {
   const getText = useLocaleLiteral();
   const { authenticated } = useAuth();
   const { data } = usePlace({ idLocal });
-  const [places] = useCompletePlaces(data);
-  const place = places?.[0];
+  const [place] = useCompletePlace(data);
   const coordinates: undefined | LatLngTuple =
     place?.latitude && place?.longitude
       ? [place.latitude, place.longitude]
@@ -121,9 +120,8 @@ export const PlaceDetails = ({ idLocal }: Props) => {
           <Map
             className="w-full h-64 col-span-2 mt-8 md:mt-0"
             center={coordinates}
-            zoom={13}
           >
-            <Marker className="text-red-500 text-3xl" position={coordinates} />
+            <Marker className="text-red-500" position={coordinates} />
           </Map>
         )}
       </div>
