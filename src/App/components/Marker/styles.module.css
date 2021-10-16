@@ -1,0 +1,14 @@
+.popup {
+  z-index: 10 !important;
+  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.4);
+}
+
+.popup a {
+  color: unset;
+}
+
+.popup > * {
+  border-radius: unset;
+  background-color: unset;
+  box-shadow: unset;
+}

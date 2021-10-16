@@ -5,6 +5,7 @@ import { DivIcon } from "leaflet";
 import { ReactNode } from "react";
 import { renderToString } from "react-dom/server";
 import { Marker as LeafletMarker, MarkerProps, Popup } from "react-leaflet";
+import styles from "./styles.module.css";
 
 export interface Props extends Omit<MarkerProps, "icon" | "children"> {
   icon?: IconDefinition;
@@ -34,6 +35,10 @@ export const Marker = ({
     }
     {...markerProps}
   >
-    {popup && <Popup>{popup}</Popup>}
+    {popup && (
+      <Popup className={clsx(styles.popup, "mb-14 rounded-md bg-white")}>
+        {popup}
+      </Popup>
+    )}
   </LeafletMarker>
 );
