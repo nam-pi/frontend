@@ -25,6 +25,7 @@ import { Heading } from "../Heading";
 import { Individual, IndividualInput, useIndividual } from "../IndividualInput";
 import { IndividualRepeater } from "../IndividualRepeater";
 import { Input } from "../Input";
+import { LabelsField } from "../LabelsField";
 import { LiteralRepeater } from "../LiteralRepeater";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
 import { Paragraph } from "../Paragraph";
@@ -266,21 +267,11 @@ const Editor = ({ event }: { event?: Event }) => {
       >
         <TypeRepeater onChange={setTypes} parent={defaultType} values={types} />
       </Field>
-      <Field
-        label={intl.formatMessage({
-          description: "Labels field label",
-          defaultMessage: "Labels *",
-        })}
-      >
-        <LiteralRepeater
-          label={intl.formatMessage({
-            description: "Label input label",
-            defaultMessage: "Label",
-          })}
-          onChange={(labels) => setForm((old) => ({ ...old, labels }))}
-          values={form.labels}
-        />
-      </Field>
+      <LabelsField
+        onChange={(labels) => setForm((old) => ({ ...old, labels }))}
+        required
+        values={form.labels}
+      />
       <Field
         label={intl.formatMessage({
           description: "Date label",

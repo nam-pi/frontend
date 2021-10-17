@@ -103,7 +103,7 @@ const Editor = ({ person }: { person?: Person }) => {
       </Field>
       <LabelsField
         onChange={(labels) => setForm((old) => ({ ...old, labels }))}
-        required={true}
+        required
         values={form.labels}
       />
       <Field
