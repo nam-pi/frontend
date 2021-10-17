@@ -99,15 +99,24 @@ const Editor = ({ group }: { group?: Group }) => {
         values={form.texts}
       />
       <Field
+        help={intl.formatMessage({
+          description: "Part of input help",
+          defaultMessage:
+            "Enter and select all groups this group is a part of. Examples are *monasteries in a religious order* or *departments in a company*.",
+        })}
         label={intl.formatMessage({
           description: "Part of part of",
-          defaultMessage: "Part of *",
+          defaultMessage: "Is part of",
         })}
       >
         <IndividualRepeater
           label={intl.formatMessage({
             description: "Part of input label",
-            defaultMessage: "Label",
+            defaultMessage: "Group",
+          })}
+          placeholder={intl.formatMessage({
+            description: "Part of input placeholder",
+            defaultMessage: "Enter and select a group",
           })}
           onChange={(partOf) => setForm((old) => ({ ...old, partOf }))}
           type="groups"
@@ -169,7 +178,7 @@ export const GroupEditor = ({ idLocal }: Props) => {
         {intl.formatMessage({
           description: "Group form introduction",
           defaultMessage:
-            "Please use the following form to enter the appropriate data for the desired group. Please note that the fields marked with a *red star* are mandatory. Once you are finished, please click the *Submit* button at the bottom of the page to submit the form. To get help with individual fields, please move your mouse pointer above the little *question mark* icons.",
+            "Please use the following form to enter the appropriate data for the desired group.",
         })}
       </FormIntroduction>
       <Editor group={data} />

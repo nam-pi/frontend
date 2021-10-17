@@ -40,14 +40,22 @@ interface FormState {
   texts: undefined | LiteralString[];
 }
 
-const validate = (form: FormState, types: Type[]) =>
+const empty = <V,>(value: V | null | undefined): value is V =>
+  value === null ||
+  value === undefined ||
+  (typeof value === "string" && value.replace(/\s/g, "").length === 0);
+
+const hasValidOptionalCoordinates = (form: FormState): boolean =>
+  (empty(form.latitude) && empty(form.longitude)) ||
+  (form.latitude?.match(/^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?)$/) !== null &&
+    form.longitude?.match(
+      /[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)/
+    ) !== null);
+
+const validate = (form: FormState, types: Type[]): boolean =>
   types.length > 0 &&
   (form.labels?.length || 0) > 0 &&
-  ((form?.latitude === undefined && form?.longitude === undefined) ||
-    (!Number.isNaN(form?.latitude) &&
-      !Number.isNaN(Number.parseFloat(form?.latitude || "")) &&
-      !Number.isNaN(form?.longitude) &&
-      !Number.isNaN(Number.parseFloat(form?.longitude || ""))));
+  hasValidOptionalCoordinates(form);
 
 const useForm = (
   baseUrl: string,
@@ -60,8 +68,8 @@ const useForm = (
     labels: place?.labels,
     sameAs: place?.sameAs,
     texts: place?.texts,
-    latitude: String(place?.latitude),
-    longitude: String(place?.longitude),
+    latitude: place?.latitude ? String(place?.latitude) : undefined,
+    longitude: place?.longitude ? String(place?.longitude) : undefined,
   });
   const [types, setTypes] = useEditorTypes(
     place ? { itemId: place.id } : { defaultType }
@@ -105,6 +113,11 @@ const Editor = ({ place }: { place?: Place }) => {
         values={form.texts}
       />
       <Field
+        help={intl.formatMessage({
+          description: "Coordinates input help",
+          defaultMessage:
+            "Enter a valid pair of coordinates in decimal degrees between *±90* for latitude and *±180* for longitude. Example: Latitude *48.400002*, Longitude *9.983333* ",
+        })}
         label={intl.formatMessage({
           description: "Coordinates field label",
           defaultMessage: "Coordinates",
@@ -114,22 +127,30 @@ const Editor = ({ place }: { place?: Place }) => {
           <Input
             label={intl.formatMessage({
               description: "Latitude input label",
-              defaultMessage: "Lat",
+              defaultMessage: "Latitude",
             })}
             onChange={(e) =>
               setForm((old) => ({ ...old, latitude: e.target.value }))
             }
+            placeholder={intl.formatMessage({
+              description: "Latitude placeholder",
+              defaultMessage: "Enter a decimal latitude",
+            })}
             value={form.latitude || ""}
           />
           <Input
             className="mt-4 md:mt-0 md:ml-4"
             label={intl.formatMessage({
               description: "Longitude input label",
-              defaultMessage: "Lng",
+              defaultMessage: "Longitude",
             })}
             onChange={(e) =>
               setForm((old) => ({ ...old, longitude: e.target.value }))
             }
+            placeholder={intl.formatMessage({
+              description: "Longitude placeholder",
+              defaultMessage: "Enter a decimal longitude",
+            })}
             value={form.longitude || ""}
           />
         </div>
@@ -149,8 +170,8 @@ const Editor = ({ place }: { place?: Place }) => {
           mutate({
             comments: serializeLiteral(form.comments),
             labels: serializeLiteral(form.labels),
-            latitude: form.latitude,
-            longitude: form.longitude,
+            latitude: form.latitude?.replace(",", "."),
+            longitude: form.longitude?.replace(",", "."),
             sameAs: form.sameAs,
             texts: serializeLiteral(form.texts),
             types: types.map((t) => t.value || ""),
@@ -190,7 +211,7 @@ export const PlaceEditor = ({ idLocal }: Props) => {
         {intl.formatMessage({
           description: "Place form introduction",
           defaultMessage:
-            "Please use the following form to enter the appropriate data for the desired place. Please note that the fields marked with a *red star* are mandatory. Once you are finished, please click the *Submit* button at the bottom of the page to submit the form. To get help with individual fields, please move your mouse pointer above the little *question mark* icons.",
+            "Please use the following form to enter the appropriate data for the desired place.",
         })}
       </FormIntroduction>
       <Editor place={data} />

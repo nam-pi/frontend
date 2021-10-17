@@ -4,13 +4,13 @@ import { namespaces } from "App/namespaces";
 import { serializeLiteral } from "App/utils/serializeLiteral";
 import { format } from "date-fns";
 import {
-    Event,
-    Hierarchy,
-    LiteralString,
-    useEvent,
-    useEventCreate,
-    useEventUpdate,
-    useHierarchy
+  Event,
+  Hierarchy,
+  LiteralString,
+  useEvent,
+  useEventCreate,
+  useEventUpdate,
+  useHierarchy,
 } from "nampi-use-api";
 import { useEffect, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -440,7 +440,7 @@ export const EventEditor = ({ idLocal }: Props) => {
         {intl.formatMessage({
           description: "Event form introduction",
           defaultMessage:
-            "Please use the following form to enter the appropriate data for the desired event. Please note that the fields marked with a *red star* are mandatory. Once you are finished, please click the *Submit* button at the bottom of the page to submit the form. To get help with individual fields, please move your mouse pointer above the little *question mark* icons.",
+            "Please use the following form to enter the appropriate data for the desired event.",
         })}
       </FormIntroduction>
       <Editor event={data} />

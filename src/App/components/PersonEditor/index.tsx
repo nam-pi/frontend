@@ -145,7 +145,7 @@ export const PersonEditor = ({ idLocal }: Props) => {
         {intl.formatMessage({
           description: "Person form introduction",
           defaultMessage:
-            "Please use the following form to enter the appropriate data for the desired person. Please note that the fields marked with a *red star* are mandatory. Once you are finished, please click the *Submit* button at the bottom of the page to submit the form. To get help with individual fields, please move your mouse pointer above the little *question mark* icons.",
+            "Please use the following form to enter the appropriate data for the desired person.",
         })}
       </FormIntroduction>
       <Editor person={data} />
