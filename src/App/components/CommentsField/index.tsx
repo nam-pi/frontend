@@ -28,6 +28,7 @@ export const CommentsField = ({ label, required, ...props }: Props) => {
       required={required}
     >
       <LiteralRepeater
+        {...props}
         label={
           label ||
           intl.formatMessage({
@@ -35,7 +36,7 @@ export const CommentsField = ({ label, required, ...props }: Props) => {
             defaultMessage: "Comment",
           })
         }
-        {...props}
+        type="multiline"
       />
     </Field>
   );

@@ -2,10 +2,14 @@ import { useLanguages } from "App/hooks/useLanguages";
 import Fuse from "fuse.js";
 import { Language, TranslationState } from "I18n/types";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useIntl } from "react-intl";
 import { ComboBox, Props as ComboBoxProps } from "../ComboBox";
 
 interface Props
-  extends Omit<ComboBoxProps, "options" | "matches" | "value" | "onChange"> {
+  extends Omit<
+    ComboBoxProps,
+    "options" | "matches" | "value" | "onChange" | "placeholder"
+  > {
   onChange: (value: undefined | string, text: string) => void;
   value?: string;
 }
@@ -31,6 +35,7 @@ export const LanguageInput = ({
   value,
   ...props
 }: Props) => {
+  const intl = useIntl();
   const languages = useLanguages();
   const options = useMemo(
     () =>
@@ -77,6 +82,10 @@ export const LanguageInput = ({
   return (
     <ComboBox
       {...props}
+      placeholder={intl.formatMessage({
+        description: "Placeholder text",
+        defaultMessage: "Select a language",
+      })}
       matches={matches.map((m) => m.text)}
       onChange={handleChange}
       options={languages.map((m) => m.text)}

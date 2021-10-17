@@ -75,7 +75,7 @@ export const LiteralInput = ({
           onChange={handleTextChange}
           placeholder={intl.formatMessage({
             description: "Literal input placeholder",
-            defaultMessage: "Enter text",
+            defaultMessage: "Enter some text",
           })}
           value={text || ""}
         />
@@ -85,9 +85,9 @@ export const LiteralInput = ({
           onChange={handleTextChange}
           placeholder={intl.formatMessage({
             description: "Literal input placeholder",
-            defaultMessage: "Enter text",
+            defaultMessage: "Enter some text",
           })}
-          rows={1}
+          rows={2}
           value={text || ""}
         />
       )}
@@ -97,10 +97,6 @@ export const LiteralInput = ({
         label={intl.formatMessage({
           description: "Langue input label",
           defaultMessage: "Language",
-        })}
-        placeholder={intl.formatMessage({
-          description: "Literal input placeholder",
-          defaultMessage: "Enter and select a language",
         })}
         value={language}
       />

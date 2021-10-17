@@ -1,5 +1,6 @@
 import { faCircleNotch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import clsx from "clsx";
 import { FormattedMessage } from "react-intl";
 import { useHistory } from "react-router-dom";
 import { Button } from "../Button";
@@ -20,7 +21,14 @@ export const EditorControls = ({
   const history = useHistory();
   return (
     <div className="flex justify-start mt-4">
-      <Button disabled={loading || !valid} onClick={() => mutate()}>
+      <Button
+        className={clsx(
+          valid &&
+            "text-green-500 border-solid border border-green-500 hover:text-green-600 hover:border-green-600"
+        )}
+        disabled={loading || !valid}
+        onClick={() => mutate()}
+      >
         {loading ? (
           <FontAwesomeIcon icon={faCircleNotch} spin />
         ) : (

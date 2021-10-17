@@ -1,5 +1,6 @@
 import { faPlus, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import clsx from "clsx";
 import {
     ComponentPropsWithoutRef,
     ComponentType,
@@ -83,7 +84,11 @@ export const Repeater = <
           value: newValue,
         } as unknown as P)}
         <IconButton
-          className="ml-4"
+          className={clsx(
+            "ml-4",
+            valid(newValue) &&
+              "text-green-500 border-solid border border-green-500 hover:text-green-600 hover:border-green-600"
+          )}
           disabled={!valid(newValue)}
           icon={faPlus}
           label={intl.formatMessage({
@@ -101,7 +106,7 @@ export const Repeater = <
                 {createElement(outputComponent, { value })}
               </div>
               <button
-                className="mx-2 border-none shadow-none text-red-500 hover:text-red-400"
+                className="mx-2 border-none shadow-none text-red-500 hover:text-red-600"
                 aria-label={intl.formatMessage({
                   description: "Delete button label",
                   defaultMessage: "Delete item",

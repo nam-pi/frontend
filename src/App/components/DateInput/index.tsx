@@ -98,7 +98,7 @@ export const DateInput = ({ className, onChange = () => {}, value }: Props) => {
         className="mt-4 md:mt-0 md:ml-4"
         label={intl.formatMessage({
           description: "Range checkbox",
-          defaultMessage: "Range",
+          defaultMessage: "Uncertain",
         })}
         type="checkbox"
         checked={range}
