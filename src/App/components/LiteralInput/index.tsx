@@ -64,11 +64,23 @@ export const LiteralInput = ({
   return (
     <div className={clsx(className, "w-full")}>
       {type === "single" ? (
-        <Input label={label} onChange={handleTextChange} value={text || ""} />
+        <Input
+          label={label}
+          onChange={handleTextChange}
+          placeholder={intl.formatMessage({
+            description: "Literal input placeholder",
+            defaultMessage: "Enter text",
+          })}
+          value={text || ""}
+        />
       ) : (
         <Textarea
           label={label}
           onChange={handleTextChange}
+          placeholder={intl.formatMessage({
+            description: "Literal input placeholder",
+            defaultMessage: "Enter text",
+          })}
           rows={1}
           value={text || ""}
         />
@@ -79,6 +91,10 @@ export const LiteralInput = ({
         label={intl.formatMessage({
           description: "Langue input label",
           defaultMessage: "Language",
+        })}
+        placeholder={intl.formatMessage({
+          description: "Literal input placeholder",
+          defaultMessage: "Enter language",
         })}
         value={language}
       />
