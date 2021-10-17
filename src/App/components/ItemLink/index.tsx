@@ -40,7 +40,7 @@ export const ItemLink = ({ classNames, item }: Props) => {
       to={getUrl(item)}
     >
       <span>{getText(item.labels)}</span>
-      <Icon className="text-xs ml-1 text-blue-500" icon={faLink} />
+      <Icon className="text-xs ml-1 text-blue-400" icon={faLink} />
     </Link>
   );
 };

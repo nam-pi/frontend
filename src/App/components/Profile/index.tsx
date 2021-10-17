@@ -28,7 +28,7 @@ export const Profile = () => {
             description="Profile page text"
             defaultMessage="Your email address is {email} and your author page is {author}."
             values={{
-              email: <span className="text-gray-500">{data?.email}</span>,
+              email: <span className="text-gray-400">{data?.email}</span>,
               author: (
                 <Link
                   className="text-gray-500"
@@ -36,7 +36,7 @@ export const Profile = () => {
                 >
                   {literal(data?.labels)}
                   <FontAwesomeIcon
-                    className="text-blue-500 text-xs ml-1"
+                    className="text-blue-400 text-xs ml-1"
                     icon={faLink}
                   />
                 </Link>

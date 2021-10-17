@@ -172,7 +172,9 @@ export const FilterableItemList = <
         {filterSettings && (
           <div className="text-xs flex space-x-2">
             <IconButton
-              className={clsx(filterActive && "bg-gray-100")}
+              className={clsx(
+                filterActive && "border-blue-400 bg-blue-400 text-white"
+              )}
               disabled={loading}
               icon={faFilter}
               label={formatMessage({
@@ -183,7 +185,7 @@ export const FilterableItemList = <
             />
             {filterChanged && (
               <IconButton
-                className="bg-red-100"
+                className="bg-red-400 text-white border-red-400"
                 icon={faEraser}
                 label={formatMessage({
                   description: "Item list filter modal toggle button label",
@@ -231,13 +233,13 @@ export const FilterableItemList = <
                   "mb-1",
                   "last:mb-0",
                   "cursor-pointer",
-                  "hover:bg-gray-200",
+                  "hover:bg-gray-200 focus-within:bg-gray-200",
                   active && "bg-gray-100"
                 )}
                 ref={(ref) => (itemRefs.current[item.idLocal] = ref!)}
               >
                 <Link
-                  className="w-full inline-block"
+                  className="w-full inline-block focus-within:outline-none"
                   key={item.id}
                   to={"/" + linkBase + "/" + item.idLocal}
                 >

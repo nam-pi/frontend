@@ -25,7 +25,7 @@ export const ItemSameAs = <
             <a href={sameAs} key={idx}>
               {sameAs}
               <FontAwesomeIcon
-                className="text-xs ml-1 text-blue-500"
+                className="text-xs ml-1 text-blue-400"
                 icon={faLink}
               />
             </a>

@@ -32,7 +32,7 @@ const MenuItem = ({
 }) => (
   <Menu.Item>
     {(active) => (
-      <div className="hover:bg-gray-100 w-full">
+      <div className="hover:bg-gray-100 w-full px-3 py-1">
         {typeof action === "string" ? (
           <Link className="inline-block w-full" to={action}>
             {children}
@@ -62,7 +62,7 @@ const NavMenu = ({
   children: ReactNode | ReactNode[];
   className?: string;
 }) => (
-  <Menu as="div" className={clsx("relative text-gray-800", className)}>
+  <Menu as="div" className={clsx("relative text--800", className)}>
     <Menu.Button
       className="text-white hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-current"
       aria-label={buttonLabel}
@@ -78,58 +78,103 @@ const NavMenu = ({
       leaveFrom="transform opacity-100 scale-100"
       leaveTo="transform opacity-0 scale-95"
     >
-      <Menu.Items className="absolute min-w-8 mt-1 right-0 bg-white shadow-lg rounded flex flex-col px-3 pt-2 pb-4 space-y-1">
+      <Menu.Items className="absolute min-w-8 mt-1 right-0 bg-white text-gray-900 shadow-lg rounded flex flex-col pt-2 pb-4">
         {children}
       </Menu.Items>
     </Transition>
   </Menu>
 );
-const Links = () => (
-  <>
-    <Link to="/events" className="hover:opacity-80">
-      <FormattedMessage
-        description="Events menu link label"
-        defaultMessage="Events"
-      />
-    </Link>
-    <Link to="/persons" className="hover:opacity-80">
-      <FormattedMessage
-        description="Persons menu link label"
-        defaultMessage="Persons"
-      />
-    </Link>
-    <Link to="/groups" className="hover:opacity-80">
-      <FormattedMessage
-        description="Groups menu link label"
-        defaultMessage="Groups"
-      />
-    </Link>
-    <Link to="/places" className="hover:opacity-80">
-      <FormattedMessage
-        description="Places menu link label"
-        defaultMessage="Places"
-      />
-    </Link>
-    <Link to="/aspects" className="hover:opacity-80">
-      <FormattedMessage
-        description="Aspects menu link label"
-        defaultMessage="Aspects"
-      />
-    </Link>
-    <Link to="/sources" className="hover:opacity-80">
-      <FormattedMessage
-        description="Sources menu link label"
-        defaultMessage="Sources"
-      />
-    </Link>
-    <Link to="/authors" className="hover:opacity-80">
-      <FormattedMessage
-        description="Authors menu link label"
-        defaultMessage="Authors"
-      />
-    </Link>
-  </>
-);
+const Links = () => {
+  const { pathname } = useLocation();
+  return (
+    <>
+      <Link
+        to="/events"
+        className={clsx(
+          pathname.startsWith("/events") && "text-blue-100",
+          "hover:opacity-80"
+        )}
+      >
+        <FormattedMessage
+          description="Events menu link label"
+          defaultMessage="Events"
+        />
+      </Link>
+      <Link
+        to="/persons"
+        className={clsx(
+          pathname.startsWith("/persons") && "text-blue-100",
+          "hover:opacity-80"
+        )}
+      >
+        <FormattedMessage
+          description="Persons menu link label"
+          defaultMessage="Persons"
+        />
+      </Link>
+      <Link
+        to="/groups"
+        className={clsx(
+          pathname.startsWith("/groups") && "text-blue-100",
+          "hover:opacity-80"
+        )}
+      >
+        <FormattedMessage
+          description="Groups menu link label"
+          defaultMessage="Groups"
+        />
+      </Link>
+      <Link
+        to="/places"
+        className={clsx(
+          pathname.startsWith("/places") && "text-blue-100",
+          "hover:opacity-80"
+        )}
+      >
+        <FormattedMessage
+          description="Places menu link label"
+          defaultMessage="Places"
+        />
+      </Link>
+      <Link
+        to="/aspects"
+        className={clsx(
+          pathname.startsWith("/aspects") && "text-blue-100",
+          "hover:opacity-80"
+        )}
+      >
+        <FormattedMessage
+          description="Aspects menu link label"
+          defaultMessage="Aspects"
+        />
+      </Link>
+      <Link
+        to="/sources"
+        className={clsx(
+          pathname.startsWith("/sources") && "text-blue-100",
+          "hover:opacity-80"
+        )}
+      >
+        <FormattedMessage
+          description="Sources menu link label"
+          defaultMessage="Sources"
+        />
+      </Link>
+      <Link
+        to="/authors"
+        className={clsx(
+          pathname.startsWith("/authors") && "text-blue-100",
+          "hover:opacity-80"
+        )}
+      >
+        <FormattedMessage
+          description="Authors menu link label"
+          defaultMessage="Authors"
+        />
+      </Link>
+    </>
+  );
+};
 
 const EditMenu = () => {
   const intl = useIntl();
@@ -231,7 +276,13 @@ export const Navbar = ({ className }: Props) => {
     }
   }, [pathname, mobileMenu, toggleMobileMenu]);
   return (
-    <nav className={clsx("bg-gray-400", "text-white", className)}>
+    <nav
+      className={clsx(
+        "bg-gray-400 border-b-4 border-blue-400",
+        "text-white",
+        className
+      )}
+    >
       <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
         <div className="relative flex flex-1 items-center justify-between h-16 sm:justify-start">
           <div className="flex">
@@ -269,7 +320,10 @@ export const Navbar = ({ className }: Props) => {
             </button>
             {authenticated && data && <EditMenu />}
             <Link
-              className="mr-4 hover:opacity-80 hidden sm:inline-block"
+              className={clsx(
+                pathname.startsWith("/search") && "text-blue-100",
+                "mr-4 hover:opacity-80 hidden sm:inline-block"
+              )}
               title={intl.formatMessage({
                 description: "Desktop search link title text",
                 defaultMessage: "Go to search",
@@ -281,7 +335,15 @@ export const Navbar = ({ className }: Props) => {
             {initialized && !loading ? (
               authenticated && data ? (
                 <NavMenu
-                  buttonContent={<Icon icon={faUserCircle} />}
+                  buttonContent={
+                    <Icon
+                      icon={faUserCircle}
+                      className={clsx(
+                        pathname.startsWith("/profile") && "text-blue-100",
+                        "hover:opacity-80"
+                      )}
+                    />
+                  }
                   buttonLabel={intl.formatMessage({
                     description: "Profile menu button label",
                     defaultMessage: "Toggle profile menu",
@@ -329,7 +391,13 @@ export const Navbar = ({ className }: Props) => {
       {mobileMenu ? (
         <div className="sm:hidden text-lg space-y-1" id="mobile-menu">
           <div className="px-2 pb-3 flex flex-col">
-            <Link className="mr-4 hover:opacity-80" to="/search">
+            <Link
+              className={clsx(
+                pathname.startsWith("/search") && "text-blue-100",
+                "mr-4 hover:opacity-80"
+              )}
+              to="/search"
+            >
               <FormattedMessage
                 description="Search link text"
                 defaultMessage="Search"

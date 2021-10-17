@@ -1,8 +1,8 @@
 import {
-  faBackward,
-  faForward,
-  faStepBackward,
-  faStepForward,
+    faBackward,
+    faForward,
+    faStepBackward,
+    faStepForward
 } from "@fortawesome/free-solid-svg-icons";
 import clsx from "clsx";
 import { CollectionNav } from "nampi-use-api";

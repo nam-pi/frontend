@@ -182,7 +182,7 @@ export const ComboBox = ({
       <div className="relative w-full" onKeyDown={handleKeyPress}>
         <Input
           {...inputProps}
-          className="relative w-full pr-4"
+          className="relative w-full"
           onChange={handleChange}
           onFocus={handleInputFocus}
           ref={inputElement}
@@ -206,7 +206,7 @@ export const ComboBox = ({
       </div>
       {expanded && matches.length > 0 && (
         <div
-          className="max-h-64 w-full overflow-y-auto shadow bg-white outline-none border border-gray-400 rounded py-1 absolute right-0 z-10 mt-2 p-2"
+          className="max-h-64 w-full overflow-y-auto shadow bg-white outline-none border border-blue-400 rounded py-1 absolute right-0 z-10 mt-2"
           onKeyDown={handleKeyPress}
           ref={listContainer}
           tabIndex={-1}
@@ -214,7 +214,7 @@ export const ComboBox = ({
           {matches.map((text, idx) => (
             <div
               className={clsx(
-                "cursor-pointer hover:bg-gray-100",
+                "cursor-pointer hover:bg-gray-100 px-2",
                 idx === active && "active bg-gray-200"
               )}
               key={idx}

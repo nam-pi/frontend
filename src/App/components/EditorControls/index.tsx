@@ -22,10 +22,7 @@ export const EditorControls = ({
   return (
     <div className="flex justify-start mt-4">
       <Button
-        className={clsx(
-          valid &&
-            "text-green-500 border-solid border border-green-500 hover:text-green-600 hover:border-green-600"
-        )}
+        className={clsx(valid && "text-green-500 border-green-500")}
         disabled={loading || !valid}
         onClick={() => mutate()}
       >
