@@ -20,7 +20,7 @@ import { Heading } from "../Heading";
 import { LabelsField } from "../LabelsField";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
 import { Paragraph } from "../Paragraph";
-import { TextRepeater } from "../TextRepeater";
+import { SameAsField } from "../SameAsField";
 import { TextsField } from "../TextsField";
 import { Type } from "../TypeInput";
 import { TypeRepeater } from "../TypeRepeater";
@@ -111,21 +111,10 @@ const Editor = ({ source }: { source?: Source }) => {
         onChange={(texts) => setForm((old) => ({ ...old, texts }))}
         values={form.texts}
       />
-      <Field
-        label={intl.formatMessage({
-          description: "Sameas field label",
-          defaultMessage: "Same as URLs",
-        })}
-      >
-        <TextRepeater
-          label={intl.formatMessage({
-            description: "Sameas input label",
-            defaultMessage: "Same as",
-          })}
-          onChange={(sameAs) => setForm((old) => ({ ...old, sameAs }))}
-          values={form.sameAs}
-        />
-      </Field>
+      <SameAsField
+        onChange={(sameAs) => setForm((old) => ({ ...old, sameAs }))}
+        values={form.sameAs}
+      />
       <CommentsField
         onChange={(comments) => setForm((old) => ({ ...old, comments }))}
         values={form.comments}
