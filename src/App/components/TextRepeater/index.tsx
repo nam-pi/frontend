@@ -6,7 +6,8 @@ interface WrapperProps extends Omit<InputProps, "onChange" | "value"> {
   value: undefined | string;
 }
 
-interface Props extends Omit<WrapperProps, "onChange" | "values" | "value"> {
+export interface Props
+  extends Omit<WrapperProps, "onChange" | "values" | "value"> {
   onChange: (value: string[]) => void;
   values: undefined | string[];
 }

@@ -3,7 +3,7 @@ import { LiteralInput, Props as LiteralInputProps } from "../LiteralInput";
 import { MultiLangTexts } from "../MultiLangTexts";
 import { Repeater } from "../Repeater";
 
-interface Props
+export interface Props
   extends Omit<LiteralInputProps, "onChange" | "values" | "value"> {
   onChange: (value: LiteralString[]) => void;
   values: undefined | LiteralString[];

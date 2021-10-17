@@ -2,34 +2,40 @@ import { useEditorTypes } from "App/hooks/useEditorTypes";
 import { useLocaleLiteral } from "App/hooks/useLocaleLiteral";
 import { namespaces } from "App/namespaces";
 import { serializeLiteral } from "App/utils/serializeLiteral";
-import { format } from "date-fns";
+import { format, isValid, parse } from "date-fns";
+import { JsonLdArray } from "jsonld/jsonld-spec";
 import {
+    Author,
     Event,
     Hierarchy,
     LiteralString,
     useEvent,
     useEventCreate,
     useEventUpdate,
-    useHierarchy
+    useHierarchy,
+    useUser
 } from "nampi-use-api";
 import { useEffect, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useHistory } from "react-router-dom";
+import { CommentsField } from "../CommentsField";
 import { Couple, CoupleInput } from "../CoupleInput";
 import { CoupleRepeater } from "../CoupleRepeater";
 import { DateInput, Dates } from "../DateInput";
 import { EditorControls } from "../EditorControls";
 import { EditorForm } from "../EditorForm";
 import { Field } from "../Field";
+import { FormError } from "../FormError";
+import { FormIntroduction } from "../FormIntroduction";
 import { Heading } from "../Heading";
 import { Individual, IndividualInput, useIndividual } from "../IndividualInput";
 import { IndividualRepeater } from "../IndividualRepeater";
 import { Input } from "../Input";
-import { LiteralRepeater } from "../LiteralRepeater";
+import { LabelsField } from "../LabelsField";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
-import { Paragraph } from "../Paragraph";
+import { TextsField } from "../TextsField";
 import { Type } from "../TypeInput";
-import { TypeRepeater } from "../TypeRepeater";
+import { TypesField } from "../TypesField";
 
 interface Props {
   idLocal?: string;
@@ -52,9 +58,24 @@ interface FormState {
 
 const { core } = namespaces;
 
+const validDate = (dateString: undefined | string) =>
+  !dateString ||
+  isValid(
+    parse(
+      dateString.startsWith("-")
+        ? dateString.substr(1) + " BC"
+        : dateString + " AD",
+      "yyyyyy-MM-dd G",
+      new Date()
+    )
+  );
+
 const validate = (form: FormState, types: Type[]) =>
   form.authors !== undefined &&
   form.authors.length > 0 &&
+  validDate(form.dates?.end) &&
+  validDate(form.dates?.exact) &&
+  validDate(form.dates?.start) &&
   types.length > 0 &&
   form.labels !== undefined &&
   form.labels.length > 0 &&
@@ -182,13 +203,14 @@ const useCouples = (event?: Event) => {
 const useForm = (
   baseUrl: string,
   defaultType: string,
-  event: undefined | Event
+  event: undefined | Event,
+  author: Author
 ) => {
   const history = useHistory();
   const individual = useIndividual();
   const [form, setForm] = useState<FormState>({
     aspects: undefined,
-    authors: event?.act.authors.map((a) => individual(a)!),
+    authors: (event?.act.authors || [author]).map((a) => individual(a)!),
     comments: event?.comments,
     dates: {
       exact: event?.exact ? format(event.exact, "yyyy-MM-dd") : undefined,
@@ -234,57 +256,129 @@ const useForm = (
   return { form, setForm, types, setTypes, mutate, state };
 };
 
-const Editor = ({ event }: { event?: Event }) => {
+const Editor = ({ event, author }: { event?: Event; author: Author }) => {
   const defaultType = core.event;
   const baseUrl = "/events/";
-  const literal = useLocaleLiteral();
   const intl = useIntl();
   const { form, setForm, types, setTypes, mutate, state } = useForm(
     baseUrl,
     defaultType,
-    event
+    event,
+    author
   );
   return (
     <EditorForm>
-      {state.error && (
-        <Paragraph className="italic p-2 rounded bg-red-500 text-white">
-          <span>
-            <FormattedMessage
-              description="Error heading"
-              defaultMessage="Error"
-            />
-          </span>
-          :&nbsp;
-          {literal(state.error.description)}
-        </Paragraph>
-      )}
+      <FormError error={state.error} />
+      <TypesField onChange={setTypes} parent={defaultType} values={types} />
+      <LabelsField
+        onChange={(labels) => setForm((old) => ({ ...old, labels }))}
+        required
+        values={form.labels}
+      />
       <Field
-        label={intl.formatMessage({
-          description: "Event type field label",
-          defaultMessage: "Event types *",
+        help={intl.formatMessage({
+          description: "Main participant help text",
+          defaultMessage:
+            "Enter both the main participant and the type of the participation.",
         })}
+        label={intl.formatMessage({
+          description: "Main participant label",
+          defaultMessage: "Main participant",
+        })}
+        required
       >
-        <TypeRepeater onChange={setTypes} parent={defaultType} values={types} />
+        <CoupleInput
+          onChange={(mainParticipant) =>
+            setForm((old) => ({ ...old, mainParticipant }))
+          }
+          individualType="persons"
+          label={intl.formatMessage({
+            description: "Main participant input label",
+            defaultMessage: "Person",
+          })}
+          placeholder={intl.formatMessage({
+            description: "Main particpant input placeholder",
+            defaultMessage: "Enter and select a person",
+          })}
+          propertyType={core.hasMainParticipant}
+          value={form.mainParticipant}
+        />
+      </Field>
+      <Field
+        help={intl.formatMessage({
+          description: "Source citation help text",
+          defaultMessage:
+            "Add the source of the information on this event. Enter and select a *source* and add the appropriate *source location* text. Depending on the type of source this can be a *page number* or for instance a *full URL* to an online representation of the data like an entry in an online database.",
+        })}
+        label={intl.formatMessage({
+          description: "Source label",
+          defaultMessage: "Source citation",
+        })}
+        required
+      >
+        <IndividualInput
+          label={intl.formatMessage({
+            description: "Source input label",
+            defaultMessage: "Source",
+          })}
+          onChange={(source) => setForm((old) => ({ ...old, source }))}
+          placeholder={intl.formatMessage({
+            description: "Source input placeholder",
+            defaultMessage: "Enter and select a source",
+          })}
+          type="sources"
+          value={form.source}
+        />
+        <Input
+          className="mt-4"
+          label={intl.formatMessage({
+            description: "Source location input label",
+            defaultMessage: "Location",
+          })}
+          onChange={(e) =>
+            setForm((old) => ({ ...old, sourceLocation: e.target.value }))
+          }
+          placeholder={intl.formatMessage({
+            description: "Source location input placeholder",
+            defaultMessage: "Enter the source location",
+          })}
+          value={form.sourceLocation || ""}
+        />
       </Field>
       <Field
         label={intl.formatMessage({
-          description: "Labels field label",
-          defaultMessage: "Labels *",
+          description: "Authors label",
+          defaultMessage: "Authors",
         })}
+        help={intl.formatMessage({
+          description: "Authors input help",
+          defaultMessage: "Enter and select at least one author.",
+        })}
+        required
       >
-        <LiteralRepeater
+        <IndividualRepeater
           label={intl.formatMessage({
-            description: "Label input label",
-            defaultMessage: "Label",
+            description: "Authors input label",
+            defaultMessage: "Author",
           })}
-          onChange={(labels) => setForm((old) => ({ ...old, labels }))}
-          values={form.labels}
+          onChange={(authors) => setForm((old) => ({ ...old, authors }))}
+          placeholder={intl.formatMessage({
+            description: "Authors input placeholder",
+            defaultMessage: "Enter and select an author",
+          })}
+          type="authors"
+          values={form.authors}
         />
       </Field>
       <Field
         label={intl.formatMessage({
           description: "Date label",
-          defaultMessage: "Date",
+          defaultMessage: "Event date",
+        })}
+        help={intl.formatMessage({
+          description: "Date field help text",
+          defaultMessage:
+            "Enter the optional date the event has happened. It is possible to either add a *single value* in case the event date is exactly known, or a *combination of dates* the event could have happened the earliest and the latest, in case the date is unclear. Either one can be ommited. In this case, the upper or lower boundary is unspecified. The dates have to be added in the format *YYYY-MM-DD* or *-YYYY-MM-DD* for a year before the Common Era.",
         })}
       >
         <DateInput
@@ -293,55 +387,61 @@ const Editor = ({ event }: { event?: Event }) => {
         />
       </Field>
       <Field
+        help={intl.formatMessage({
+          description: "Place help text",
+          defaultMessage:
+            "Enter and select the optional place the event happened at.",
+        })}
         label={intl.formatMessage({
-          description: "Text field label",
-          defaultMessage: "Text",
+          description: "Place label",
+          defaultMessage: "Event location",
         })}
       >
-        <LiteralRepeater
+        <IndividualInput
           label={intl.formatMessage({
-            description: "Text input label",
-            defaultMessage: "Texts",
+            description: "Place input label",
+            defaultMessage: "Place",
           })}
-          onChange={(texts) => setForm((old) => ({ ...old, texts }))}
-          values={form.texts}
+          onChange={(place) => setForm((old) => ({ ...old, place }))}
+          placeholder={intl.formatMessage({
+            description: "Place input placeholder",
+            defaultMessage: "Enter and select a place",
+          })}
+          type="places"
+          value={form.place}
         />
       </Field>
       <Field
+        help={intl.formatMessage({
+          description: "Aspects help text",
+          defaultMessage:
+            "Enter the aspects that are used in this event as well as their usage type. Aspects are the things that actually happen in an event like the aquisition of a new status in society, the start of a job, becoming member of a family and so on.",
+        })}
         label={intl.formatMessage({
-          description: "Authors label",
-          defaultMessage: "Authors *",
+          description: "Aspects label",
+          defaultMessage: "Event aspects ",
         })}
       >
-        <IndividualRepeater
-          label={intl.formatMessage({
-            description: "Authors input label",
-            defaultMessage: "Label",
+        <CoupleRepeater
+          onChange={(aspects) => setForm((old) => ({ ...old, aspects }))}
+          individualType="aspects"
+          placeholder={intl.formatMessage({
+            description: "Aspect input placeholder",
+            defaultMessage: "Enter and select an aspect",
           })}
-          onChange={(authors) => setForm((old) => ({ ...old, authors }))}
-          type="authors"
-          values={form.authors}
+          propertyType={core.usesAspect}
+          values={form.aspects}
         />
       </Field>
       <Field
-        label={intl.formatMessage({
-          description: "Main participant label",
-          defaultMessage: "Main participant *",
+        help={intl.formatMessage({
+          description: "Other participants help text",
+          defaultMessage:
+            "Add all other participants in the event and their participation type. Participants can be both groups and persons.",
         })}
-      >
-        <CoupleInput
-          onChange={(mainParticipant) =>
-            setForm((old) => ({ ...old, mainParticipant }))
-          }
-          individualType="persons"
-          propertyType={core.hasMainParticipant}
-          value={form.mainParticipant}
-        />
-      </Field>
-      <Field
         label={intl.formatMessage({
           description: "Other participants label",
-          defaultMessage: "Other participants ",
+          defaultMessage: "Other participants",
         })}
       >
         <CoupleRepeater
@@ -349,97 +449,39 @@ const Editor = ({ event }: { event?: Event }) => {
             setForm((old) => ({ ...old, participants }))
           }
           individualType="actors"
+          label={intl.formatMessage({
+            description: "Other participants label",
+            defaultMessage: "Actor",
+          })}
+          placeholder={intl.formatMessage({
+            description: "Other participant input placeholder",
+            defaultMessage: "Enter and select a group or person",
+          })}
           propertyType={core.hasParticipant}
           values={form.participants}
         />
       </Field>
-      <Field
-        label={intl.formatMessage({
-          description: "Aspects label",
-          defaultMessage: "Aspects ",
-        })}
-      >
-        <CoupleRepeater
-          onChange={(aspects) => setForm((old) => ({ ...old, aspects }))}
-          individualType="aspects"
-          propertyType={core.usesAspect}
-          values={form.aspects}
-        />
-      </Field>
-      <Field
-        label={intl.formatMessage({
-          description: "Source label",
-          defaultMessage: "Source *",
-        })}
-      >
-        <IndividualInput
-          label={intl.formatMessage({
-            description: "Source input label",
-            defaultMessage: "Label",
-          })}
-          onChange={(source) => setForm((old) => ({ ...old, source }))}
-          type="sources"
-          value={form.source}
-        />
-      </Field>
-      <Field
-        label={intl.formatMessage({
-          description: "Source location label",
-          defaultMessage: "Source location *",
-        })}
-      >
-        <Input
-          label={intl.formatMessage({
-            description: "Source location input label",
-            defaultMessage: "Text",
-          })}
-          onChange={(e) =>
-            setForm((old) => ({ ...old, sourceLocation: e.target.value }))
-          }
-          value={form.sourceLocation || ""}
-        />
-      </Field>
-      <Field
-        label={intl.formatMessage({
-          description: "Place label",
-          defaultMessage: "Place",
-        })}
-      >
-        <IndividualInput
-          label={intl.formatMessage({
-            description: "Place input label",
-            defaultMessage: "Label",
-          })}
-          onChange={(place) => setForm((old) => ({ ...old, place }))}
-          type="places"
-          value={form.place}
-        />
-      </Field>
-      <Field
-        label={intl.formatMessage({
-          description: "Comments field label",
-          defaultMessage: "Comments",
-        })}
-      >
-        <LiteralRepeater
-          label={intl.formatMessage({
-            description: "Comment input label",
-            defaultMessage: "Comment",
-          })}
-          onChange={(comments) => setForm((old) => ({ ...old, comments }))}
-          type="multiline"
-          values={form.comments}
-        />
-      </Field>
+      <TextsField
+        onChange={(texts) => setForm((old) => ({ ...old, texts }))}
+        values={form.texts}
+      />
+      <CommentsField
+        onChange={(comments) => setForm((old) => ({ ...old, comments }))}
+        values={form.comments}
+      />
       <EditorControls
         cancelUrl={baseUrl + (event?.idLocal || "")}
         loading={state.loading}
-        mutate={() =>
+        mutate={() => {
+          const authors = form.authors?.map((a) => a.id!) || [];
+          if (!authors.includes(author.id)) {
+            authors.push(author.id);
+          }
           mutate({
             aspects:
               form.aspects?.map((p) => `${p.type.value}|${p.individual.id}`) ||
               [],
-            authors: form.authors?.map((a) => a.id!) || [],
+            authors,
             comments: serializeLiteral(form.comments),
             date: serializeDates(form.dates),
             labels: serializeLiteral(form.labels),
@@ -453,8 +495,8 @@ const Editor = ({ event }: { event?: Event }) => {
             sourceLocation: form.sourceLocation || "",
             texts: serializeLiteral(form.texts),
             types: types.map((t) => t.value || ""),
-          })
-        }
+          });
+        }}
         valid={validate(form, types)}
       />
     </EditorForm>
@@ -462,13 +504,19 @@ const Editor = ({ event }: { event?: Event }) => {
 };
 
 export const EventEditor = ({ idLocal }: Props) => {
+  const intl = useIntl();
   const { data, initialized, loading } = useEvent({
     idLocal: idLocal || "",
     paused: !idLocal,
   });
+  const user = useUser();
   const literal = useLocaleLiteral();
   const create = idLocal === undefined;
-  return initialized && !loading ? (
+  return initialized &&
+    !loading &&
+    user.initialized &&
+    !user.loading &&
+    user.data?.author ? (
     <>
       <Heading>
         {create ? (
@@ -484,7 +532,22 @@ export const EventEditor = ({ idLocal }: Props) => {
           />
         )}
       </Heading>
-      <Editor event={data} />
+      <FormIntroduction>
+        {intl.formatMessage({
+          description: "Event form introduction",
+          defaultMessage:
+            "Please use the following form to enter the appropriate data for the desired event.",
+        })}
+      </FormIntroduction>
+      <Editor
+        event={data}
+        author={{
+          ...user.data.author,
+          labels: user.data.labels,
+          response: [{}] as JsonLdArray,
+          types: [namespaces.core.author],
+        }}
+      />
     </>
   ) : (
     <LoadingPlaceholder />

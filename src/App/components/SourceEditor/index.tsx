@@ -12,16 +12,18 @@ import {
 import { useEffect, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useHistory } from "react-router-dom";
+import { CommentsField } from "../CommentsField";
 import { EditorControls } from "../EditorControls";
 import { EditorForm } from "../EditorForm";
-import { Field } from "../Field";
+import { FormError } from "../FormError";
+import { FormIntroduction } from "../FormIntroduction";
 import { Heading } from "../Heading";
-import { LiteralRepeater } from "../LiteralRepeater";
+import { LabelsField } from "../LabelsField";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
-import { Paragraph } from "../Paragraph";
-import { TextRepeater } from "../TextRepeater";
+import { SameAsField } from "../SameAsField";
+import { TextsField } from "../TextsField";
 import { Type } from "../TypeInput";
-import { TypeRepeater } from "../TypeRepeater";
+import { TypesField } from "../TypesField";
 
 interface Props {
   idLocal?: string;
@@ -71,8 +73,6 @@ const useForm = (
 const Editor = ({ source }: { source?: Source }) => {
   const defaultType = namespaces.core.source;
   const baseUrl = "/sources/";
-  const literal = useLocaleLiteral();
-  const intl = useIntl();
   const { form, setForm, types, setTypes, mutate, state } = useForm(
     baseUrl,
     defaultType,
@@ -80,87 +80,25 @@ const Editor = ({ source }: { source?: Source }) => {
   );
   return (
     <EditorForm>
-      {state.error && (
-        <Paragraph className="italic p-2 rounded bg-red-500 text-white">
-          <span>
-            <FormattedMessage
-              description="Error heading"
-              defaultMessage="Error"
-            />
-          </span>
-          :&nbsp;
-          {literal(state.error.description)}
-        </Paragraph>
-      )}
-      <Field
-        label={intl.formatMessage({
-          description: "Source type field label",
-          defaultMessage: "Source types *",
-        })}
-      >
-        <TypeRepeater onChange={setTypes} parent={defaultType} values={types} />
-      </Field>
-      <Field
-        label={intl.formatMessage({
-          description: "Labels field label",
-          defaultMessage: "Labels *",
-        })}
-      >
-        <LiteralRepeater
-          label={intl.formatMessage({
-            description: "Label input label",
-            defaultMessage: "Label",
-          })}
-          onChange={(labels) => setForm((old) => ({ ...old, labels }))}
-          values={form.labels}
-        />
-      </Field>
-      <Field
-        label={intl.formatMessage({
-          description: "Text field label",
-          defaultMessage: "Text",
-        })}
-      >
-        <LiteralRepeater
-          label={intl.formatMessage({
-            description: "Text input label",
-            defaultMessage: "Texts",
-          })}
-          onChange={(texts) => setForm((old) => ({ ...old, texts }))}
-          values={form.texts}
-        />
-      </Field>
-      <Field
-        label={intl.formatMessage({
-          description: "Sameas field label",
-          defaultMessage: "Same as URLs",
-        })}
-      >
-        <TextRepeater
-          label={intl.formatMessage({
-            description: "Sameas input label",
-            defaultMessage: "Same as",
-          })}
-          onChange={(sameAs) => setForm((old) => ({ ...old, sameAs }))}
-          values={form.sameAs}
-        />
-      </Field>
-      <Field
-        label={intl.formatMessage({
-          description: "Comments field label",
-          defaultMessage: "Comments",
-        })}
-      >
-        <LiteralRepeater
-          label={intl.formatMessage({
-            description: "Comment input label",
-            defaultMessage: "Comment",
-          })}
-          onChange={(comments) => setForm((old) => ({ ...old, comments }))}
-          type="multiline"
-          values={form.comments}
-        />
-      </Field>
+      <FormError error={state.error} />
+      <TypesField onChange={setTypes} parent={defaultType} values={types} />
+      <LabelsField
+        onChange={(labels) => setForm((old) => ({ ...old, labels }))}
+        required
+        values={form.labels}
+      />
+      <TextsField
+        onChange={(texts) => setForm((old) => ({ ...old, texts }))}
+        values={form.texts}
+      />
+      <SameAsField
+        onChange={(sameAs) => setForm((old) => ({ ...old, sameAs }))}
+        values={form.sameAs}
+      />
+      <CommentsField
+        onChange={(comments) => setForm((old) => ({ ...old, comments }))}
+        values={form.comments}
+      />
       <EditorControls
         cancelUrl={baseUrl + (source?.idLocal || "")}
         loading={state.loading}
@@ -180,6 +118,7 @@ const Editor = ({ source }: { source?: Source }) => {
 };
 
 export const SourceEditor = ({ idLocal }: Props) => {
+  const intl = useIntl();
   const { data, initialized, loading } = useSource({
     idLocal: idLocal || "",
     paused: !idLocal,
@@ -202,6 +141,13 @@ export const SourceEditor = ({ idLocal }: Props) => {
           />
         )}
       </Heading>
+      <FormIntroduction>
+        {intl.formatMessage({
+          description: "Source form introduction",
+          defaultMessage:
+            "Please use the following form to enter the appropriate data for the desired source.",
+        })}
+      </FormIntroduction>
       <Editor source={data} />
     </>
   ) : (

@@ -14,6 +14,9 @@ module.exports = {
       "3/4": "75%",
       full: "100%",
     },
+    extend: {
+      width: { sm: "640px", md: "768px", lg: "1024px" },
+    },
   },
   variants: {
     extend: {

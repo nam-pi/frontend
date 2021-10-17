@@ -80,7 +80,7 @@ export const DeleteButton = ({ entityLabels, idLocal, type }: Props) => {
         rightElement={
           state.error === undefined && (
             <Button
-              className="mr-4 text-red-500 border border-red-300"
+              className="mr-4 text-red-500 border-red-300"
               onClick={remove}
             >
               {state.loading ? (

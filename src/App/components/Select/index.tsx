@@ -60,7 +60,7 @@ export const Select = <V extends OptionValue = string>({
       <Listbox value={selected} onChange={handleChange}>
         <div className="relative mt-1">
           <Listbox.Button
-            className="relative rounded border border-gray-400 shadow disabled:opacity-50 px-2 py-1 w-full flex flex-row justify-between items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-current"
+            className="relative rounded border border-gray-400 shadow disabled:opacity-50 px-2 py-1 w-full flex flex-row justify-between items-center focus:outline-none focus-within:border-blue-400"
             id={id}
           >
             <span className="block truncate">{selected.text}</span>
@@ -74,7 +74,7 @@ export const Select = <V extends OptionValue = string>({
             leaveFrom="transform scale-100 opacity-100"
             leaveTo="transform scale-95 opacity-0"
           >
-            <Listbox.Options className="max-h-64 w-full overflow-y-auto shadow bg-white border border-gray-400 rounded py-1 absolute right-0 z-10 mt-2">
+            <Listbox.Options className="max-h-64 w-full overflow-y-auto shadow bg-white border border-gray-400 rounded py-1 absolute right-0 z-10 mt-2 focus:outline-none focus-within:border-blue-400">
               {options.map((value, idx) => (
                 <Listbox.Option key={idx} value={value}>
                   {({ active, selected }) => {

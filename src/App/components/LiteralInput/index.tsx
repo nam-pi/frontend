@@ -1,6 +1,12 @@
 import clsx from "clsx";
 import { LiteralString } from "nampi-use-api";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+    ReactNode,
+    useCallback,
+    useEffect,
+    useRef,
+    useState
+} from "react";
 import { useIntl } from "react-intl";
 import { Input } from "../Input";
 import { LanguageInput } from "../LanguageInput";
@@ -9,7 +15,7 @@ import { Textarea } from "../Textarea";
 export interface Props {
   className?: string;
   onChange?: (value: LiteralString) => void;
-  label?: string;
+  label?: ReactNode;
   type?: "single" | "multiline";
   value?: LiteralString;
 }
@@ -64,12 +70,24 @@ export const LiteralInput = ({
   return (
     <div className={clsx(className, "w-full")}>
       {type === "single" ? (
-        <Input label={label} onChange={handleTextChange} value={text || ""} />
+        <Input
+          label={label}
+          onChange={handleTextChange}
+          placeholder={intl.formatMessage({
+            description: "Literal input placeholder",
+            defaultMessage: "Enter some text",
+          })}
+          value={text || ""}
+        />
       ) : (
         <Textarea
           label={label}
           onChange={handleTextChange}
-          rows={1}
+          placeholder={intl.formatMessage({
+            description: "Literal input placeholder",
+            defaultMessage: "Enter some text",
+          })}
+          rows={2}
           value={text || ""}
         />
       )}

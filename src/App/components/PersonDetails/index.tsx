@@ -117,7 +117,7 @@ const EventsMap = ({
             <>
               {mapEvents.map((event, idx) => (
                 <Marker
-                  className="text-green-500"
+                  className="text-green-400"
                   key={idx}
                   position={
                     [

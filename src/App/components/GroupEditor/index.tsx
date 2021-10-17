@@ -12,18 +12,21 @@ import {
 import { useEffect, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useHistory } from "react-router-dom";
+import { CommentsField } from "../CommentsField";
 import { EditorControls } from "../EditorControls";
 import { EditorForm } from "../EditorForm";
 import { Field } from "../Field";
+import { FormError } from "../FormError";
+import { FormIntroduction } from "../FormIntroduction";
 import { Heading } from "../Heading";
 import { Individual, useIndividual } from "../IndividualInput";
 import { IndividualRepeater } from "../IndividualRepeater";
-import { LiteralRepeater } from "../LiteralRepeater";
+import { LabelsField } from "../LabelsField";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
-import { Paragraph } from "../Paragraph";
-import { TextRepeater } from "../TextRepeater";
+import { SameAsField } from "../SameAsField";
+import { TextsField } from "../TextsField";
 import { Type } from "../TypeInput";
-import { TypeRepeater } from "../TypeRepeater";
+import { TypesField } from "../TypesField";
 
 interface Props {
   idLocal?: string;
@@ -76,7 +79,6 @@ const useForm = (
 const Editor = ({ group }: { group?: Group }) => {
   const defaultType = namespaces.core.group;
   const baseUrl = "/groups/";
-  const literal = useLocaleLiteral();
   const intl = useIntl();
   const { form, setForm, types, setTypes, mutate, state } = useForm(
     baseUrl,
@@ -85,103 +87,50 @@ const Editor = ({ group }: { group?: Group }) => {
   );
   return (
     <EditorForm>
-      {state.error && (
-        <Paragraph className="italic p-2 rounded bg-red-500 text-white">
-          <span>
-            <FormattedMessage
-              description="Error heading"
-              defaultMessage="Error"
-            />
-          </span>
-          :&nbsp;
-          {literal(state.error.description)}
-        </Paragraph>
-      )}
+      <FormError error={state.error} />
+      <TypesField onChange={setTypes} parent={defaultType} values={types} />
+      <LabelsField
+        onChange={(labels) => setForm((old) => ({ ...old, labels }))}
+        required
+        values={form.labels}
+      />
+      <TextsField
+        onChange={(texts) => setForm((old) => ({ ...old, texts }))}
+        values={form.texts}
+      />
       <Field
-        label={intl.formatMessage({
-          description: "Group type field label",
-          defaultMessage: "Group types *",
+        help={intl.formatMessage({
+          description: "Part of input help",
+          defaultMessage:
+            "Enter and select all groups this group is a part of. Examples are *monasteries in a religious order* or *departments in a company*.",
         })}
-      >
-        <TypeRepeater onChange={setTypes} parent={defaultType} values={types} />
-      </Field>
-      <Field
-        label={intl.formatMessage({
-          description: "Labels field label",
-          defaultMessage: "Labels *",
-        })}
-      >
-        <LiteralRepeater
-          label={intl.formatMessage({
-            description: "Label input label",
-            defaultMessage: "Label",
-          })}
-          onChange={(labels) => setForm((old) => ({ ...old, labels }))}
-          values={form.labels}
-        />
-      </Field>
-      <Field
-        label={intl.formatMessage({
-          description: "Text field label",
-          defaultMessage: "Text",
-        })}
-      >
-        <LiteralRepeater
-          label={intl.formatMessage({
-            description: "Text input label",
-            defaultMessage: "Texts",
-          })}
-          onChange={(texts) => setForm((old) => ({ ...old, texts }))}
-          values={form.texts}
-        />
-      </Field>
-      <Field
         label={intl.formatMessage({
           description: "Part of part of",
-          defaultMessage: "Part of *",
+          defaultMessage: "Is part of",
         })}
       >
         <IndividualRepeater
           label={intl.formatMessage({
             description: "Part of input label",
-            defaultMessage: "Label",
+            defaultMessage: "Group",
+          })}
+          placeholder={intl.formatMessage({
+            description: "Part of input placeholder",
+            defaultMessage: "Enter and select a group",
           })}
           onChange={(partOf) => setForm((old) => ({ ...old, partOf }))}
           type="groups"
           values={form.partOf}
         />
       </Field>
-      <Field
-        label={intl.formatMessage({
-          description: "Sameas field label",
-          defaultMessage: "Same as URLs",
-        })}
-      >
-        <TextRepeater
-          label={intl.formatMessage({
-            description: "Sameas input label",
-            defaultMessage: "Same as",
-          })}
-          onChange={(sameAs) => setForm((old) => ({ ...old, sameAs }))}
-          values={form.sameAs}
-        />
-      </Field>
-      <Field
-        label={intl.formatMessage({
-          description: "Comments field label",
-          defaultMessage: "Comments",
-        })}
-      >
-        <LiteralRepeater
-          label={intl.formatMessage({
-            description: "Comment input label",
-            defaultMessage: "Comment",
-          })}
-          onChange={(comments) => setForm((old) => ({ ...old, comments }))}
-          type="multiline"
-          values={form.comments}
-        />
-      </Field>
+      <SameAsField
+        onChange={(sameAs) => setForm((old) => ({ ...old, sameAs }))}
+        values={form.sameAs}
+      />
+      <CommentsField
+        onChange={(comments) => setForm((old) => ({ ...old, comments }))}
+        values={form.comments}
+      />
       <EditorControls
         cancelUrl={baseUrl + (group?.idLocal || "")}
         loading={state.loading}
@@ -202,6 +151,7 @@ const Editor = ({ group }: { group?: Group }) => {
 };
 
 export const GroupEditor = ({ idLocal }: Props) => {
+  const intl = useIntl();
   const { data, initialized, loading } = useGroup({
     idLocal: idLocal || "",
     paused: !idLocal,
@@ -224,6 +174,13 @@ export const GroupEditor = ({ idLocal }: Props) => {
           />
         )}
       </Heading>
+      <FormIntroduction>
+        {intl.formatMessage({
+          description: "Group form introduction",
+          defaultMessage:
+            "Please use the following form to enter the appropriate data for the desired group.",
+        })}
+      </FormIntroduction>
       <Editor group={data} />
     </>
   ) : (

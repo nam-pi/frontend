@@ -12,17 +12,20 @@ import {
 import { useEffect, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useHistory } from "react-router-dom";
+import { CommentsField } from "../CommentsField";
 import { EditorControls } from "../EditorControls";
 import { EditorForm } from "../EditorForm";
 import { Field } from "../Field";
+import { FormError } from "../FormError";
+import { FormIntroduction } from "../FormIntroduction";
 import { Heading } from "../Heading";
 import { Input } from "../Input";
-import { LiteralRepeater } from "../LiteralRepeater";
+import { LabelsField } from "../LabelsField";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
-import { Paragraph } from "../Paragraph";
-import { TextRepeater } from "../TextRepeater";
+import { SameAsField } from "../SameAsField";
+import { TextsField } from "../TextsField";
 import { Type } from "../TypeInput";
-import { TypeRepeater } from "../TypeRepeater";
+import { TypesField } from "../TypesField";
 
 interface Props {
   idLocal?: string;
@@ -37,14 +40,22 @@ interface FormState {
   texts: undefined | LiteralString[];
 }
 
-const validate = (form: FormState, types: Type[]) =>
+const empty = <V,>(value: V | null | undefined): value is V =>
+  value === null ||
+  value === undefined ||
+  (typeof value === "string" && value.replace(/\s/g, "").length === 0);
+
+const hasValidOptionalCoordinates = (form: FormState): boolean =>
+  (empty(form.latitude) && empty(form.longitude)) ||
+  (form.latitude?.match(/^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?)$/) !== null &&
+    form.longitude?.match(
+      /[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)/
+    ) !== null);
+
+const validate = (form: FormState, types: Type[]): boolean =>
   types.length > 0 &&
   (form.labels?.length || 0) > 0 &&
-  ((form?.latitude === undefined && form?.longitude === undefined) ||
-    (!Number.isNaN(form?.latitude) &&
-      !Number.isNaN(Number.parseFloat(form?.latitude || "")) &&
-      !Number.isNaN(form?.longitude) &&
-      !Number.isNaN(Number.parseFloat(form?.longitude || ""))));
+  hasValidOptionalCoordinates(form);
 
 const useForm = (
   baseUrl: string,
@@ -57,8 +68,8 @@ const useForm = (
     labels: place?.labels,
     sameAs: place?.sameAs,
     texts: place?.texts,
-    latitude: String(place?.latitude),
-    longitude: String(place?.longitude),
+    latitude: place?.latitude ? String(place?.latitude) : undefined,
+    longitude: place?.longitude ? String(place?.longitude) : undefined,
   });
   const [types, setTypes] = useEditorTypes(
     place ? { itemId: place.id } : { defaultType }
@@ -82,7 +93,6 @@ const useForm = (
 const Editor = ({ place }: { place?: Place }) => {
   const defaultType = namespaces.core.place;
   const baseUrl = "/places/";
-  const literal = useLocaleLiteral();
   const intl = useIntl();
   const { form, setForm, types, setTypes, mutate, state } = useForm(
     baseUrl,
@@ -91,57 +101,23 @@ const Editor = ({ place }: { place?: Place }) => {
   );
   return (
     <EditorForm>
-      {state.error && (
-        <Paragraph className="italic p-2 rounded bg-red-500 text-white">
-          <span>
-            <FormattedMessage
-              description="Error heading"
-              defaultMessage="Error"
-            />
-          </span>
-          :&nbsp;
-          {literal(state.error.description)}
-        </Paragraph>
-      )}
+      <FormError error={state.error} />
+      <TypesField onChange={setTypes} parent={defaultType} values={types} />
+      <LabelsField
+        onChange={(labels) => setForm((old) => ({ ...old, labels }))}
+        required
+        values={form.labels}
+      />
+      <TextsField
+        onChange={(texts) => setForm((old) => ({ ...old, texts }))}
+        values={form.texts}
+      />
       <Field
-        label={intl.formatMessage({
-          description: "Place type field label",
-          defaultMessage: "Place types *",
+        help={intl.formatMessage({
+          description: "Coordinates input help",
+          defaultMessage:
+            "Enter a valid pair of coordinates in decimal degrees between *±90* for latitude and *±180* for longitude. Example: Latitude *48.400002*, Longitude *9.983333* ",
         })}
-      >
-        <TypeRepeater onChange={setTypes} parent={defaultType} values={types} />
-      </Field>
-      <Field
-        label={intl.formatMessage({
-          description: "Labels field label",
-          defaultMessage: "Labels *",
-        })}
-      >
-        <LiteralRepeater
-          label={intl.formatMessage({
-            description: "Label input label",
-            defaultMessage: "Label",
-          })}
-          onChange={(labels) => setForm((old) => ({ ...old, labels }))}
-          values={form.labels}
-        />
-      </Field>
-      <Field
-        label={intl.formatMessage({
-          description: "Text field label",
-          defaultMessage: "Text",
-        })}
-      >
-        <LiteralRepeater
-          label={intl.formatMessage({
-            description: "Text input label",
-            defaultMessage: "Texts",
-          })}
-          onChange={(texts) => setForm((old) => ({ ...old, texts }))}
-          values={form.texts}
-        />
-      </Field>
-      <Field
         label={intl.formatMessage({
           description: "Coordinates field label",
           defaultMessage: "Coordinates",
@@ -151,57 +127,42 @@ const Editor = ({ place }: { place?: Place }) => {
           <Input
             label={intl.formatMessage({
               description: "Latitude input label",
-              defaultMessage: "Lat",
+              defaultMessage: "Latitude",
             })}
             onChange={(e) =>
               setForm((old) => ({ ...old, latitude: e.target.value }))
             }
+            placeholder={intl.formatMessage({
+              description: "Latitude placeholder",
+              defaultMessage: "Enter a decimal latitude",
+            })}
             value={form.latitude || ""}
           />
           <Input
             className="mt-4 md:mt-0 md:ml-4"
             label={intl.formatMessage({
               description: "Longitude input label",
-              defaultMessage: "Lng",
+              defaultMessage: "Longitude",
             })}
             onChange={(e) =>
               setForm((old) => ({ ...old, longitude: e.target.value }))
             }
+            placeholder={intl.formatMessage({
+              description: "Longitude placeholder",
+              defaultMessage: "Enter a decimal longitude",
+            })}
             value={form.longitude || ""}
           />
         </div>
       </Field>
-      <Field
-        label={intl.formatMessage({
-          description: "Sameas field label",
-          defaultMessage: "Same as URLs",
-        })}
-      >
-        <TextRepeater
-          label={intl.formatMessage({
-            description: "Sameas input label",
-            defaultMessage: "Same as",
-          })}
-          onChange={(sameAs) => setForm((old) => ({ ...old, sameAs }))}
-          values={form.sameAs}
-        />
-      </Field>
-      <Field
-        label={intl.formatMessage({
-          description: "Comments field label",
-          defaultMessage: "Comments",
-        })}
-      >
-        <LiteralRepeater
-          label={intl.formatMessage({
-            description: "Comment input label",
-            defaultMessage: "Comment",
-          })}
-          onChange={(comments) => setForm((old) => ({ ...old, comments }))}
-          type="multiline"
-          values={form.comments}
-        />
-      </Field>
+      <SameAsField
+        onChange={(sameAs) => setForm((old) => ({ ...old, sameAs }))}
+        values={form.sameAs}
+      />
+      <CommentsField
+        onChange={(comments) => setForm((old) => ({ ...old, comments }))}
+        values={form.comments}
+      />
       <EditorControls
         cancelUrl={baseUrl + (place?.idLocal || "")}
         loading={state.loading}
@@ -209,8 +170,8 @@ const Editor = ({ place }: { place?: Place }) => {
           mutate({
             comments: serializeLiteral(form.comments),
             labels: serializeLiteral(form.labels),
-            latitude: form.latitude,
-            longitude: form.longitude,
+            latitude: form.latitude?.replace(",", "."),
+            longitude: form.longitude?.replace(",", "."),
             sameAs: form.sameAs,
             texts: serializeLiteral(form.texts),
             types: types.map((t) => t.value || ""),
@@ -223,6 +184,7 @@ const Editor = ({ place }: { place?: Place }) => {
 };
 
 export const PlaceEditor = ({ idLocal }: Props) => {
+  const intl = useIntl();
   const { data, initialized, loading } = usePlace({
     idLocal: idLocal || "",
     paused: !idLocal,
@@ -245,6 +207,13 @@ export const PlaceEditor = ({ idLocal }: Props) => {
           />
         )}
       </Heading>
+      <FormIntroduction>
+        {intl.formatMessage({
+          description: "Place form introduction",
+          defaultMessage:
+            "Please use the following form to enter the appropriate data for the desired place.",
+        })}
+      </FormIntroduction>
       <Editor place={data} />
     </>
   ) : (

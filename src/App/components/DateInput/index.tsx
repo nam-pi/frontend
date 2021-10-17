@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import { format } from "date-fns";
 import { useEffect, useRef, useState } from "react";
 import { useIntl } from "react-intl";
 import { Input } from "../Input";
@@ -25,6 +26,13 @@ export const DateInput = ({ className, onChange = () => {}, value }: Props) => {
   );
   const [start, setStart] = useState(range ? value?.start : value?.exact);
   const [end, setEnd] = useState(value?.end);
+  const datePlaceholder = intl.formatMessage(
+    {
+      description: "Date placeholder",
+      defaultMessage: "Enter a date like {date}",
+    },
+    { date: format(new Date(), "yyyy-MM-dd") }
+  );
   useEffect(() => {
     if (value !== oldDates.current) {
       oldDates.current = value;
@@ -69,7 +77,7 @@ export const DateInput = ({ className, onChange = () => {}, value }: Props) => {
           onChange(newDates);
           setStart(newStart);
         }}
-        type="date"
+        placeholder={datePlaceholder}
         value={start || ""}
       />
       {range && (
@@ -90,7 +98,7 @@ export const DateInput = ({ className, onChange = () => {}, value }: Props) => {
             onChange(newDates);
             setEnd(newEnd);
           }}
-          type="date"
+          placeholder={datePlaceholder}
           value={end || ""}
         />
       )}
@@ -98,7 +106,7 @@ export const DateInput = ({ className, onChange = () => {}, value }: Props) => {
         className="mt-4 md:mt-0 md:ml-4"
         label={intl.formatMessage({
           description: "Range checkbox",
-          defaultMessage: "Range",
+          defaultMessage: "Uncertain",
         })}
         type="checkbox"
         checked={range}

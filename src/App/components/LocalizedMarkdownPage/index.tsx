@@ -34,7 +34,7 @@ export const LocalizedMarkdownPage = ({ texts }: Props) => {
             <Paragraph className="mb-2">{children}</Paragraph>
           ),
           a: ({ node, children, ...props }) => (
-            <a className="text-blue-500 visited:text-purple-500" {...props}>
+            <a className="text-blue-400 visited:text-purple-400" {...props}>
               {children}
             </a>
           ),

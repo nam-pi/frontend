@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
+import { useIntl } from "react-intl";
 import {
     Individual,
     IndividualInput,
@@ -8,7 +9,9 @@ import { Props as TypeInputProps, Type, TypeInput } from "../TypeInput";
 
 export interface Props {
   individualType: IndividualInputProps["type"];
+  label?: ReactNode;
   onChange?: (value: Couple) => void;
+  placeholder?: string;
   propertyType: TypeInputProps["parent"];
   value?: Couple;
 }
@@ -20,10 +23,13 @@ export interface Couple {
 
 export const CoupleInput = ({
   individualType,
+  label,
   onChange = () => {},
+  placeholder,
   propertyType,
   value,
 }: Props) => {
+  const intl = useIntl();
   const [type, setType] = useState<Type>(
     value?.type || { text: "", value: undefined }
   );
@@ -36,22 +42,28 @@ export const CoupleInput = ({
   }, [value?.individual, value?.type]);
   return (
     <div className="w-full">
+      <IndividualInput
+        label={label}
+        onChange={(i) => {
+          onChange({ type, individual: i });
+          setIndividual(i);
+        }}
+        placeholder={placeholder}
+        type={individualType}
+        value={individual}
+      />
       <TypeInput
+        className="mt-4"
+        placeholder={intl.formatMessage({
+          description: "Type input placeholder",
+          defaultMessage: "Select a type",
+        })}
         parent={propertyType}
         onChange={(t) => {
           onChange({ individual, type: t });
           setType(t);
         }}
         value={type}
-      />
-      <IndividualInput
-        className="mt-4"
-        onChange={(i) => {
-          onChange({ type, individual: i });
-          setIndividual(i);
-        }}
-        type={individualType}
-        value={individual}
       />
     </div>
   );
