@@ -16,12 +16,12 @@ import { CommentsField } from "../CommentsField";
 import { EditorControls } from "../EditorControls";
 import { EditorForm } from "../EditorForm";
 import { Field } from "../Field";
+import { FormError } from "../FormError";
 import { FormIntroduction } from "../FormIntroduction";
 import { Heading } from "../Heading";
 import { Input } from "../Input";
 import { LabelsField } from "../LabelsField";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
-import { Paragraph } from "../Paragraph";
 import { SameAsField } from "../SameAsField";
 import { TextsField } from "../TextsField";
 import { Type } from "../TypeInput";
@@ -85,7 +85,6 @@ const useForm = (
 const Editor = ({ place }: { place?: Place }) => {
   const defaultType = namespaces.core.place;
   const baseUrl = "/places/";
-  const literal = useLocaleLiteral();
   const intl = useIntl();
   const { form, setForm, types, setTypes, mutate, state } = useForm(
     baseUrl,
@@ -94,19 +93,7 @@ const Editor = ({ place }: { place?: Place }) => {
   );
   return (
     <EditorForm>
-      {state.error && (
-        <Paragraph className="italic p-2 rounded bg-red-500 text-white">
-          <span>
-            <FormattedMessage
-              description="Error heading"
-              defaultMessage="Error"
-            />
-          </span>
-          :&nbsp;
-          {literal(state.error.description)}
-        </Paragraph>
-      )}
-
+      <FormError error={state.error} />
       <TypesField onChange={setTypes} parent={defaultType} values={types} />
       <LabelsField
         onChange={(labels) => setForm((old) => ({ ...old, labels }))}

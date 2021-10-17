@@ -22,6 +22,7 @@ import { DateInput, Dates } from "../DateInput";
 import { EditorControls } from "../EditorControls";
 import { EditorForm } from "../EditorForm";
 import { Field } from "../Field";
+import { FormError } from "../FormError";
 import { FormIntroduction } from "../FormIntroduction";
 import { Heading } from "../Heading";
 import { Individual, IndividualInput, useIndividual } from "../IndividualInput";
@@ -29,7 +30,6 @@ import { IndividualRepeater } from "../IndividualRepeater";
 import { Input } from "../Input";
 import { LabelsField } from "../LabelsField";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
-import { Paragraph } from "../Paragraph";
 import { TextsField } from "../TextsField";
 import { Type } from "../TypeInput";
 import { TypesField } from "../TypesField";
@@ -240,7 +240,6 @@ const useForm = (
 const Editor = ({ event }: { event?: Event }) => {
   const defaultType = core.event;
   const baseUrl = "/events/";
-  const literal = useLocaleLiteral();
   const intl = useIntl();
   const { form, setForm, types, setTypes, mutate, state } = useForm(
     baseUrl,
@@ -249,19 +248,7 @@ const Editor = ({ event }: { event?: Event }) => {
   );
   return (
     <EditorForm>
-      {state.error && (
-        <Paragraph className="italic p-2 rounded bg-red-500 text-white">
-          <span>
-            <FormattedMessage
-              description="Error heading"
-              defaultMessage="Error"
-            />
-          </span>
-          :&nbsp;
-          {literal(state.error.description)}
-        </Paragraph>
-      )}
-
+      <FormError error={state.error} />
       <TypesField onChange={setTypes} parent={defaultType} values={types} />
       <LabelsField
         onChange={(labels) => setForm((old) => ({ ...old, labels }))}
