@@ -2,7 +2,7 @@ import { useEditorTypes } from "App/hooks/useEditorTypes";
 import { useLocaleLiteral } from "App/hooks/useLocaleLiteral";
 import { namespaces } from "App/namespaces";
 import { serializeLiteral } from "App/utils/serializeLiteral";
-import { format } from "date-fns";
+import { format, isValid, parse } from "date-fns";
 import { JsonLdArray } from "jsonld/jsonld-spec";
 import {
     Author,
@@ -58,9 +58,24 @@ interface FormState {
 
 const { core } = namespaces;
 
+const validDate = (dateString: undefined | string) =>
+  !dateString ||
+  isValid(
+    parse(
+      dateString.startsWith("-")
+        ? dateString.substr(1) + " BC"
+        : dateString + " AD",
+      "yyyyyy-MM-dd G",
+      new Date()
+    )
+  );
+
 const validate = (form: FormState, types: Type[]) =>
   form.authors !== undefined &&
   form.authors.length > 0 &&
+  validDate(form.dates?.end) &&
+  validDate(form.dates?.exact) &&
+  validDate(form.dates?.start) &&
   types.length > 0 &&
   form.labels !== undefined &&
   form.labels.length > 0 &&
@@ -363,7 +378,7 @@ const Editor = ({ event, author }: { event?: Event; author: Author }) => {
         help={intl.formatMessage({
           description: "Date field help text",
           defaultMessage:
-            "Enter the optional date the event has happened. It is possible to either add a *single value* in case the event date is exactly known, or a *combination of dates* the event could have happened the earliest and the latest, in case the date is unclear. Either one can be ommited. In this case, the upper or lower boundary is unspecified. The dates have to be added in the format *YYYY-MM-DD*.",
+            "Enter the optional date the event has happened. It is possible to either add a *single value* in case the event date is exactly known, or a *combination of dates* the event could have happened the earliest and the latest, in case the date is unclear. Either one can be ommited. In this case, the upper or lower boundary is unspecified. The dates have to be added in the format *YYYY-MM-DD* or *-YYYY-MM-DD* for a year before the Common Era.",
         })}
       >
         <DateInput
