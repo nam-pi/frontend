@@ -12,13 +12,13 @@ import {
 import { useEffect, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useHistory } from "react-router-dom";
+import { CommentsField } from "../CommentsField";
 import { EditorControls } from "../EditorControls";
 import { EditorForm } from "../EditorForm";
 import { Field } from "../Field";
 import { Heading } from "../Heading";
 import { Input } from "../Input";
 import { LabelsField } from "../LabelsField";
-import { LiteralRepeater } from "../LiteralRepeater";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
 import { Paragraph } from "../Paragraph";
 import { TextRepeater } from "../TextRepeater";
@@ -167,22 +167,10 @@ const Editor = ({ place }: { place?: Place }) => {
           values={form.sameAs}
         />
       </Field>
-      <Field
-        label={intl.formatMessage({
-          description: "Comments field label",
-          defaultMessage: "Comments",
-        })}
-      >
-        <LiteralRepeater
-          label={intl.formatMessage({
-            description: "Comment input label",
-            defaultMessage: "Comment",
-          })}
-          onChange={(comments) => setForm((old) => ({ ...old, comments }))}
-          type="multiline"
-          values={form.comments}
-        />
-      </Field>
+      <CommentsField
+        onChange={(comments) => setForm((old) => ({ ...old, comments }))}
+        values={form.comments}
+      />
       <EditorControls
         cancelUrl={baseUrl + (place?.idLocal || "")}
         loading={state.loading}

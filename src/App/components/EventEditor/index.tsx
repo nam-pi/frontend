@@ -15,6 +15,7 @@ import {
 import { useEffect, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useHistory } from "react-router-dom";
+import { CommentsField } from "../CommentsField";
 import { Couple, CoupleInput } from "../CoupleInput";
 import { CoupleRepeater } from "../CoupleRepeater";
 import { DateInput, Dates } from "../DateInput";
@@ -26,7 +27,6 @@ import { Individual, IndividualInput, useIndividual } from "../IndividualInput";
 import { IndividualRepeater } from "../IndividualRepeater";
 import { Input } from "../Input";
 import { LabelsField } from "../LabelsField";
-import { LiteralRepeater } from "../LiteralRepeater";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
 import { Paragraph } from "../Paragraph";
 import { TextsField } from "../TextsField";
@@ -396,22 +396,10 @@ const Editor = ({ event }: { event?: Event }) => {
           value={form.place}
         />
       </Field>
-      <Field
-        label={intl.formatMessage({
-          description: "Comments field label",
-          defaultMessage: "Comments",
-        })}
-      >
-        <LiteralRepeater
-          label={intl.formatMessage({
-            description: "Comment input label",
-            defaultMessage: "Comment",
-          })}
-          onChange={(comments) => setForm((old) => ({ ...old, comments }))}
-          type="multiline"
-          values={form.comments}
-        />
-      </Field>
+      <CommentsField
+        onChange={(comments) => setForm((old) => ({ ...old, comments }))}
+        values={form.comments}
+      />
       <EditorControls
         cancelUrl={baseUrl + (event?.idLocal || "")}
         loading={state.loading}
