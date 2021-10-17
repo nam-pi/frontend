@@ -27,7 +27,7 @@ export const SameAsField = ({ required, ...props }: Props) => {
           defaultMessage: "Enter a full URL including http(s)://",
         })}
         label={intl.formatMessage({
-          description: "Label input label",
+          description: "SameAs input label",
           defaultMessage: "URL",
         })}
         {...props}

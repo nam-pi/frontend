@@ -1,7 +1,7 @@
 import { Repeater } from "../Repeater";
 import { Props as TypeInputProps, Type, TypeInput } from "../TypeInput";
 
-interface Props extends Omit<TypeInputProps, "onChange" | "value"> {
+export interface Props extends Omit<TypeInputProps, "onChange" | "value"> {
   onChange: (value: Type[]) => void;
   values: undefined | Type[];
 }

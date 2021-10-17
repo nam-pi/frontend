@@ -100,7 +100,7 @@ export const LiteralInput = ({
         })}
         placeholder={intl.formatMessage({
           description: "Literal input placeholder",
-          defaultMessage: "Enter language",
+          defaultMessage: "Enter and select a language",
         })}
         value={language}
       />

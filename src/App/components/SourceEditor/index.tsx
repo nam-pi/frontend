@@ -15,7 +15,7 @@ import { useHistory } from "react-router-dom";
 import { CommentsField } from "../CommentsField";
 import { EditorControls } from "../EditorControls";
 import { EditorForm } from "../EditorForm";
-import { Field } from "../Field";
+import { FormIntroduction } from "../FormIntroduction";
 import { Heading } from "../Heading";
 import { LabelsField } from "../LabelsField";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
@@ -23,7 +23,7 @@ import { Paragraph } from "../Paragraph";
 import { SameAsField } from "../SameAsField";
 import { TextsField } from "../TextsField";
 import { Type } from "../TypeInput";
-import { TypeRepeater } from "../TypeRepeater";
+import { TypesField } from "../TypesField";
 
 interface Props {
   idLocal?: string;
@@ -74,7 +74,6 @@ const Editor = ({ source }: { source?: Source }) => {
   const defaultType = namespaces.core.source;
   const baseUrl = "/sources/";
   const literal = useLocaleLiteral();
-  const intl = useIntl();
   const { form, setForm, types, setTypes, mutate, state } = useForm(
     baseUrl,
     defaultType,
@@ -94,14 +93,7 @@ const Editor = ({ source }: { source?: Source }) => {
           {literal(state.error.description)}
         </Paragraph>
       )}
-      <Field
-        label={intl.formatMessage({
-          description: "Source type field label",
-          defaultMessage: "Source types *",
-        })}
-      >
-        <TypeRepeater onChange={setTypes} parent={defaultType} values={types} />
-      </Field>
+      <TypesField onChange={setTypes} parent={defaultType} values={types} />
       <LabelsField
         onChange={(labels) => setForm((old) => ({ ...old, labels }))}
         required
@@ -138,6 +130,7 @@ const Editor = ({ source }: { source?: Source }) => {
 };
 
 export const SourceEditor = ({ idLocal }: Props) => {
+  const intl = useIntl();
   const { data, initialized, loading } = useSource({
     idLocal: idLocal || "",
     paused: !idLocal,
@@ -160,6 +153,13 @@ export const SourceEditor = ({ idLocal }: Props) => {
           />
         )}
       </Heading>
+      <FormIntroduction>
+        {intl.formatMessage({
+          description: "Source form introduction",
+          defaultMessage:
+            "Please use the following form to enter the appropriate data for the desired source. Please note that the fields marked with a *red star* are mandatory. Once you are finished, please click the *Submit* button at the bottom of the page to submit the form. To get help with individual fields, please move your mouse pointer above the little *question mark* icons.",
+        })}
+      </FormIntroduction>
       <Editor source={data} />
     </>
   ) : (
