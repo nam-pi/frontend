@@ -23,6 +23,7 @@ import { LiteralRepeater } from "../LiteralRepeater";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
 import { Paragraph } from "../Paragraph";
 import { TextRepeater } from "../TextRepeater";
+import { TextsField } from "../TextsField";
 import { Type } from "../TypeInput";
 import { TypeRepeater } from "../TypeRepeater";
 
@@ -111,21 +112,10 @@ const Editor = ({ group }: { group?: Group }) => {
         required
         values={form.labels}
       />
-      <Field
-        label={intl.formatMessage({
-          description: "Text field label",
-          defaultMessage: "Text",
-        })}
-      >
-        <LiteralRepeater
-          label={intl.formatMessage({
-            description: "Text input label",
-            defaultMessage: "Texts",
-          })}
-          onChange={(texts) => setForm((old) => ({ ...old, texts }))}
-          values={form.texts}
-        />
-      </Field>
+      <TextsField
+        onChange={(texts) => setForm((old) => ({ ...old, texts }))}
+        values={form.texts}
+      />
       <Field
         label={intl.formatMessage({
           description: "Part of part of",

@@ -1,6 +1,12 @@
 import clsx from "clsx";
 import { LiteralString } from "nampi-use-api";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+    ReactNode,
+    useCallback,
+    useEffect,
+    useRef,
+    useState
+} from "react";
 import { useIntl } from "react-intl";
 import { Input } from "../Input";
 import { LanguageInput } from "../LanguageInput";
@@ -9,7 +15,7 @@ import { Textarea } from "../Textarea";
 export interface Props {
   className?: string;
   onChange?: (value: LiteralString) => void;
-  label?: string;
+  label?: ReactNode;
   type?: "single" | "multiline";
   value?: LiteralString;
 }

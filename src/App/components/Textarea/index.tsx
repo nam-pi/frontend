@@ -1,12 +1,17 @@
 import clsx from "clsx";
-import { DetailedHTMLProps, forwardRef, TextareaHTMLAttributes } from "react";
+import {
+    DetailedHTMLProps,
+    forwardRef,
+    ReactNode,
+    TextareaHTMLAttributes
+} from "react";
 
 interface Props
   extends DetailedHTMLProps<
     TextareaHTMLAttributes<HTMLTextAreaElement>,
     HTMLTextAreaElement
   > {
-  label?: string;
+  label?: ReactNode;
 }
 
 export const Textarea = forwardRef<HTMLTextAreaElement, Props>(

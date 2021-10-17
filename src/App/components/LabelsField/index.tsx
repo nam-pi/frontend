@@ -14,7 +14,7 @@ export const LabelsField = ({ required, ...props }: Props) => {
   return (
     <Field
       help={intl.formatMessage({
-        description: "Labels field label",
+        description: "Labels field help",
         defaultMessage:
           "Enter as many text-language combinations as you like to use as labels for this entity. This can be its name or any other customary label. It is intended to be understood by people and doesn't have a direct quote or official name.",
       })}

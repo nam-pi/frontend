@@ -29,6 +29,7 @@ import { LabelsField } from "../LabelsField";
 import { LiteralRepeater } from "../LiteralRepeater";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
 import { Paragraph } from "../Paragraph";
+import { TextsField } from "../TextsField";
 import { Type } from "../TypeInput";
 import { TypeRepeater } from "../TypeRepeater";
 
@@ -283,21 +284,10 @@ const Editor = ({ event }: { event?: Event }) => {
           value={form.dates}
         />
       </Field>
-      <Field
-        label={intl.formatMessage({
-          description: "Text field label",
-          defaultMessage: "Text",
-        })}
-      >
-        <LiteralRepeater
-          label={intl.formatMessage({
-            description: "Text input label",
-            defaultMessage: "Texts",
-          })}
-          onChange={(texts) => setForm((old) => ({ ...old, texts }))}
-          values={form.texts}
-        />
-      </Field>
+      <TextsField
+        onChange={(texts) => setForm((old) => ({ ...old, texts }))}
+        values={form.texts}
+      />
       <Field
         label={intl.formatMessage({
           description: "Authors label",
