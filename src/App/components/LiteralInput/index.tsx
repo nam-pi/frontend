@@ -92,7 +92,7 @@ export const LiteralInput = ({
         />
       )}
       <LanguageInput
-        className="mt-4"
+        className="mt-2"
         onChange={handleLanguageChange}
         label={intl.formatMessage({
           description: "Langue input label",

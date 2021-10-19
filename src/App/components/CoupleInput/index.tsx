@@ -55,7 +55,7 @@ export const CoupleInput = ({
         value={type}
       />
       <IndividualInput
-        className="mt-4"
+        className="mt-2"
         label={label}
         onChange={(i) => {
           onChange({ type, individual: i });

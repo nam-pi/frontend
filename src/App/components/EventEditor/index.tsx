@@ -330,7 +330,7 @@ const Editor = ({ event, author }: { event?: Event; author: Author }) => {
           value={form.source}
         />
         <Input
-          className="mt-4"
+          className="mt-2"
           label={intl.formatMessage({
             description: "Source location input label",
             defaultMessage: "Location",
