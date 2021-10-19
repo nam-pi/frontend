@@ -42,18 +42,7 @@ export const CoupleInput = ({
   }, [value?.individual, value?.type]);
   return (
     <div className="w-full">
-      <IndividualInput
-        label={label}
-        onChange={(i) => {
-          onChange({ type, individual: i });
-          setIndividual(i);
-        }}
-        placeholder={placeholder}
-        type={individualType}
-        value={individual}
-      />
       <TypeInput
-        className="mt-4"
         placeholder={intl.formatMessage({
           description: "Type input placeholder",
           defaultMessage: "Select a type",
@@ -64,6 +53,17 @@ export const CoupleInput = ({
           setType(t);
         }}
         value={type}
+      />
+      <IndividualInput
+        className="mt-4"
+        label={label}
+        onChange={(i) => {
+          onChange({ type, individual: i });
+          setIndividual(i);
+        }}
+        placeholder={placeholder}
+        type={individualType}
+        value={individual}
       />
     </div>
   );
