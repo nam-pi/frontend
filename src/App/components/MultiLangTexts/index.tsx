@@ -1,6 +1,6 @@
 import {
-  faAngleDoubleLeft,
-  faAngleDoubleRight,
+    faAngleDoubleLeft,
+    faAngleDoubleRight
 } from "@fortawesome/free-solid-svg-icons";
 import clsx from "clsx";
 import { LiteralString } from "nampi-use-api";
@@ -58,7 +58,7 @@ const Texts = ({ className, texts }: InternalProps) => {
                 className="text-xs text-gray-500 mx-1"
                 icon={faAngleDoubleLeft}
               />
-              <span className="text-gray-600">({language})</span>
+              <span className="text-gray-400">({language})</span>
             </div>
           );
         })}
