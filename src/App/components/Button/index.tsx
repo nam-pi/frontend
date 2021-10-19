@@ -13,7 +13,7 @@ export const Button = ({ className = "", type, ...props }: Props) => {
     defaultClasses += " py-1";
   }
   if (!className.includes("text-")) {
-    defaultClasses += " text-gray-500";
+    defaultClasses += " text-gray-800";
   }
   if (!className.includes("border")) {
     defaultClasses +=
