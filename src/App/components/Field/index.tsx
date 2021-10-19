@@ -1,6 +1,6 @@
 import {
-  faAsterisk,
-  faQuestionCircle,
+    faAsterisk,
+    faQuestionCircle
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
@@ -32,7 +32,7 @@ export const Field = ({
         {help && (
           <div className="flex relative ml-2">
             <FontAwesomeIcon
-              className="text-gray-400 text-sm hover:text-blue-400 cursor-pointer"
+              className="text-gray-400 text-sm hover:text-blue-400"
               icon={faQuestionCircle}
               onMouseEnter={toggleHelp}
               onMouseLeave={toggleHelp}
