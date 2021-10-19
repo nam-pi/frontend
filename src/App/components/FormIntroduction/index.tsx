@@ -14,7 +14,7 @@ export const FormIntroduction = ({ children }: Props) => {
         {intl.formatMessage({
           description: "Form help text",
           defaultMessage:
-            "Note: The fields marked with a *red star* are mandatory. Once you are satisfied with the form content, please click the *Submit* button at the bottom of the page to submit the form. To get help with individual fields, please move your mouse pointer above the little *question mark* icons.",
+            "Note: The fields marked with a *red star* are mandatory. Once you are satisfied with the form content, please click the *Submit* button at the bottom of the page to submit the form. To get help with individual fields, please move your mouse pointer above the little *question mark* icons. Fields with a *plus* button are list fields. New entries have to be added by clicking on the button once it lights up *green*.",
         })}
       </ReactMarkdown>
     </div>
