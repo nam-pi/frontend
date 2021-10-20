@@ -82,7 +82,7 @@ export const DateInput = ({ className, onChange = () => {}, value }: Props) => {
       />
       {range && (
         <Input
-          className="mt-4 md:mt-0 md:ml-4"
+          className="mt-2 md:mt-0 md:ml-4"
           label={intl.formatMessage({
             description: "Not after input label",
             defaultMessage: "Not after",
@@ -103,7 +103,7 @@ export const DateInput = ({ className, onChange = () => {}, value }: Props) => {
         />
       )}
       <Input
-        className="mt-4 md:mt-0 md:ml-4"
+        className="mt-2 md:mt-0 md:ml-4"
         label={intl.formatMessage({
           description: "Range checkbox",
           defaultMessage: "Uncertain",

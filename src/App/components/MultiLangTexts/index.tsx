@@ -58,7 +58,7 @@ const Texts = ({ className, texts }: InternalProps) => {
                 className="text-xs text-gray-500 mx-1"
                 icon={faAngleDoubleLeft}
               />
-              <span className="text-gray-600">({language})</span>
+              <span className="text-gray-500">({language})</span>
             </div>
           );
         })}

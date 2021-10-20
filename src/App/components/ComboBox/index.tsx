@@ -214,7 +214,7 @@ export const ComboBox = ({
           {matches.map((text, idx) => (
             <div
               className={clsx(
-                "cursor-pointer hover:bg-gray-100 px-2",
+                "cursor-pointer hover:bg-gray-200 px-2",
                 idx === active && "active bg-gray-200"
               )}
               key={idx}

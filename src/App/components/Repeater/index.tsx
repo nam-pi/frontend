@@ -1,13 +1,13 @@
 import { faPlus, faTimes } from "@fortawesome/free-solid-svg-icons";
 import clsx from "clsx";
 import {
-    ComponentPropsWithoutRef,
-    ComponentType,
-    createElement,
-    useCallback,
-    useEffect,
-    useRef,
-    useState
+  ComponentPropsWithoutRef,
+  ComponentType,
+  createElement,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
 } from "react";
 import { useIntl } from "react-intl";
 import { IconButton } from "../IconButton";
@@ -98,9 +98,12 @@ export const Repeater = <
         />
       </div>
       {values.length > 0 && (
-        <div className="ml-2 grid grid-flow-row mt-2">
+        <div className="grid grid-flow-row mt-2 mr-11">
           {values.map((value, idx) => (
-            <div key={idx} className="flex items-center">
+            <div
+              key={idx}
+              className="pl-2 flex items-center bg-gray-100 border border-gray-200 rounded-md mb-2 last:mb-0"
+            >
               <div className="w-full">
                 {createElement(outputComponent, { value })}
               </div>

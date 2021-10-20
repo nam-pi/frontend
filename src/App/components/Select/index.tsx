@@ -64,7 +64,7 @@ export const Select = <V extends OptionValue = string>({
             id={id}
           >
             <span className="block truncate">{selected.text}</span>
-            <Icon className="ml-2" icon={faCaretDown} />
+            <Icon className="ml-2 text-gray-500" icon={faCaretDown} />
           </Listbox.Button>
           <Transition
             enter="transition duration-100 ease-out"

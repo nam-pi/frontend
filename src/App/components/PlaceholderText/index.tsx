@@ -7,5 +7,5 @@ interface Props {
 }
 
 export const PlaceholderText = ({ children, className }: Props) => (
-  <span className={clsx("text-gray-400", className)}>{children}</span>
+  <span className={clsx("text-gray-500", className)}>{children}</span>
 );

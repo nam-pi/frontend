@@ -139,7 +139,7 @@ const Editor = ({ place }: { place?: Place }) => {
             value={form.latitude || ""}
           />
           <Input
-            className="mt-4 md:mt-0 md:ml-4"
+            className="mt-2 md:mt-0 md:ml-4"
             label={intl.formatMessage({
               description: "Longitude input label",
               defaultMessage: "Longitude",
