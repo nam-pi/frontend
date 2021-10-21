@@ -6,13 +6,14 @@ import { FormattedMessage } from "react-intl";
 import { Link } from "react-router-dom";
 import { Heading } from "../Heading";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
+import { PageContent } from "../PageContent";
 import { Paragraph } from "../Paragraph";
 
 export const Profile = () => {
   const { initialized, loading, data } = useUser();
   const literal = useLocaleLiteral();
   return (
-    <div className="space-y-4">
+    <PageContent className="flex-col space-y-4">
       <Heading>
         <FormattedMessage
           description="Profile page heading"
@@ -45,6 +46,6 @@ export const Profile = () => {
           />
         </Paragraph>
       )}
-    </div>
+    </PageContent>
   );
 };
