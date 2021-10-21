@@ -1,4 +1,8 @@
-import { faEdit } from "@fortawesome/free-solid-svg-icons";
+import {
+    faBullseye,
+    faEdit,
+    faMapMarker
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { SECONDARY_ITEM_LIMIT } from "App/constants";
 import { useCompletePlaces } from "App/hooks/useCompletePlaces";
@@ -34,6 +38,10 @@ import { Marker } from "../Marker";
 
 interface Props {
   idLocal: string;
+}
+
+interface CoordinatesEvents {
+  [coords: string]: Event[];
 }
 
 const EventsWithPerson = ({ id }: { id: string }) => {
@@ -85,22 +93,26 @@ const EventsMap = ({
   const mapRef = useRef<LeafletMap>();
   const allPlaces = useMemo(() => events?.map((e) => e.place) || [], [events]);
   const [places] = useCompletePlaces(allPlaces);
-  const mapEvents = useMemo(
+  const mapEvents: CoordinatesEvents = useMemo(
     () =>
-      places.reduce<Event[]>(
-        (prev, curr, idx) =>
-          curr?.latitude && curr?.longitude
-            ? [...prev, { ...events?.[idx], place: curr } as Event]
-            : prev,
-        []
-      ),
+      places.reduce((all, curr, idx) => {
+        const lat = curr?.latitude;
+        const lng = curr?.longitude;
+        const coords = JSON.stringify([lat, lng]);
+        return !lat || !lng || Number.isNaN(lat) || Number.isNaN(lng)
+          ? all
+          : {
+              ...all,
+              [coords]: [
+                ...(all[coords] || []),
+                { ...events?.[idx], place: curr } as Event,
+              ],
+            };
+      }, {} as CoordinatesEvents),
     [events, places]
   );
   const bounds = useMemo(
-    () =>
-      mapEvents.map(
-        (e) => [e.place!.latitude, e.place!.longitude] as LatLngTuple
-      ),
+    () => Object.keys(mapEvents).map((c) => JSON.parse(c) as LatLngTuple),
     [mapEvents]
   );
   useEffect(() => {
@@ -115,17 +127,27 @@ const EventsMap = ({
           mapRef.current = map;
           return (
             <>
-              {mapEvents.map((event, idx) => (
+              {Object.entries(mapEvents).map(([coords, events]) => (
                 <Marker
                   className="text-green-400"
-                  key={idx}
-                  position={
-                    [
-                      event.place!.latitude,
-                      event.place!.longitude,
-                    ] as LatLngTuple
+                  icon={events.length === 1 ? faMapMarker : faBullseye}
+                  key={coords}
+                  position={JSON.parse(coords)}
+                  popup={
+                    <div className="m-2">
+                      <div className="font-bold text-lg mb-2">
+                        <FormattedMessage
+                          description="Events heading"
+                          defaultMessage="Events"
+                        />
+                      </div>
+                      <div className="flex flex-col max-h-32 w-48 overflow-y-auto space-y-2">
+                        {events.map((event, idx) => (
+                          <ItemLink key={idx} item={event} />
+                        ))}
+                      </div>
+                    </div>
                   }
-                  popup={<ItemLink item={event} />}
                 />
               ))}
             </>
