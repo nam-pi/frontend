@@ -1,4 +1,4 @@
-import { HOME_TEXTS } from "App/constants";
-import { LocalizedMarkdownPage } from "../LocalizedMarkdownPage";
+import { EXTERNAL_DOCS } from "App/constants";
+import { FetchedMarkdownPage } from "../FetchedMarkdownPage";
 
-export const Home = () => <LocalizedMarkdownPage texts={HOME_TEXTS} />;
+export const Home = () => <FetchedMarkdownPage baseUrl={EXTERNAL_DOCS.home} />;

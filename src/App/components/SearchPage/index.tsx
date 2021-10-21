@@ -19,6 +19,7 @@ import { GroupsFilterSettings } from "../GroupsFilterSettings";
 import { Heading } from "../Heading";
 import { Input } from "../Input";
 import { Label } from "../Label";
+import { PageContent } from "../PageContent";
 import { PersonsFilterSettings } from "../PersonsFilterSettings";
 import { PlacesFilterSettings } from "../PlacesFilterSettings";
 import { SourcesFilterSettings } from "../SourcesFilterSettings";
@@ -285,7 +286,7 @@ export const SearchPage = () => {
     }
   }, [history, location.pathname, text]);
   return (
-    <div className="flex flex-col h-full">
+    <PageContent className="flex-col">
       <Heading className="text-center mb-4">
         <FormattedMessage
           description="Search page heading"
@@ -302,7 +303,7 @@ export const SearchPage = () => {
           onChange={(e) => setText(e.currentTarget.value)}
         />
       </div>
-      <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 overflow-auto">
+      <div className="my-4 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 overflow-auto">
         <EventsList text={synchronizedText} />
         <PersonsList text={synchronizedText} />
         <GroupsList text={synchronizedText} />
@@ -310,6 +311,6 @@ export const SearchPage = () => {
         <AspectsList text={synchronizedText} />
         <SourcesList text={synchronizedText} />
       </div>
-    </div>
+    </PageContent>
   );
 };

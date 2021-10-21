@@ -24,55 +24,55 @@ export const App = () => {
     <Router history={HISTORY}>
       <div className="text-gray-800 h-screen flex flex-col">
         <Navbar className="sticky top-0 z-10" />
-        <div className="max-w-7xl mx-auto px-2 my-4 w-full sm:overflow-hidden sm:px-6 lg:px-8 h-full">
-          <Switch>
-            <Route exact path="/" component={Home} />
-            <Route
-              exact
-              path={["/acts", "/acts/:idLocal"]}
-              component={ActsPage}
-            />
-            <Route
-              exact
-              path={["/aspects", "/aspects/:idLocal"]}
-              component={AspectsPage}
-            />
-            <Route
-              exact
-              path={["/authors", "/authors/:idLocal"]}
-              component={AuthorsPage}
-            />
-            <Route
-              exact
-              path={["/events", "/events/:idLocal"]}
-              component={EventsPage}
-            />
-            <Route
-              exact
-              path={["/groups", "/groups/:idLocal"]}
-              component={GroupsPage}
-            />
-            <Route
-              exact
-              path={["/persons", "/persons/:idLocal"]}
-              component={PersonsPage}
-            />
-            <Route
-              exact
-              path={["/places", "/places/:idLocal"]}
-              component={PlacesPage}
-            />
-            <Route
-              exact
-              path={["/sources", "/sources/:idLocal"]}
-              component={SourcesPage}
-            />
-            <Route exact path="/search" component={SearchPage} />
-            <Route exact path="/login" component={Login} />
-            <PrivateRoute exact path="/profile" component={Profile} />
-            <Route path="*" component={NoMatch} />
-          </Switch>
-        </div>
+        {/*  <div className="max-w-7xl mx-auto px-2 my-4 w-full sm:px-6 lg:px-8 h-full">  */}
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route
+            exact
+            path={["/acts", "/acts/:idLocal"]}
+            component={ActsPage}
+          />
+          <Route
+            exact
+            path={["/aspects", "/aspects/:idLocal"]}
+            component={AspectsPage}
+          />
+          <Route
+            exact
+            path={["/authors", "/authors/:idLocal"]}
+            component={AuthorsPage}
+          />
+          <Route
+            exact
+            path={["/events", "/events/:idLocal"]}
+            component={EventsPage}
+          />
+          <Route
+            exact
+            path={["/groups", "/groups/:idLocal"]}
+            component={GroupsPage}
+          />
+          <Route
+            exact
+            path={["/persons", "/persons/:idLocal"]}
+            component={PersonsPage}
+          />
+          <Route
+            exact
+            path={["/places", "/places/:idLocal"]}
+            component={PlacesPage}
+          />
+          <Route
+            exact
+            path={["/sources", "/sources/:idLocal"]}
+            component={SourcesPage}
+          />
+          <Route exact path="/search" component={SearchPage} />
+          <Route exact path="/login" component={Login} />
+          <PrivateRoute exact path="/profile" component={Profile} />
+          <Route path="*" component={NoMatch} />
+        </Switch>
+        {/*  </div>  */}
       </div>
     </Router>
   ) : (

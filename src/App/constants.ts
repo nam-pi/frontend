@@ -13,3 +13,9 @@ export const HOME_TEXTS: TextDefinitions = JSON.parse(
 );
 
 export const SECONDARY_ITEM_LIMIT = 20;
+
+export const EXTERNAL_DOCS = {
+  home:
+    process.env.REACT_APP_CONTENT_HOME ||
+    "https://raw.githubusercontent.com/nam-pi/frontend-assets/main/texts/home/",
+};
