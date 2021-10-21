@@ -12,3 +12,7 @@
   background-color: unset;
   box-shadow: unset;
 }
+
+.popup > div:first-child > div {
+  margin: 0;
+}
