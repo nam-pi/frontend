@@ -16,14 +16,14 @@ export interface Props {
   value?: Dates;
 }
 
+const isRange = (value?: Dates): boolean =>
+  value?.exact === undefined &&
+  (value?.start !== undefined || value?.end !== undefined);
+
 export const DateInput = ({ className, onChange = () => {}, value }: Props) => {
   const intl = useIntl();
-  const oldDates = useRef<typeof value>(value);
-  const [range, setRange] = useState<boolean>(
-    value?.exact === undefined &&
-      value?.start !== undefined &&
-      value?.end !== undefined
-  );
+  const oldDates = useRef<typeof value>();
+  const [range, setRange] = useState<boolean>(isRange(value));
   const [start, setStart] = useState(range ? value?.start : value?.exact);
   const [end, setEnd] = useState(value?.end);
   const datePlaceholder = intl.formatMessage(
@@ -36,10 +36,7 @@ export const DateInput = ({ className, onChange = () => {}, value }: Props) => {
   useEffect(() => {
     if (value !== oldDates.current) {
       oldDates.current = value;
-      const newRange =
-        value?.exact === undefined &&
-        value?.start !== undefined &&
-        value?.end !== undefined;
+      const newRange = isRange(value);
       const newStart = newRange ? value?.start : value?.exact;
       const newEnd = value?.end;
       setRange(newRange);

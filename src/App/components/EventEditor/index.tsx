@@ -2,7 +2,7 @@ import { useEditorTypes } from "App/hooks/useEditorTypes";
 import { useLocaleLiteral } from "App/hooks/useLocaleLiteral";
 import { namespaces } from "App/namespaces";
 import { serializeLiteral } from "App/utils/serializeLiteral";
-import { format, isValid, parse } from "date-fns";
+import { isValid, parse } from "date-fns";
 import { JsonLdArray } from "jsonld/jsonld-spec";
 import {
     Author,
@@ -52,7 +52,6 @@ interface FormState {
   place: undefined | Individual;
   source: undefined | Individual;
   sourceLocation: undefined | string;
-  start: undefined | string;
   texts: undefined | LiteralString[];
 }
 
@@ -70,6 +69,28 @@ const validDate = (dateString: undefined | string) =>
     )
   );
 
+const serializeDates = (dates: undefined | Dates): string =>
+  !dates
+    ? ""
+    : dates.exact
+    ? dates.exact
+    : dates.start && dates.end
+    ? `${dates.start}|${dates.end}`
+    : dates.start
+    ? `${dates.start}|`
+    : dates.end
+    ? `|${dates.end}`
+    : "";
+
+const dateToString = (date: Date) => {
+  const year = date.getFullYear();
+  const negative = Math.sign(year) === -1;
+  const neutralYear = String(Math.abs(year)).padStart(4, "0");
+  return `${negative ? "-" : ""}${neutralYear}-${String(
+    date.getMonth() + 1
+  ).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+};
+
 const validate = (form: FormState, types: Type[]) =>
   form.authors !== undefined &&
   form.authors.length > 0 &&
@@ -84,19 +105,6 @@ const validate = (form: FormState, types: Type[]) =>
   form.source?.id !== undefined &&
   form.sourceLocation !== undefined &&
   form.sourceLocation.replace(/\s/g, "").length > 0;
-
-const serializeDates = (dates: undefined | Dates): string =>
-  !dates
-    ? ""
-    : dates.exact
-    ? dates.exact
-    : dates.start && dates.end
-    ? `${dates.start}|${dates.end}`
-    : dates.start
-    ? `${dates.start}|`
-    : dates.end
-    ? `|${dates.end}`
-    : "";
 
 const findInHierarchy = (id: string, hierarchy: Hierarchy, fallback: string) =>
   id === fallback || hierarchy.items[id] !== undefined;
@@ -174,9 +182,7 @@ const useCouples = (event?: Event) => {
       }
       const partCouples: Couple[] = [];
       for (const [id, types] of Object.entries(part)) {
-        console.log(id, types);
         const idxs = types.map((type) => indexInHierarchy(type, pHierarchy));
-        console.log(idxs);
         let value = types[maxIdx(idxs)] || core.hasOtherParticipant;
         if (value === "participants") {
           value = core.hasOtherParticipant;
@@ -221,15 +227,14 @@ const useForm = (
     authors: (event?.act.authors || [author]).map((a) => individual(a)!),
     comments: event?.comments,
     dates: {
-      exact: event?.exact ? format(event.exact, "yyyy-MM-dd") : undefined,
-      start: event?.earliest ? format(event.earliest, "yyyy-MM-dd") : undefined,
-      end: event?.latest ? format(event.latest, "yyyy-MM-dd") : undefined,
+      exact: event?.exact ? dateToString(event.exact) : undefined,
+      start: event?.earliest ? dateToString(event.earliest) : undefined,
+      end: event?.latest ? dateToString(event.latest) : undefined,
     },
     labels: event?.labels,
     mainParticipant: undefined,
     participants: undefined,
     place: individual(event?.place),
-    start: event?.earliest ? format(event.earliest, "yyyy-MM-dd") : "",
     source: individual(event?.act.sourceLocation.source),
     sourceLocation: event?.act.sourceLocation.text,
     texts: event?.texts,
