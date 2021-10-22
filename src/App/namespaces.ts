@@ -1,4 +1,4 @@
-export const CORE_IRI = "https://purl.org/nampi/owl/core#";
+export const CORE_IRI = "http://purl.org/nampi/owl/core#";
 
 const resource = (namespace: string, localName: string): string =>
   namespace + localName;
@@ -21,6 +21,7 @@ export const namespaces = {
     event: core.resource("event"),
     group: core.resource("group"),
     hasMainParticipant: core.resource("has_main_participant"),
+    hasOtherParticipant: core.resource("has_other_participant"),
     hasParticipant: core.resource("has_participant"),
     hasUrl: core.resource("has_url"),
     person: core.resource("person"),

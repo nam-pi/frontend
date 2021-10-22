@@ -116,7 +116,7 @@ const useCouples = (event?: Event) => {
   >();
   // participant hierarchy
   const pHierarchy = useHierarchy({
-    query: { iri: core.hasParticipant, descendants: true },
+    query: { iri: core.hasOtherParticipant, descendants: true },
     paused: !event,
   })?.data;
   // mainParticipant hierarchy
@@ -134,14 +134,20 @@ const useCouples = (event?: Event) => {
       const main: { [id: string]: string[] } = {};
       const part: { [id: string]: string[] } = {};
       const asp: { [id: string]: string[] } = {};
+      const mainPartIds: string[] = [];
       for (const [propId, value] of Object.entries(event || {})) {
         if (findInHierarchy(propId, mHierarchy, "mainParticipant")) {
           (Array.isArray(value) ? value : [value]).forEach((v: any) => {
-            main[v.id] = [...(main[v.id] || []), propId];
+            const id = v.id;
+            main[id] = [...(main[id] || []), propId];
+            mainPartIds.push(id);
           });
         } else if (findInHierarchy(propId, pHierarchy, "participants")) {
           value?.forEach((v: any) => {
-            part[v.id] = [...(part[v.id] || []), propId];
+            const id = v.id;
+            if (!mainPartIds.includes(id)) {
+              part[id] = [...(part[id] || []), propId];
+            }
           });
         } else if (findInHierarchy(propId, aHierarchy, "aspect")) {
           value?.forEach((v: any) => {
@@ -168,10 +174,12 @@ const useCouples = (event?: Event) => {
       }
       const partCouples: Couple[] = [];
       for (const [id, types] of Object.entries(part)) {
+        console.log(id, types);
         const idxs = types.map((type) => indexInHierarchy(type, pHierarchy));
-        let value = types[maxIdx(idxs)] || core.hasParticipant;
+        console.log(idxs);
+        let value = types[maxIdx(idxs)] || core.hasOtherParticipant;
         if (value === "participants") {
-          value = core.hasParticipant;
+          value = core.hasOtherParticipant;
         }
         const label = literal(
           event?.[value]?.find((a: any) => a.id === id)?.labels ||
@@ -457,7 +465,7 @@ const Editor = ({ event, author }: { event?: Event; author: Author }) => {
             description: "Other participant input placeholder",
             defaultMessage: "Enter and select a group or person",
           })}
-          propertyType={core.hasParticipant}
+          propertyType={core.hasOtherParticipant}
           values={form.participants}
         />
       </Field>
