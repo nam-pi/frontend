@@ -18,6 +18,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { Link } from "react-router-dom";
 import { DeleteButton } from "../DeleteButton";
 import { Heading } from "../Heading";
+import { ItemComments } from "../ItemComments";
 import { ItemInheritance } from "../ItemInheritance";
 import { ItemLabels } from "../ItemLabels";
 import { ItemLink } from "../ItemLink";
@@ -239,6 +240,7 @@ export const EventDetails = ({ idLocal }: Props) => {
               />
             </li>
           </ul>
+          <ItemComments item={data} />
         </div>
         {coordinates && (
           <Map
