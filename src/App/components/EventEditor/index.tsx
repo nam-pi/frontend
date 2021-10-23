@@ -69,9 +69,9 @@ const validDate = (dateString: undefined | string) =>
     )
   );
 
-const serializeDates = (dates: undefined | Dates): string =>
+const serializeDates = (dates: undefined | Dates): undefined | string =>
   !dates
-    ? ""
+    ? undefined
     : dates.exact
     ? dates.exact
     : dates.start && dates.end
@@ -80,7 +80,7 @@ const serializeDates = (dates: undefined | Dates): string =>
     ? `${dates.start}|`
     : dates.end
     ? `|${dates.end}`
-    : "";
+    : undefined;
 
 const dateToString = (date: Date) => {
   const year = date.getFullYear();
@@ -495,7 +495,9 @@ const Editor = ({ event, author }: { event?: Event; author: Author }) => {
               form.aspects?.map((p) => `${p.type.value}|${p.individual.id}`) ||
               [],
             authors,
-            comments: serializeLiteral(form.comments),
+            comments: form.comments
+              ? serializeLiteral(form.comments)
+              : undefined,
             date: serializeDates(form.dates),
             labels: serializeLiteral(form.labels),
             mainParticipant: `${form.mainParticipant?.type.value}|${form.mainParticipant?.individual.id}`,
@@ -503,10 +505,10 @@ const Editor = ({ event, author }: { event?: Event; author: Author }) => {
               form.participants?.map(
                 (p) => `${p.type.value}|${p.individual.id}`
               ) || [],
-            place: form.place?.id || "",
+            place: form.place?.id,
             source: form.source?.id || "",
             sourceLocation: form.sourceLocation || "",
-            texts: serializeLiteral(form.texts),
+            texts: form.texts ? serializeLiteral(form.texts) : undefined,
             types: types.map((t) => t.value || ""),
           });
         }}

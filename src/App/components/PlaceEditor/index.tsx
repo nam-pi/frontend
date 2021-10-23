@@ -168,7 +168,9 @@ const Editor = ({ place }: { place?: Place }) => {
         loading={state.loading}
         mutate={() =>
           mutate({
-            comments: serializeLiteral(form.comments),
+            comments: form.comments
+              ? serializeLiteral(form.comments)
+              : undefined,
             labels: serializeLiteral(form.labels),
             latitude: form.latitude?.replace(",", "."),
             longitude: form.longitude?.replace(",", "."),

@@ -138,7 +138,9 @@ const Editor = ({ group }: { group?: Group }) => {
           mutate({
             types: types.map((t) => t.value || ""),
             texts: serializeLiteral(form.texts),
-            comments: serializeLiteral(form.comments),
+            comments: form.comments
+              ? serializeLiteral(form.comments)
+              : undefined,
             labels: serializeLiteral(form.labels),
             sameAs: form.sameAs,
             partOf: form.partOf?.map((p) => p.id!),
