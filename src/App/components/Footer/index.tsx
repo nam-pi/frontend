@@ -20,13 +20,13 @@ const LoginLink = () => (
 const Logos = () => {
   const intl = useIntl();
   return (
-    <div className="flex space-x-4 sm:w-full md:w-auto flex-wrap">
+    <div className="flex py-1 sm:w-full md:w-auto flex-wrap">
       {EXTERNAL_LOGOS.map(([url, src], idx) => (
         <a
           key={idx}
           href={url}
           target="__blank"
-          className="p-1 bg-white rounded"
+          className="p-1 my-1 mr-2 bg-white rounded"
         >
           <img
             alt={intl.formatMessage(
