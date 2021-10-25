@@ -39,7 +39,7 @@ const HighlightLink = ({
           pathname.startsWith(
             to.includes("?") ? to.substring(0, to.indexOf("?")) : to
           ) &&
-          (invert ? "text-blue-300" : "text-blue-500"),
+          (invert ? "text-blue-200" : "text-blue-500"),
         "hover:opacity-80"
       )}
     />

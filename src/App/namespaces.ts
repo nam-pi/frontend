@@ -28,6 +28,7 @@ export const namespaces = {
     place: core.resource("place"),
     source: core.resource("source"),
     sourceLocation: core.resource("source_location"),
+    startsLifeOf: core.resource("starts_life_of"),
     usesAspect: core.resource("uses_aspect"),
   },
 };
