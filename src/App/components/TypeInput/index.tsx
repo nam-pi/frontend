@@ -21,8 +21,8 @@ export interface Type {
 
 type Types = Type[];
 
-const findMatches = (text: string, options: Fuse<Type>, languages: Types) =>
-  text ? options.search(text).map((r) => r.item) : languages;
+const findMatches = (text: string, options: Fuse<Type>, types: Types) =>
+  text ? options.search(text).map((r) => r.item) : types;
 
 const findText = (value: undefined | string, matches: Types): string =>
   matches.find((match) => match.value === value)?.text || "";
@@ -93,8 +93,8 @@ export const TypeInput = ({
   }, [data, options, text, types]);
 
   useEffect(() => {
-    if (text === lastText.current && value !== lastValue.current) {
-      const newText = findText(value?.value, types);
+    if (value !== lastValue.current) {
+      const newText = findText(value?.value, types) || text;
       const newMatches = findMatches(newText, options, types);
       lastValue.current = value?.value;
       lastText.current = newText;

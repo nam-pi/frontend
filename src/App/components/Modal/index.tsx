@@ -61,11 +61,11 @@ export const Modal = ({
               <div className="inline-block w-full max-w-lg p-6 my-8 text-left align-middle transition-all transform bg-white shadow-lg rounded-lg border-2">
                 <Dialog.Title
                   as="h3"
-                  className="text-lg font-medium leading-6 text-gray-900"
+                  className="text-2xl font-medium leading-6 text-gray-900"
                 >
                   {title}
                 </Dialog.Title>
-                <div className="mt-2">{children}</div>
+                <div className="mt-4">{children}</div>
 
                 <div className="mt-4 flex justify-between">
                   <Button onClick={closeCallback}>

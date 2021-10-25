@@ -15,7 +15,7 @@ export type Namespaces = typeof namespaces;
 export const namespaces = {
   core: {
     act: core.resource("act"),
-    agent: core.resource("agent"),
+    actor: core.resource("actor"),
     aspect: core.resource("aspect"),
     author: core.resource("author"),
     event: core.resource("event"),
