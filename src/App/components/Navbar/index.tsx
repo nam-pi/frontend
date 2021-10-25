@@ -14,9 +14,9 @@ import { useAuth, useUser } from "nampi-use-api";
 import { Fragment, ReactNode, useEffect, useRef } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { Link, LinkProps, useLocation } from "react-router-dom";
+import { AppLogo } from "../AppLogo";
 import { Icon } from "../Icon";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
-import { NampiLogo } from "../NampiLogo";
 
 interface Props {
   className?: string;
@@ -279,14 +279,14 @@ const Brand = () => (
       to="/"
       className="font-semibold text-2xl flex items-center rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-current"
     >
-      <NampiLogo className="h-10 bg-white p-1 rounded" />
+      <AppLogo className="h-10 bg-white p-1 rounded" />
     </Link>
     <Link
       to="/"
       className="font-semibold text-2xl flex items-center"
       tabIndex={-1}
     >
-      <span className="ml-2 hidden lg:block text-white" tabIndex={-1}>
+      <span className="ml-2 hidden lg:block text-white uppercase" tabIndex={-1}>
         {APP_NAME}
       </span>
     </Link>
@@ -371,18 +371,6 @@ const SearchLink = () => {
   );
 };
 
-const LoginLink = () => (
-  <Link
-    className="hover:opacity-80"
-    to={{
-      pathname: "/login",
-      state: { from: window.location.href },
-    }}
-  >
-    <FormattedMessage description="Login link text" defaultMessage="Log in" />
-  </Link>
-);
-
 const InfoMenu = () => {
   const intl = useIntl();
   return (
@@ -449,11 +437,7 @@ const RightMenu = ({
       <SearchLink />
       <InfoMenu />
       {initialized && !loading ? (
-        authenticated && data ? (
-          <ProfileMenu />
-        ) : (
-          <LoginLink />
-        )
+        authenticated && data && <ProfileMenu />
       ) : (
         <LoadingPlaceholder />
       )}
@@ -498,8 +482,7 @@ export const Navbar = ({ className }: Props) => {
   return (
     <nav
       className={clsx(
-        "bg-gray-400 border-b-4 border-blue-400",
-        "text-white",
+        "bg-gray-400 border-b-4 border-blue-400 text-white",
         className
       )}
     >

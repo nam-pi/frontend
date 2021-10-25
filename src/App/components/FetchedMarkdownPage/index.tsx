@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { Footer } from "../Footer";
 import { Heading } from "../Heading";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
 import { PageContent } from "../PageContent";
@@ -41,44 +42,49 @@ export const FetchedMarkdownPage = ({ baseUrl }: Props) => {
   return !text ? (
     <LoadingPlaceholder />
   ) : (
-    <PageContent className="max-w-3xl flex-col">
-      <ReactMarkdown
-        components={{
-          h1: ({ node, ...props }) => (
-            <Heading {...props} level={1} className="mb-4" />
-          ),
-          h2: ({ node, ...props }) => <Heading {...props} level={2} />,
-          h3: ({ node, ...props }) => <Heading {...props} level={3} />,
-          h4: ({ node, ...props }) => <Heading {...props} level={4} />,
-          p: ({ node, ...props }) => <Paragraph {...props} className="mb-2" />,
-          img: ({ alt, src, ...props }) => (
-            <img
-              {...props}
-              alt={alt || ""}
-              className="object-contain h-64 w-full"
-              src={
-                isRelativeUrl(src || "") ? joinPath(baseUrl!, src || "") : src
-              }
-            />
-          ),
-          a: ({ node, ...props }) => (
-            // eslint-disable-next-line jsx-a11y/anchor-has-content
-            <a className="text-blue-400 visited:text-purple-400" {...props} />
-          ),
-          table: ({ node, ...props }) => (
-            <table {...props} className="border-separate" />
-          ),
-          th: ({ node, ...props }) => (
-            <th
-              {...(props as any)}
-              className="rounded-md bg-gray-400 text-white"
-            />
-          ),
-        }}
-        remarkPlugins={[remarkGfm]}
-      >
-        {text}
-      </ReactMarkdown>
-    </PageContent>
+    <>
+      <PageContent className="max-w-3xl flex-col flex-grow">
+        <ReactMarkdown
+          components={{
+            h1: ({ node, ...props }) => (
+              <Heading {...props} level={1} className="mb-4" />
+            ),
+            h2: ({ node, ...props }) => <Heading {...props} level={2} />,
+            h3: ({ node, ...props }) => <Heading {...props} level={3} />,
+            h4: ({ node, ...props }) => <Heading {...props} level={4} />,
+            p: ({ node, ...props }) => (
+              <Paragraph {...props} className="mb-2" />
+            ),
+            img: ({ alt, src, ...props }) => (
+              <img
+                {...props}
+                alt={alt || ""}
+                className="object-contain h-64 w-full"
+                src={
+                  isRelativeUrl(src || "") ? joinPath(baseUrl!, src || "") : src
+                }
+              />
+            ),
+            a: ({ node, ...props }) => (
+              // eslint-disable-next-line jsx-a11y/anchor-has-content
+              <a className="text-blue-400 visited:text-purple-400" {...props} />
+            ),
+            table: ({ node, ...props }) => (
+              <table {...props} className="border-separate" />
+            ),
+            th: ({ node, ...props }) => (
+              <th
+                {...(props as any)}
+                className="rounded-md bg-gray-400 text-white"
+              />
+            ),
+          }}
+          remarkPlugins={[remarkGfm]}
+        >
+          {text}
+        </ReactMarkdown>
+      </PageContent>
+      <Footer />
+    </>
   );
 };
