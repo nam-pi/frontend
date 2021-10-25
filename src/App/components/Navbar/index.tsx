@@ -39,7 +39,7 @@ const HighlightLink = ({
           pathname.startsWith(
             to.includes("?") ? to.substring(0, to.indexOf("?")) : to
           ) &&
-          (invert ? "text-blue-300" : "text-blue-500"),
+          (invert ? "text-blue-200" : "text-blue-500"),
         "hover:opacity-80"
       )}
     />
@@ -446,28 +446,13 @@ const RightMenu = ({
   );
 };
 
-const MobileMenu = () => {
-  const { pathname } = useLocation();
-  return (
-    <div className="sm:hidden text-lg space-y-1" id="mobile-menu">
-      <div className="px-2 pb-3 flex flex-col">
-        <Link
-          className={clsx(
-            pathname.startsWith("/search") && "text-blue-100",
-            "mr-4 hover:opacity-80"
-          )}
-          to="/search"
-        >
-          <FormattedMessage
-            description="Search link text"
-            defaultMessage="Search"
-          />
-        </Link>
-        <EntityLinks />
-      </div>
+const MobileMenu = () => (
+  <div className="sm:hidden text-lg space-y-1" id="mobile-menu">
+    <div className="px-2 pb-3 flex flex-col">
+      <EntityLinks />
     </div>
-  );
-};
+  </div>
+);
 
 export const Navbar = ({ className }: Props) => {
   const { pathname } = useLocation();

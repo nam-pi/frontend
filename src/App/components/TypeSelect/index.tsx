@@ -7,6 +7,7 @@ import { Option, Select } from "../Select";
 export interface Props {
   className?: string;
   id?: string;
+  label?: string;
   onChange?: (id: string, value: string) => void;
   typeBase: string;
   typeIri?: string;
@@ -21,6 +22,7 @@ export const TypeSelect = ({
   typeBase,
   typeIri,
 }: Props) => {
+  const intl = useIntl();
   const getText = useLocaleLiteral();
   const { formatMessage } = useIntl();
   const emptyType = useRef<SelectOption>({
@@ -53,6 +55,10 @@ export const TypeSelect = ({
     <Select
       className={className}
       id={id}
+      label={intl.formatMessage({
+        description: "Type select label",
+        defaultMessage: "Type",
+      })}
       options={allTypes}
       selected={typeIri}
       onChange={(v) => onChange(v.value, v.text)}

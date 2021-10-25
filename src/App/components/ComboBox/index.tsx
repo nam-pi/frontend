@@ -104,6 +104,7 @@ export const ComboBox = ({
   const handleListClick = useCallback(
     (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
       e.preventDefault();
+      e.stopPropagation();
       fireEvent(e.currentTarget.textContent || "", true);
     },
     [fireEvent]
@@ -206,7 +207,7 @@ export const ComboBox = ({
       </div>
       {expanded && matches.length > 0 && (
         <div
-          className="max-h-64 w-full overflow-y-auto shadow bg-white outline-none border border-blue-400 rounded py-1 absolute right-0 z-10 mt-2"
+          className="max-h-32 w-full overflow-y-auto shadow bg-white outline-none border border-blue-400 rounded py-1 absolute right-0 z-10 mt-2"
           onKeyDown={handleKeyPress}
           ref={listContainer}
           tabIndex={-1}

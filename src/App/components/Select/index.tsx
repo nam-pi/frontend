@@ -17,6 +17,7 @@ interface Props<V extends OptionValue> {
   options: Option<V>[];
   selected?: V | Option<V>;
   onChange?: (value: Option<V>) => void;
+  label?: string;
 }
 
 const isOption = <V extends OptionValue>(
@@ -27,6 +28,7 @@ const isOption = <V extends OptionValue>(
 export const Select = <V extends OptionValue = string>({
   className,
   id,
+  label,
   onChange = () => undefined,
   options,
   selected: externalValue,
@@ -56,11 +58,24 @@ export const Select = <V extends OptionValue = string>({
   }, [value]);
 
   return (
-    <div className={className}>
+    <div
+      className={clsx(
+        className,
+        "flex w-full rounded border bg-gray-400 border-gray-400 shadow focus-within:border-blue-400 focus-within:bg-blue-400"
+      )}
+    >
+      {label && (
+        <label
+          className="min-w-6 px-2 focus-visible:ring-red-400 rounded-l py-1 bg-transparent text-white"
+          htmlFor={id}
+        >
+          {label}
+        </label>
+      )}
       <Listbox value={selected} onChange={handleChange}>
-        <div className="relative mt-1">
+        <div className="relative w-full bg-white rounded-r">
           <Listbox.Button
-            className="relative rounded border border-gray-400 shadow disabled:opacity-50 px-2 py-1 w-full flex flex-row justify-between items-center focus:outline-none focus-within:border-blue-400"
+            className="relative disabled:opacity-50 px-2 py-1 w-full flex flex-row justify-between items-center focus:outline-none focus-within:border-blue-400"
             id={id}
           >
             <span className="block truncate">{selected.text}</span>

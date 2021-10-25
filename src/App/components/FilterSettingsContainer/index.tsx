@@ -5,5 +5,5 @@ interface Props {
 }
 
 export const FilterSettingsContainer = ({ children }: Props) => (
-  <div className="grid grid-cols-1 sm:grid-cols-6 gap-4">{children}</div>
+  <div className="space-y-4 pb-4">{children}</div>
 );

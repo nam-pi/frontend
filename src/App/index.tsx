@@ -84,6 +84,6 @@ export const App = () => {
       </div>
     </Router>
   ) : (
-    <LoadingPlaceholder delay={2000} />
+    <LoadingPlaceholder className="text-gray-400" delay={2000} maximized />
   );
 };

@@ -9,10 +9,11 @@ import { Icon } from "../Icon";
 interface Props {
   classNames?: string;
   item: Item;
+  createText?: (labels: Item["labels"]) => string;
 }
 
 const getUrl = (item: Item) => {
-  if (item.types.includes(namespaces.core.act)) {
+  if (item?.types?.includes(namespaces.core.act)) {
     return "/acts/" + item.idLocal;
   } else if (item.types.includes(namespaces.core.aspect)) {
     return "/aspects/" + item.idLocal;
@@ -32,14 +33,14 @@ const getUrl = (item: Item) => {
   throw new Error("Cannot find URL for item " + item.id);
 };
 
-export const ItemLink = ({ classNames, item }: Props) => {
+export const ItemLink = ({ classNames, createText, item }: Props) => {
   const getText = useLocaleLiteral();
   return (
     <Link
       className={clsx("inline-block", "hover:opacity-80", classNames)}
       to={getUrl(item)}
     >
-      <span>{getText(item.labels)}</span>
+      <span>{(createText || getText)(item.labels)}</span>
       <Icon className="text-xs ml-1 text-blue-400" icon={faLink} />
     </Link>
   );

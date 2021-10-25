@@ -1,13 +1,14 @@
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { faCircleNotch } from "@fortawesome/free-solid-svg-icons";
 import {
-  FontAwesomeIcon,
-  FontAwesomeIconProps,
+    FontAwesomeIcon,
+    FontAwesomeIconProps
 } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
 import { useEffect, useRef, useState } from "react";
 
 interface Props extends Omit<FontAwesomeIconProps, "spin" | "icon"> {
+  maximized?: boolean;
   icon?: IconProp;
   delay?: boolean | number;
 }
@@ -18,6 +19,7 @@ export const LoadingPlaceholder = ({
   className,
   delay,
   icon = faCircleNotch,
+  maximized = false,
   ...props
 }: Props) => {
   const timeout = useRef<undefined | NodeJS.Timeout>();
@@ -38,15 +40,23 @@ export const LoadingPlaceholder = ({
     };
   }, [delay]);
   return visible ? (
-    <FontAwesomeIcon
-      {...props}
+    <div
       className={clsx(
-        className,
-        !className?.includes("text-") && "text-gray-500"
+        "w-full flex justify-center items-center",
+        maximized ? "h-screen" : "h-full"
       )}
-      icon={icon}
-      spin
-    />
+    >
+      <FontAwesomeIcon
+        {...props}
+        className={clsx(
+          className,
+          "text-3xl",
+          !className?.includes("text-") && "text-gray-400"
+        )}
+        icon={icon}
+        spin
+      />
+    </div>
   ) : (
     <></>
   );

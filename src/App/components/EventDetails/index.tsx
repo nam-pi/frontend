@@ -4,7 +4,6 @@ import { useCompletePlace } from "App/hooks/useCompletePlaces";
 import { useEventDate } from "App/hooks/useEventDate";
 import { useLocaleLiteral } from "App/hooks/useLocaleLiteral";
 import { namespaces } from "App/namespaces";
-import clsx from "clsx";
 import { LatLngTuple } from "leaflet";
 import {
     Event,
@@ -73,14 +72,8 @@ export const EventDetails = ({ idLocal }: Props) => {
       : undefined;
   return data ? (
     <>
-      <div
-        className={clsx(
-          "md:grid",
-          "gap-8",
-          coordinates ? "grid-cols-6" : "grid-cols-4"
-        )}
-      >
-        <div className="col-span-4 space-y-4">
+      <div className="flex flex-col md:flex-row">
+        <div className="space-y-4 flex-grow w-full md:w-auto">
           <div className="flex items-center">
             <Heading>
               <FormattedMessage
@@ -243,10 +236,7 @@ export const EventDetails = ({ idLocal }: Props) => {
           <ItemComments item={data} />
         </div>
         {coordinates && (
-          <Map
-            className="w-full h-64 col-span-2 mt-8 md:mt-0"
-            center={coordinates}
-          >
+          <Map className="w-full md:min-w-64 md:w-64 h-64" center={coordinates}>
             <Marker
               className="text-green-500"
               position={coordinates}

@@ -1,20 +1,20 @@
 {
-  "short_name": "NAMPI",
-  "name": "Nuns and Monks - Prosopographical Interfaces",
+  "short_name": "%REACT_APP_NAME",
+  "name": "%REACT_APP_DESCRIPTION",
   "icons": [
     {
-      "src": "favicon.ico",
+      "src": "%REACT_APP_FAVICION%",
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/x-icon"
     },
     {
-      "src": "logo192.png",
-      "type": "image/png",
+      "src": "%REACT_APP_LOGO%",
+      "type": "image/svg+xml",
       "sizes": "192x192"
     },
     {
-      "src": "logo512.png",
-      "type": "image/png",
+      "src": "%REACT_APP_LOGO%",
+      "type": "image/svg+xml",
       "sizes": "512x512"
     }
   ],
@@ -23,3 +23,4 @@
   "theme_color": "#000000",
   "background_color": "#ffffff"
 }
+
