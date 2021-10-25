@@ -1,10 +1,11 @@
 {
   "name": "nampi-frontend",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "private": true,
   "dependencies": {
     "//": "TODO: Replace with the original react-leaflet package after this [issue](https://github.com/PaulLeCam/react-leaflet/issues/891) is resolved.",
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
+    "@fortawesome/free-brands-svg-icons": "^5.15.4",
     "@fortawesome/free-regular-svg-icons": "^5.15.4",
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
     "@fortawesome/react-fontawesome": "^0.1.16",
@@ -44,6 +45,7 @@
     "react-markdown": "^7.1.0",
     "react-router-dom": "^5.3.0",
     "react-scripts": "4.0.3",
+    "remark-gfm": "^3.0.0",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat",
     "typescript": "^4.4.4",
     "uuid": "^8.3.2",
