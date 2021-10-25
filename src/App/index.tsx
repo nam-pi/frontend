@@ -1,17 +1,22 @@
 import { useAuth } from "nampi-use-api";
 import { Route, Router, Switch } from "react-router";
+import { About } from "./components/About";
 import { ActsPage } from "./components/ActsPage";
 import { AspectsPage } from "./components/AspectsPage";
 import { AuthorsPage } from "./components/AuthorsPage";
+import { Data } from "./components/Data";
+import { DataModel } from "./components/DataModel";
 import { EventsPage } from "./components/EventsPage";
 import { GroupsPage } from "./components/GroupsPage";
 import { Home } from "./components/Home";
+import { Imprint } from "./components/Imprint";
 import { LoadingPlaceholder } from "./components/LoadingPlaceholder";
 import { Login } from "./components/Login";
 import { Navbar } from "./components/Navbar";
 import { NoMatch } from "./components/NoMatch";
 import { PersonsPage } from "./components/PersonsPage";
 import { PlacesPage } from "./components/PlacesPage";
+import { Privacy } from "./components/Privacy";
 import { PrivateRoute } from "./components/PrivateRoute";
 import { Profile } from "./components/Profile";
 import { SearchPage } from "./components/SearchPage";
@@ -24,7 +29,6 @@ export const App = () => {
     <Router history={HISTORY}>
       <div className="text-gray-800 h-screen flex flex-col">
         <Navbar className="sticky top-0 z-10" />
-        {/*  <div className="max-w-7xl mx-auto px-2 my-4 w-full sm:px-6 lg:px-8 h-full">  */}
         <Switch>
           <Route exact path="/" component={Home} />
           <Route
@@ -70,9 +74,13 @@ export const App = () => {
           <Route exact path="/search" component={SearchPage} />
           <Route exact path="/login" component={Login} />
           <PrivateRoute exact path="/profile" component={Profile} />
+          <Route exact path="/info/about" component={About} />
+          <Route exact path="/info/data" component={Data} />
+          <Route exact path="/info/data-model" component={DataModel} />
+          <Route exact path="/info/imprint" component={Imprint} />
+          <Route exact path="/info/privacy" component={Privacy} />
           <Route path="*" component={NoMatch} />
         </Switch>
-        {/*  </div>  */}
       </div>
     </Router>
   ) : (
