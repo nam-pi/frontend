@@ -151,6 +151,11 @@ export const FilterableItemList = <
       clearTimeout(scrollTimeout.current);
     }
     scrollTimeout.current = setTimeout(scroll, 10);
+    return () => {
+      if (scrollTimeout.current) {
+        clearTimeout(scrollTimeout.current);
+      }
+    };
   }, [activeItem, data, initialized, loading]);
 
   return (
