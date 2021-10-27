@@ -43,17 +43,27 @@ export const FetchedMarkdownPage = ({ baseUrl }: Props) => {
     <LoadingPlaceholder />
   ) : (
     <>
-      <PageContent className="max-w-3xl flex-col flex-grow">
+      <PageContent className="max-w-3xl flex-col flex-grow mb-12">
         <ReactMarkdown
           components={{
             h1: ({ node, ...props }) => (
-              <Heading {...props} level={1} className="mb-4" />
+              <Heading {...props} level={1} className="my-4 first:mt-2" />
             ),
-            h2: ({ node, ...props }) => <Heading {...props} level={2} />,
-            h3: ({ node, ...props }) => <Heading {...props} level={3} />,
-            h4: ({ node, ...props }) => <Heading {...props} level={4} />,
+            h2: ({ node, ...props }) => (
+              <Heading
+                {...props}
+                level={2}
+                className="mt-4 border-b border-blue-200 pb-1"
+              />
+            ),
+            h3: ({ node, ...props }) => (
+              <Heading {...props} level={3} className="mt-4" />
+            ),
+            h4: ({ node, ...props }) => (
+              <Heading {...props} level={4} className="mt-2" />
+            ),
             p: ({ node, ...props }) => (
-              <Paragraph {...props} className="mb-2" />
+              <Paragraph {...props} className="mt-2" />
             ),
             img: ({ alt, src, ...props }) => (
               <img
@@ -70,13 +80,16 @@ export const FetchedMarkdownPage = ({ baseUrl }: Props) => {
               <a className="text-blue-400 visited:text-purple-400" {...props} />
             ),
             table: ({ node, ...props }) => (
-              <table {...props} className="border-separate" />
+              <table {...props} className="border-separate mt-2" />
             ),
             th: ({ node, ...props }) => (
               <th
                 {...(props as any)}
                 className="rounded-md bg-gray-400 text-white"
               />
+            ),
+            ul: ({ node, ...props }) => (
+              <ul {...props} className="list-disc list-inside mt-2" />
             ),
           }}
           remarkPlugins={[remarkGfm]}
