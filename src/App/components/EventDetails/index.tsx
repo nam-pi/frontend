@@ -134,14 +134,24 @@ export const EventDetails = ({ idLocal }: Props) => {
               />
             </li>
             <li>
-              <FormattedMessage
-                description="Source text"
-                defaultMessage="Source: {source}, {location}"
-                values={{
-                  source: <ItemLink item={data.act.sourceLocation.source} />,
-                  location: getLocation(data.act.sourceLocation),
-                }}
-              />
+              {data.act.sourceLocation.text ? (
+                <FormattedMessage
+                  description="Source text"
+                  defaultMessage="Source: {source}, {location}"
+                  values={{
+                    source: <ItemLink item={data.act.sourceLocation.source} />,
+                    location: getLocation(data.act.sourceLocation),
+                  }}
+                />
+              ) : (
+                <FormattedMessage
+                  description="Source text"
+                  defaultMessage="Source: {source}"
+                  values={{
+                    source: <ItemLink item={data.act.sourceLocation.source} />,
+                  }}
+                />
+              )}
             </li>
           </ul>
           <Heading level={2}>

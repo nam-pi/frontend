@@ -399,7 +399,7 @@ const InfoMenu = () => {
         </MenuItem>
       )}
       {EXTERNAL_DOCS.dataModel && (
-        <MenuItem action="/info/data-model">
+        <MenuItem action="/info/model">
           <FormattedMessage
             description="Data model link text"
             defaultMessage="Data model"

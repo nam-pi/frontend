@@ -16,7 +16,14 @@ export const Heading = ({
     tag,
     {
       ...props,
-      className: clsx(level === 1 ? "text-2xl" : "text-xl", className),
+      className: clsx(
+        level === 1
+          ? "text-2xl text-bold"
+          : level === 2
+          ? "text-xl"
+          : "text-lg",
+        className
+      ),
     },
     children
   );
