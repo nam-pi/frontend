@@ -102,9 +102,7 @@ const validate = (form: FormState, types: Type[]) =>
   form.labels.length > 0 &&
   form.mainParticipant?.type.value !== undefined &&
   form.mainParticipant?.individual.id !== undefined &&
-  form.source?.id !== undefined &&
-  form.sourceLocation !== undefined &&
-  form.sourceLocation.replace(/\s/g, "").length > 0;
+  form.source?.id !== undefined;
 
 const findInHierarchy = (id: string, hierarchy: Hierarchy, fallback: string) =>
   id === fallback || hierarchy.items[id] !== undefined;
