@@ -14,11 +14,11 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { useHistory, useLocation } from "react-router";
 import { AspectsFilterSettings } from "../AspectsFilterSettings";
 import { EventsFilterSettings } from "../EventsFilterSettings";
+import { Field } from "../Field";
 import { FilterableItemList } from "../FilterableItemList";
 import { GroupsFilterSettings } from "../GroupsFilterSettings";
 import { Heading } from "../Heading";
 import { Input } from "../Input";
-import { Label } from "../Label";
 import { PageContent } from "../PageContent";
 import { PersonsFilterSettings } from "../PersonsFilterSettings";
 import { PlacesFilterSettings } from "../PlacesFilterSettings";
@@ -263,6 +263,7 @@ const SourcesList = ({ text }: { text: string }) => {
 };
 
 export const SearchPage = () => {
+  const intl = useIntl();
   const inputTimeout = useRef<undefined | NodeJS.Timeout>();
   const searchParam = useSearchParam();
   const [text, setText] = useState<string>(searchParam);
@@ -293,15 +294,35 @@ export const SearchPage = () => {
           defaultMessage="Search"
         />
       </Heading>
-      <div className="flex justify-center items-center w-full border-2 bg-gray-100 px-6 py-4 rounded-lg">
-        <Label className="mr-2" htmlFor="search-input">
-          <FormattedMessage description="Search text" defaultMessage="Search" />
-        </Label>
-        <Input
-          id="search-input"
-          value={text}
-          onChange={(e) => setText(e.currentTarget.value)}
-        />
+      <div className="flex justify-center items-center border-2 bg-gray-100 px-6 py-4 rounded-lg">
+        <div className="w-full md:w-2/3 lg:w-1/3">
+          <Field
+            label={intl.formatMessage({
+              description: "Search text field label",
+              defaultMessage: "Search labels and text",
+            })}
+            help={intl.formatMessage({
+              description: "Search help",
+              defaultMessage:
+                "Enter any part of an entity's label or text content. You can use regular expressions like *H(ä|ae)ndel* to exactly specify what you are interested in.",
+            })}
+          >
+            <Input
+              autoFocus
+              id="search-input"
+              label={intl.formatMessage({
+                description: "Search field label",
+                defaultMessage: "Text",
+              })}
+              placeholder={intl.formatMessage({
+                description: "Search field placeholder",
+                defaultMessage: "Enter content",
+              })}
+              value={text}
+              onChange={(e) => setText(e.currentTarget.value)}
+            />
+          </Field>
+        </div>
       </div>
       <div className="my-4 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 overflow-auto">
         <EventsList text={synchronizedText} />
