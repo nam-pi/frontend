@@ -76,7 +76,7 @@ export const App = () => {
           <PrivateRoute exact path="/profile" component={Profile} />
           <Route exact path="/info/about" component={About} />
           <Route exact path="/info/data" component={Data} />
-          <Route exact path="/info/data-model" component={DataModel} />
+          <Route exact path="/info/model" component={DataModel} />
           <Route exact path="/info/imprint" component={Imprint} />
           <Route exact path="/info/privacy" component={Privacy} />
           <Route path="*" component={NoMatch} />
