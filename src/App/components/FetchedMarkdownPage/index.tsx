@@ -93,7 +93,7 @@ export const FetchedMarkdownPage = ({ baseUrl }: Props) => {
                 <img
                   {...props}
                   alt={""}
-                  className="object-contain h-auto w-full"
+                  className="my-6 object-contain h-auto w-full"
                   src={
                     isRelativeUrl(src || "")
                       ? joinPath(baseUrl!, src || "")
