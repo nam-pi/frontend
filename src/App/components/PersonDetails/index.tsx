@@ -159,7 +159,6 @@ const EventsMap = ({
 const Overview = ({ person }: { person: Person }) => {
   const intl = useIntl();
   const getDate = useEventDate();
-  console.log(person);
   return (
     <div className="flex flex-col">
       {person.bornIn?.length && (
