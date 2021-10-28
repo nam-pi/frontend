@@ -111,7 +111,7 @@ export const FetchedMarkdownPage = ({ baseUrl }: Props) => {
                     />
                   }
                 </a>
-              ) : href?.startsWith("http") ? (
+              ) : href?.startsWith("http") || href?.startsWith("mailto:") ? (
                 // eslint-disable-next-line jsx-a11y/anchor-has-content
                 <a
                   {...props}
