@@ -1,7 +1,9 @@
+import { faUndo } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { joinPath } from "App/utils/joinPath";
 import { DEFAULT_LOCALE } from "I18n/constants";
 import { useEffect, useState } from "react";
-import { useIntl } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Footer } from "../Footer";
@@ -65,31 +67,76 @@ export const FetchedMarkdownPage = ({ baseUrl }: Props) => {
             p: ({ node, ...props }) => (
               <Paragraph {...props} className="mt-2" />
             ),
-            img: ({ alt, src, ...props }) => (
-              <img
-                {...props}
-                alt={alt || ""}
-                className="object-contain h-64 w-full"
-                src={
-                  isRelativeUrl(src || "") ? joinPath(baseUrl!, src || "") : src
-                }
-              />
-            ),
-            a: ({ node, ...props }) => (
-              // eslint-disable-next-line jsx-a11y/anchor-has-content
-              <a className="text-blue-400 visited:text-purple-400" {...props} />
-            ),
+            img: ({ alt, src, ...props }) =>
+              alt ? (
+                <figure className="my-6">
+                  <img
+                    {...props}
+                    alt={alt}
+                    className="object-contain h-auto w-full"
+                    src={
+                      isRelativeUrl(src || "")
+                        ? joinPath(baseUrl!, src || "")
+                        : src
+                    }
+                  />
+                  <figcaption className="text-center mt-4 italic">
+                    <FormattedMessage
+                      description="Figure caption"
+                      defaultMessage="Figure: {alt}"
+                      values={{ alt }}
+                    />
+                  </figcaption>
+                </figure>
+              ) : (
+                <img
+                  {...props}
+                  alt={""}
+                  className="object-contain h-auto w-full"
+                  src={
+                    isRelativeUrl(src || "")
+                      ? joinPath(baseUrl!, src || "")
+                      : src
+                  }
+                />
+              ),
+            a: ({ className, node, ...props }) =>
+              className === "footnote-back" ? (
+                <a {...props}>
+                  {
+                    <FontAwesomeIcon
+                      className="text-xs ml-2 text-blue-400 hover:opacity-80"
+                      icon={faUndo}
+                    />
+                  }
+                </a>
+              ) : (
+                // eslint-disable-next-line jsx-a11y/anchor-has-content
+                <a
+                  className="text-blue-400 visited:text-purple-400 hover:opacity-80"
+                  {...props}
+                />
+              ),
             table: ({ node, ...props }) => (
-              <table {...props} className="border-separate mt-2" />
+              <table {...props} className="mt-4" />
             ),
             th: ({ node, ...props }) => (
               <th
                 {...(props as any)}
-                className="rounded-md bg-gray-400 text-white"
+                className="border-b border-blue-200 font-semibold"
               />
+            ),
+            section: ({ node, ...props }) => (
+              <section {...props} className="mt-8" />
+            ),
+            hr: ({ node, ...props }) => (
+              <hr {...props} className="border-blue-200" />
             ),
             ul: ({ node, ...props }) => (
               <ul {...props} className="list-disc list-inside mt-2" />
+            ),
+            ol: ({ node, ...props }) => (
+              <ol {...props} className="list-inside list-decimal mt-2" />
             ),
           }}
           remarkPlugins={[remarkGfm]}
