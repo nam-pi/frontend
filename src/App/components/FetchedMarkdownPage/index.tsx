@@ -5,6 +5,7 @@ import { DEFAULT_LOCALE } from "I18n/constants";
 import { useEffect, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import ReactMarkdown from "react-markdown";
+import { Link } from "react-router-dom";
 import remarkGfm from "remark-gfm";
 import { Footer } from "../Footer";
 import { Heading } from "../Heading";
@@ -100,9 +101,9 @@ export const FetchedMarkdownPage = ({ baseUrl }: Props) => {
                   }
                 />
               ),
-            a: ({ className, node, ...props }) =>
+            a: ({ className, node, href, ...props }) =>
               className === "footnote-back" ? (
-                <a {...props}>
+                <a {...props} href={href}>
                   {
                     <FontAwesomeIcon
                       className="text-xs ml-2 text-blue-400 hover:opacity-80"
@@ -110,12 +111,22 @@ export const FetchedMarkdownPage = ({ baseUrl }: Props) => {
                     />
                   }
                 </a>
-              ) : (
+              ) : href?.startsWith("http") ? (
                 // eslint-disable-next-line jsx-a11y/anchor-has-content
                 <a
-                  className="text-blue-400 visited:text-purple-400 hover:opacity-80"
                   {...props}
+                  className="text-blue-400 visited:text-purple-400 hover:opacity-80"
+                  href={href}
+                  target={href?.startsWith("http") ? "__blank" : undefined}
                 />
+              ) : (
+                // eslint-disable-next-line jsx-a11y/anchor-has-content
+                <Link
+                  className="text-blue-400 visited:text-purple-400 hover:opacity-80"
+                  to={href || ""}
+                >
+                  {props.children}
+                </Link>
               ),
             table: ({ node, ...props }) => (
               <table {...props} className="mt-4" />

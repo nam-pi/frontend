@@ -40,7 +40,7 @@ const HighlightLink = ({
             to.includes("?") ? to.substring(0, to.indexOf("?")) : to
           ) &&
           (invert ? "text-blue-200" : "text-blue-500"),
-        "hover:opacity-80"
+        "hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-200 rounded-sm"
       )}
     />
   );
@@ -65,13 +65,16 @@ const MenuItem = ({
             {children}
           </HighlightLink>
         ) : (
-          <Link className="inline-block w-full" to={action}>
+          <Link
+            className="inline-block w-full focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-200"
+            to={action}
+          >
             {children}
           </Link>
         )
       ) : (
         <button
-          className="inline-block w-full text-left"
+          className="inline-block w-full text-left rounded-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-200"
           type="button"
           onClick={action}
           aria-label={label}
@@ -112,7 +115,7 @@ const NavMenu = ({
       )}
     >
       <Menu.Button
-        className="hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-current"
+        className="hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-200 rounded-sm"
         aria-label={buttonLabel}
       >
         {buttonContent}
@@ -126,7 +129,7 @@ const NavMenu = ({
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className="absolute min-w-8 mt-1 right-0 bg-white opacity-100 text-gray-900 shadow-lg rounded flex flex-col pt-2 pb-4">
+        <Menu.Items className="absolute min-w-8 mt-1 right-0 bg-white focus:outline-none opacity-100 text-gray-900 shadow-lg rounded flex flex-col pt-2 pb-4">
           {children}
         </Menu.Items>
       </Transition>
@@ -277,16 +280,10 @@ const Brand = () => (
   <div className="flex">
     <Link
       to="/"
-      className="font-semibold text-2xl flex items-center rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-current"
+      className="font-semibold text-2xl flex rounded items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-200"
     >
       <AppLogo className="h-10 bg-white p-1 rounded" />
-    </Link>
-    <Link
-      to="/"
-      className="font-semibold text-2xl flex items-center"
-      tabIndex={-1}
-    >
-      <span className="ml-2 hidden lg:block text-white uppercase" tabIndex={-1}>
+      <span className="ml-2 hidden lg:block text-white uppercase">
         {APP_NAME}
       </span>
     </Link>
@@ -375,7 +372,7 @@ const InfoMenu = () => {
   const intl = useIntl();
   return (
     <NavMenu
-      buttonContent={<Icon icon={faQuestion} />}
+      buttonContent={<FontAwesomeIcon icon={faQuestion} />}
       buttonLabel={intl.formatMessage({
         description: "Info button menu",
         defaultMessage: "Info",

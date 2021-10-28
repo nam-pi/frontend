@@ -37,7 +37,10 @@ export const ItemLink = ({ classNames, createText, item }: Props) => {
   const getText = useLocaleLiteral();
   return (
     <Link
-      className={clsx("inline-block", "hover:opacity-80", classNames)}
+      className={clsx(
+        "inline-block hover:opacity-80 rounded-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-200",
+        classNames
+      )}
       to={getUrl(item)}
     >
       <span>{(createText || getText)(item.labels)}</span>

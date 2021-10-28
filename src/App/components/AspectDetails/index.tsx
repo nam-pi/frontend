@@ -1,5 +1,3 @@
-import { faEdit } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { SECONDARY_ITEM_LIMIT } from "App/constants";
 import { useEventLabel } from "App/hooks/useEventLabel";
 import { useLocaleLiteral } from "App/hooks/useLocaleLiteral";
@@ -8,8 +6,7 @@ import { namespaces } from "App/namespaces";
 import { EventsQuery, PersonsQuery, useAspect, useAuth } from "nampi-use-api";
 import { useEffect, useMemo, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
-import { Link } from "react-router-dom";
-import { DeleteButton } from "../DeleteButton";
+import { DetailEditControls } from "../DetailEditControls";
 import { EventsFilterSettings } from "../EventsFilterSettings";
 import { FilterableItemList } from "../FilterableItemList";
 import { Heading } from "../Heading";
@@ -119,19 +116,11 @@ export const AspectDetails = ({ idLocal }: Props) => {
           />
         </Heading>
         {authenticated && (
-          <>
-            <Link
-              className="ml-4 text-gray-400"
-              to={`/aspects/${idLocal}?edit`}
-            >
-              <FontAwesomeIcon icon={faEdit} />
-            </Link>
-            <DeleteButton
-              entityLabels={data.labels}
-              idLocal={idLocal}
-              type="aspects"
-            />
-          </>
+          <DetailEditControls
+            type="aspects"
+            idLocal={idLocal}
+            labels={data.labels}
+          />
         )}
       </div>
       <ItemInheritance item={data} />

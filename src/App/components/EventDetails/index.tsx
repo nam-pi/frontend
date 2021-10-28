@@ -6,16 +6,17 @@ import { useLocaleLiteral } from "App/hooks/useLocaleLiteral";
 import { namespaces } from "App/namespaces";
 import { LatLngTuple } from "leaflet";
 import {
-    Event,
-    LiteralString,
-    SourceLocation,
-    useEvent,
-    useUser
+  Event,
+  LiteralString,
+  SourceLocation,
+  useEvent,
+  useUser,
 } from "nampi-use-api";
 import { ReactNode, useMemo } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { Link } from "react-router-dom";
 import { DeleteButton } from "../DeleteButton";
+import { DetailEditControls } from "../DetailEditControls";
 import { Heading } from "../Heading";
 import { ItemComments } from "../ItemComments";
 import { ItemInheritance } from "../ItemInheritance";
@@ -83,19 +84,11 @@ export const EventDetails = ({ idLocal }: Props) => {
               />
             </Heading>
             {isAuthor && (
-              <>
-                <Link
-                  className="ml-4 text-gray-400"
-                  to={`/events/${idLocal}?edit`}
-                >
-                  <FontAwesomeIcon icon={faEdit} />
-                </Link>
-                <DeleteButton
-                  entityLabels={data.labels}
-                  idLocal={idLocal}
-                  type="events"
-                />
-              </>
+              <DetailEditControls
+                type="events"
+                idLocal={idLocal}
+                labels={data.labels}
+              />
             )}
           </div>
           <ItemInheritance item={data} />
