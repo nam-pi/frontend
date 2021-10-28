@@ -8685,10 +8685,10 @@ multicast-dns@^6.0.1:
     dns-packet "^1.3.1"
     thunky "^1.0.2"
 
-nampi-use-api@^0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/nampi-use-api/-/nampi-use-api-0.6.0.tgz#63ef94ecf6c0dab3fa51636d74ae1dfe012651f4"
-  integrity sha512-QqRDbZDaXgJCP8cnBA/nHKlw3zYyl2C1mkW3g9xzx+RZCFA/Ubkxv54rFUlr9wiVs65YYxJhZV2K6b3tKLkpHA==
+nampi-use-api@^0.6.1:
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/nampi-use-api/-/nampi-use-api-0.6.1.tgz#3b105f897582995302f53dc2d1eabae502c21d62"
+  integrity sha512-2U2bAx1eZxuD3oX1WjTC5tYbMvZcC6oRFh6BH+AcbBqL+Yx3nDJEPDkmEa4Rhti4pPmU261Chf9+a7txsx3NOA==
   dependencies:
     jsonld "^5.2.0"
     keycloak-js "^15.0.2"

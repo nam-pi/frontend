@@ -1,4 +1,4 @@
-import { faEdit, faLink } from "@fortawesome/free-solid-svg-icons";
+import { faLink } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useCompletePlace } from "App/hooks/useCompletePlaces";
 import { useEventDate } from "App/hooks/useEventDate";
@@ -6,16 +6,14 @@ import { useLocaleLiteral } from "App/hooks/useLocaleLiteral";
 import { namespaces } from "App/namespaces";
 import { LatLngTuple } from "leaflet";
 import {
-  Event,
-  LiteralString,
-  SourceLocation,
-  useEvent,
-  useUser,
+    Event,
+    LiteralString,
+    SourceLocation,
+    useEvent,
+    useUser
 } from "nampi-use-api";
 import { ReactNode, useMemo } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
-import { Link } from "react-router-dom";
-import { DeleteButton } from "../DeleteButton";
 import { DetailEditControls } from "../DetailEditControls";
 import { Heading } from "../Heading";
 import { ItemComments } from "../ItemComments";
