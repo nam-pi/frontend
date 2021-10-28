@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 
 const LoginLink = () => (
   <Link
-    className="hover:opacity-80"
+    className="hover:opacity-80 rounded-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-200"
     to={{
       pathname: "/login",
       state: { from: window.location.href },
@@ -26,7 +26,7 @@ const Logos = () => {
           key={idx}
           href={url}
           target="__blank"
-          className="p-1 my-1 mr-2 bg-white rounded"
+          className="p-1 my-1 mr-2 bg-white rounded items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-200"
         >
           <img
             alt={intl.formatMessage(
@@ -50,7 +50,11 @@ export const Footer = () => {
         <div className="relative flex flex-1 items-center md:justify-between flex-wrap py-2 sm:justify-start">
           <Logos />
           <div className="space-x-4 flex items-center">
-            <a href="https://github.com/nam-pi" target="__blank">
+            <a
+              className="rounded-sm items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-200"
+              href="https://github.com/nam-pi"
+              target="__blank"
+            >
               <FontAwesomeIcon icon={faGithub} />
             </a>
             {!authenticated && <LoginLink />}

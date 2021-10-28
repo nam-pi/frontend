@@ -1,9 +1,4 @@
-import {
-    faBullseye,
-    faEdit,
-    faMapMarker
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBullseye, faMapMarker } from "@fortawesome/free-solid-svg-icons";
 import { useCompletePlaces } from "App/hooks/useCompletePlaces";
 import { useEventDate } from "App/hooks/useEventDate";
 import { useEventLabel } from "App/hooks/useEventLabel";
@@ -21,8 +16,7 @@ import {
 import { useEffect, useMemo, useRef, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { MapConsumer } from "react-leaflet";
-import { Link } from "react-router-dom";
-import { DeleteButton } from "../DeleteButton";
+import { DetailEditControls } from "../DetailEditControls";
 import { EventsFilterSettings } from "../EventsFilterSettings";
 import { FilterableItemList } from "../FilterableItemList";
 import { Heading } from "../Heading";
@@ -138,7 +132,7 @@ const EventsMap = ({
                   key={coords}
                   position={JSON.parse(coords)}
                   popup={
-                    <div className="m-2">
+                    <>
                       <div className="font-bold text-lg mb-2">
                         <FormattedMessage
                           description="Events heading"
@@ -150,7 +144,7 @@ const EventsMap = ({
                           <ItemLink key={idx} item={event} />
                         ))}
                       </div>
-                    </div>
+                    </>
                   }
                 />
               ))}
@@ -243,19 +237,11 @@ export const PersonDetails = ({ idLocal }: Props) => {
               />
             </Heading>
             {authenticated && (
-              <>
-                <Link
-                  className="ml-4 text-gray-400"
-                  to={`/persons/${idLocal}?edit`}
-                >
-                  <FontAwesomeIcon icon={faEdit} />
-                </Link>
-                <DeleteButton
-                  entityLabels={data.labels}
-                  idLocal={idLocal}
-                  type="persons"
-                />
-              </>
+              <DetailEditControls
+                type="persons"
+                idLocal={idLocal}
+                labels={data.labels}
+              />
             )}
           </div>
           <ItemInheritance item={data} />

@@ -1,5 +1,3 @@
-import { faEdit } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { SECONDARY_ITEM_LIMIT } from "App/constants";
 import { useCompletePlace } from "App/hooks/useCompletePlaces";
 import { useEventLabel } from "App/hooks/useEventLabel";
@@ -9,8 +7,7 @@ import { LatLngTuple } from "leaflet";
 import { EventsQuery, useAuth, usePlace } from "nampi-use-api";
 import { useEffect, useMemo, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
-import { Link } from "react-router-dom";
-import { DeleteButton } from "../DeleteButton";
+import { DetailEditControls } from "../DetailEditControls";
 import { EventsFilterSettings } from "../EventsFilterSettings";
 import { FilterableItemList } from "../FilterableItemList";
 import { Heading } from "../Heading";
@@ -88,19 +85,11 @@ export const PlaceDetails = ({ idLocal }: Props) => {
               />
             </Heading>
             {authenticated && (
-              <>
-                <Link
-                  className="ml-4 text-gray-400"
-                  to={`/places/${idLocal}?edit`}
-                >
-                  <FontAwesomeIcon icon={faEdit} />
-                </Link>
-                <DeleteButton
-                  entityLabels={data.labels}
-                  idLocal={idLocal}
-                  type="places"
-                />
-              </>
+              <DetailEditControls
+                type="places"
+                idLocal={idLocal}
+                labels={data.labels}
+              />
             )}
           </div>
           <ItemInheritance item={data} />

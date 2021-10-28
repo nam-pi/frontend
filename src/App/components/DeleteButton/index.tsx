@@ -58,7 +58,10 @@ export const DeleteButton = ({ entityLabels, idLocal, type }: Props) => {
   }, [state.data, state.loading, type]);
   return (
     <>
-      <button className="ml-4 text-gray-400" onClick={openModal}>
+      <button
+        className="ml-4 text-gray-400 rounded-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-200"
+        onClick={openModal}
+      >
         <FontAwesomeIcon icon={faEraser} />
       </button>
       <Modal
