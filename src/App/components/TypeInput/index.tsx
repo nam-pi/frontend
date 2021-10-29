@@ -41,7 +41,7 @@ export const TypeInput = ({
 }: Props) => {
   const intl = useIntl();
   const literal = useLocaleLiteral();
-  const { data, loading, initialized } = useTypes({ query: { type: parent } });
+  const { data, loading, initialized } = useTypes({ query: { limit: 10000, type: parent } });
   const types = useMemo<Types>(
     () =>
       (data || [])
