@@ -35,7 +35,7 @@ export const TypeSelect = ({
 
   const { data } = useTypes({
     query: {
-      limit: 1000,
+      limit: 10000,
       orderBy: "label",
       type: typeBase,
     },
