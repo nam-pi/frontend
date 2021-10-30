@@ -20,7 +20,7 @@ export const useLocaleLiteral = (): ((
       return (
         literals.find((literal) => literal.language === locale.split("-")[0])
           ?.value ||
-        literals?.[0].value ||
+        literals?.[0]?.value ||
         ""
       );
     },
