@@ -1,4 +1,4 @@
-import { faLink } from "@fortawesome/free-solid-svg-icons";
+import { faGlobe } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Item } from "nampi-use-api";
 import { FormattedMessage } from "react-intl";
@@ -22,11 +22,15 @@ export const ItemSameAs = <
       <div className="flex flex-col">
         {item.sameAs?.map((sameAs, idx) =>
           sameAs.startsWith("http") ? (
-            <a href={sameAs} key={idx}>
+            <a
+              className="hover:opacity-80 flex items-center"
+              href={sameAs}
+              key={idx}
+            >
               {sameAs}
               <FontAwesomeIcon
                 className="text-xs ml-1 text-blue-400"
-                icon={faLink}
+                icon={faGlobe}
               />
             </a>
           ) : (
