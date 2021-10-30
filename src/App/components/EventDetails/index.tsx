@@ -1,17 +1,10 @@
-import { faLink } from "@fortawesome/free-solid-svg-icons";
+import { faGlobe } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useCompletePlace } from "App/hooks/useCompletePlaces";
 import { useEventDate } from "App/hooks/useEventDate";
 import { useLocaleLiteral } from "App/hooks/useLocaleLiteral";
-import { namespaces } from "App/namespaces";
 import { LatLngTuple } from "leaflet";
-import {
-    Event,
-    LiteralString,
-    SourceLocation,
-    useEvent,
-    useUser
-} from "nampi-use-api";
+import { Event, SourceLocation, useEvent, useUser } from "nampi-use-api";
 import { ReactNode, useMemo } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { DetailEditControls } from "../DetailEditControls";
@@ -34,19 +27,17 @@ const getOtherParticipants = (data: undefined | Event): Event["participants"] =>
   data?.participants.filter((p) => p.id !== data?.mainParticipant.id) || [];
 
 const getLocation = (location: undefined | SourceLocation): ReactNode => {
-  const url = (
-    location as unknown as Record<string, undefined | LiteralString[]>
-  )[namespaces.core.hasUrl] as undefined | LiteralString[];
-  return Array.isArray(url) ? (
-    <a href={url[0].value} className="hover:opacity-80 inline-block">
+  const text = location?.text;
+  return text?.startsWith("http") ? (
+    <a href={text} className="hover:opacity-80 inline-flex items-center">
       <FormattedMessage
         description="Source link description"
-        defaultMessage="[link]"
+        defaultMessage="'<Go to location'>"
       />
-      <FontAwesomeIcon className="text-blue-500 text-xs ml-1" icon={faLink} />
+      <FontAwesomeIcon className="text-blue-500 text-xs ml-1" icon={faGlobe} />
     </a>
   ) : (
-    location?.text
+    text
   );
 };
 

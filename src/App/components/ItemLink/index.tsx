@@ -38,7 +38,7 @@ export const ItemLink = ({ classNames, createText, item }: Props) => {
   return (
     <Link
       className={clsx(
-        "inline-block hover:opacity-80 rounded-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-200",
+        "inline-flex hover:opacity-80 rounded-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-200 items-center",
         classNames
       )}
       to={getUrl(item)}
