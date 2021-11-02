@@ -65,8 +65,8 @@ const EventsWithGroup = ({ id }: { id: string }) => {
 export const GroupDetails = ({ idLocal }: Props) => {
   const getText = useLocaleLiteral();
   const { authenticated } = useAuth();
-  const { data } = useGroup({ idLocal });
-  return data ? (
+  const { data, loading } = useGroup({ idLocal });
+  return data && !loading ? (
     <>
       <div className="flex items-center">
         <Heading>

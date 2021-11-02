@@ -57,8 +57,8 @@ const EventsWithAuthor = ({ id }: { id: string }) => {
 
 export const AuthorDetails = ({ idLocal }: Props) => {
   const getText = useLocaleLiteral();
-  const { data } = useAuthor({ idLocal });
-  return data ? (
+  const { data, loading } = useAuthor({ idLocal });
+  return data && !loading ? (
     <>
       <Heading>
         <FormattedMessage
