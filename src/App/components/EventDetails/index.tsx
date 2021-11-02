@@ -44,7 +44,7 @@ const getLocation = (location: undefined | SourceLocation): ReactNode => {
 export const EventDetails = ({ idLocal }: Props) => {
   const getText = useLocaleLiteral();
   const getDate = useEventDate();
-  const { data } = useEvent({ idLocal });
+  const { data, loading } = useEvent({ idLocal });
   const date = getDate(data, "full");
   const user = useUser();
   const isAuthor = useMemo(
@@ -60,7 +60,7 @@ export const EventDetails = ({ idLocal }: Props) => {
     place?.latitude && place?.longitude
       ? [place.latitude, place.longitude]
       : undefined;
-  return data ? (
+  return data && !loading ? (
     <>
       <div className="flex flex-col md:flex-row">
         <div className="space-y-4 flex-grow w-full md:w-auto">

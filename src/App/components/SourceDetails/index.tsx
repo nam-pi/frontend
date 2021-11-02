@@ -62,8 +62,8 @@ const EventsWithSource = ({ id }: { id: string }) => {
 export const SourceDetails = ({ idLocal }: Props) => {
   const getText = useLocaleLiteral();
   const { authenticated } = useAuth();
-  const { data } = useSource({ idLocal });
-  return data ? (
+  const { data, loading } = useSource({ idLocal });
+  return data && !loading ? (
     <>
       <div className="flex items-center">
         <Heading>

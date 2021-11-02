@@ -218,12 +218,12 @@ const Overview = ({ person }: { person: Person }) => {
 export const PersonDetails = ({ idLocal }: Props) => {
   const getText = useLocaleLiteral();
   const { authenticated } = useAuth();
-  const { data } = usePerson({ idLocal });
+  const { data, loading } = usePerson({ idLocal });
   const allEvents = useEvents({
     query: { participant: data?.id, limit: 100000 },
     paused: !data?.id,
   });
-  return data ? (
+  return data && !loading ? (
     <>
       <div className="flex flex-col md:flex-row">
         <div className="space-y-4 flex-grow w-full md:w-auto">

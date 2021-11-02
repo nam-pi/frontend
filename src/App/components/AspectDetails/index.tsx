@@ -104,8 +104,8 @@ const PersonsWithAspect = ({ id }: { id: string }) => {
 export const AspectDetails = ({ idLocal }: Props) => {
   const getText = useLocaleLiteral();
   const { authenticated } = useAuth();
-  const { data } = useAspect({ idLocal });
-  return data ? (
+  const { data, loading } = useAspect({ idLocal });
+  return data && !loading ? (
     <>
       <div className="flex items-center">
         <Heading>
