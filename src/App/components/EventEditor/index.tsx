@@ -15,7 +15,7 @@ import {
     useHierarchy,
     useUser
 } from "nampi-use-api";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useHistory } from "react-router-dom";
 import { CommentsField } from "../CommentsField";
@@ -525,16 +525,11 @@ export const EventEditor = ({ idLocal }: Props) => {
   const user = useUser();
   const literal = useLocaleLiteral();
   const create = idLocal === undefined;
-  const author = useMemo(
-    () => user.data?.["http://purl.org/nampi/owl/api#isAuthor"]?.[0],
-    [user.data]
-  );
   return initialized &&
     !loading &&
     user.initialized &&
     !user.loading &&
-    user.data &&
-    author ? (
+    user.data?.author ? (
     <>
       <Heading>
         {create ? (
@@ -560,7 +555,7 @@ export const EventEditor = ({ idLocal }: Props) => {
       <Editor
         event={data}
         author={{
-          ...author,
+          ...user.data.author,
           labels: user.data.labels,
           response: [{}] as JsonLdArray,
           types: [namespaces.core.author],
