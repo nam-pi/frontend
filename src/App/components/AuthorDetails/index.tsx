@@ -10,6 +10,7 @@ import { FilterableItemList } from "../FilterableItemList";
 import { Heading } from "../Heading";
 import { ItemInheritance } from "../ItemInheritance";
 import { ItemLabels } from "../ItemLabels";
+import { ItemPermalink } from "../ItemPermalink";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
 
 interface Props {
@@ -67,6 +68,7 @@ export const AuthorDetails = ({ idLocal }: Props) => {
           values={{ label: getText(data.labels) }}
         />
       </Heading>
+      <ItemPermalink item={data} />
       <ItemInheritance item={data} />
       <ItemLabels item={data} />
       <EventsWithAuthor id={data.id} />
