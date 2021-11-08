@@ -14,6 +14,7 @@ import { Heading } from "../Heading";
 import { ItemComments } from "../ItemComments";
 import { ItemInheritance } from "../ItemInheritance";
 import { ItemLabels } from "../ItemLabels";
+import { ItemPermalink } from "../ItemPermalink";
 import { ItemSameAs } from "../ItemSameAs";
 import { ItemTexts } from "../ItemTexts";
 import { LoadingPlaceholder } from "../LoadingPlaceholder";
@@ -92,6 +93,7 @@ export const PlaceDetails = ({ idLocal }: Props) => {
               />
             )}
           </div>
+          <ItemPermalink item={data} />
           <ItemInheritance item={data} />
           <ItemLabels item={data} />
           <ItemTexts item={data} />
