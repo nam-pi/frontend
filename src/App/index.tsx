@@ -1,7 +1,6 @@
 import { useAuth } from "nampi-use-api";
 import { Route, Router, Switch } from "react-router";
 import { About } from "./components/About";
-import { ActsPage } from "./components/ActsPage";
 import { AspectsPage } from "./components/AspectsPage";
 import { AuthorsPage } from "./components/AuthorsPage";
 import { Data } from "./components/Data";
@@ -31,11 +30,6 @@ export const App = () => {
         <Navbar className="sticky top-0 z-10" />
         <Switch>
           <Route exact path="/" component={Home} />
-          <Route
-            exact
-            path={["/acts", "/acts/:idLocal"]}
-            component={ActsPage}
-          />
           <Route
             exact
             path={["/aspects", "/aspects/:idLocal"]}
